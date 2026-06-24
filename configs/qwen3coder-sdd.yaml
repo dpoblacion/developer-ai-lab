@@ -1,0 +1,25 @@
+# Qwen3-Coder for the SDD benchmark: a single agent needs a LARGE context (Claude Code's
+# system prompt + the growing app), so max_model_len is high and max_num_seqs low — the
+# opposite of the concurrency config (configs/qwen3coder.yaml), which favours many streams.
+model: Qwen/Qwen3-Coder-30B-A3B-Instruct-FP8
+
+served_model_name: qwen3-coder-30b-fp8
+
+vllm_version: "0.11.0"
+pip_constraints:
+  - "transformers<5"
+
+host: 0.0.0.0
+port: 8000
+
+download_dir: /workspace/huggingface
+
+gpu_memory_utilization: 0.92
+max_model_len: 65536
+max_num_seqs: 2
+
+tool_call_parser: qwen3_coder
+enable_auto_tool_choice: true
+
+env:
+  VLLM_USE_FLASHINFER_SAMPLER: "0"

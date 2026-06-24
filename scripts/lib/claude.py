@@ -10,9 +10,14 @@ import time
 
 
 def build_claude_cmd(prompt, allowed_tools, max_turns, permission_mode="acceptEdits"):
-    """Build the ``claude -p`` stream-json command line."""
+    """Build the ``claude -p`` stream-json command line.
+
+    ``--bare`` skips local skills/plugins/hooks/MCP/CLAUDE.md: a much smaller system
+    prompt (fits self-hosted context windows) and an isolated, reproducible benchmark
+    that doesn't leak the operator's local config into the run.
+    """
     return [
-        "claude", "-p", prompt,
+        "claude", "-p", prompt, "--bare",
         "--output-format", "stream-json", "--verbose",
         "--allowedTools", allowed_tools,
         "--permission-mode", permission_mode,
