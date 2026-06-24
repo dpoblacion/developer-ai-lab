@@ -9,7 +9,9 @@ model_list:
       # Upstream served-model name, set per run (e.g. openai/glm-5.2-fp8).
       # run_pod.sh exports it from the chosen config's served_model_name.
       model: os.environ/LITELLM_UPSTREAM_MODEL
-      api_base: http://localhost:8000/v1
+      # Where vLLM is reachable: localhost:8000 on the pod (run_pod), or
+      # host.docker.internal:8000 from the SDD toolchain container (via the SSH tunnel).
+      api_base: os.environ/VLLM_BASE
       api_key: "none"
 
 general_settings:

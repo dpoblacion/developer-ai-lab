@@ -15,13 +15,17 @@ class SddCmdsTest(unittest.TestCase):
 
     def test_docker_run_cmd(self):
         cmd = docker_run_cmd(
-            "dail-toolchain", "/host/ws", {"ANTHROPIC_BASE_URL": "http://x:4000"},
-            ["bash", "-lc", "echo hi"], name="dail-sdd")
+            "dail-toolchain",
+            ["bash", "-lc", "echo hi"],
+            mounts=[("/host/repo", "/repo"), ("/host/out", "/out")],
+            env={"ANTHROPIC_BASE_URL": "http://x:4000"},
+            workdir="/repo")
         self.assertEqual(cmd[:2], ["docker", "run"])
         self.assertIn("--rm", cmd)
-        self.assertIn("/host/ws:/workspace", cmd)
-        self.assertIn("/var/run/docker.sock:/var/run/docker.sock", cmd)
+        self.assertIn("/host/repo:/repo", cmd)
+        self.assertIn("/host/out:/out", cmd)
         self.assertIn("host.docker.internal:host-gateway", cmd)
+        self.assertEqual(cmd[cmd.index("-w") + 1], "/repo")
         self.assertEqual(cmd[cmd.index("-e") + 1], "ANTHROPIC_BASE_URL=http://x:4000")
         self.assertEqual(cmd[-4:], ["dail-toolchain", "bash", "-lc", "echo hi"])
 

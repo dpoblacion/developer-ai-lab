@@ -17,6 +17,9 @@ set -a && . ./config.env && set +a
 # Use the venv that setup_pod.sh created (vllm, python deps) and the claude CLI install dir.
 export PATH="/workspace/venv/bin:$HOME/.local/bin:$PATH"
 
+# On the pod, LiteLLM reaches vLLM on localhost (the SDD container overrides this).
+export VLLM_BASE="${VLLM_BASE:-http://localhost:8000/v1}"
+
 # Tie the served-model name across vLLM, the raw sweep, and the LiteLLM upstream.
 SERVED=$(python3 -c "import yaml; print(yaml.safe_load(open('$CONFIG'))['served_model_name'])")
 export MODEL="$SERVED"

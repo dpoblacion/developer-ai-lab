@@ -28,7 +28,8 @@ def run(scenario_path):
     scenario_dir = pathlib.Path(scenario_path).parent
 
     run_id = time.strftime("%Y%m%d-%H%M%S")
-    out_dir = pathlib.Path("results") / run_id / "sdd"
+    # SDD_OUT_DIR lets the orchestrator point output at a mounted dir inside the container.
+    out_dir = pathlib.Path(os.getenv("SDD_OUT_DIR") or pathlib.Path("results") / run_id / "sdd")
     workspace = out_dir / "workspace"
     phases_dir = out_dir / "phases"
     workspace.mkdir(parents=True, exist_ok=True)
