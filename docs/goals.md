@@ -26,6 +26,8 @@ Two complementary benchmark families, reported separately:
 
 ## Principles
 
+- **GPU pod runs inference only** — the agent, builds, tests, load generation, and scoring
+  run off the GPU; the pod serves the model and nothing else.
 - **Reproducible and deterministic** for the objective measures.
 - **Runnable from scratch** on an ephemeral pod.
 - **Model-independent** — the same harness works for any model; adding one is a config
