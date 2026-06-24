@@ -14,6 +14,11 @@ model_list:
       api_base: os.environ/VLLM_BASE
       api_key: "none"
 
+litellm_settings:
+  # Claude Code sends Anthropic-only params (cache_control, thinking, …) that vLLM's
+  # chat/completions doesn't accept — drop them instead of erroring.
+  drop_params: true
+
 general_settings:
   # Non-secret loopback token: LiteLLM and vLLM run on the same ephemeral pod and are
   # never exposed publicly. It only gates the localhost proxy, hence committed.

@@ -23,7 +23,9 @@ export VLLM_BASE="${VLLM_BASE:-http://localhost:8000/v1}"
 # Tie the served-model name across vLLM, the raw sweep, and the LiteLLM upstream.
 SERVED=$(python3 -c "import yaml; print(yaml.safe_load(open('$CONFIG'))['served_model_name'])")
 export MODEL="$SERVED"
-export LITELLM_UPSTREAM_MODEL="openai/$SERVED"
+# hosted_vllm/ routes to vLLM's /chat/completions (openai/ uses /responses, which needs
+# Harmony for tool calls and breaks Claude Code's tools on non-GPT-OSS models).
+export LITELLM_UPSTREAM_MODEL="hosted_vllm/$SERVED"
 
 LOG_DIR=${LOG_DIR:-/workspace/logs}
 mkdir -p "$LOG_DIR"

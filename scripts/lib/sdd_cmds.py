@@ -9,8 +9,15 @@ _SSH_OPTS = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/nu
 
 
 def ssh_tunnel_cmd(ip, port, key_path, local=8000, remote=8000):
-    """Background SSH local-forward: localhost:local -> pod:remote (vLLM)."""
-    return ["ssh", "-N", "-L", f"{local}:localhost:{remote}",
+    """Background SSH local-forward: localhost:local -> pod:remote (vLLM).
+
+    ExitOnForwardFailure makes a failed bind (e.g. a stale tunnel holding the port) exit
+    instead of silently not forwarding; ServerAlive keeps the tunnel from going stale.
+    """
+    return ["ssh", "-N",
+            "-o", "ExitOnForwardFailure=yes",
+            "-o", "ServerAliveInterval=20", "-o", "ServerAliveCountMax=3",
+            "-L", f"{local}:localhost:{remote}",
             "-p", str(port), "-i", key_path, *_SSH_OPTS, f"root@{ip}"]
 
 

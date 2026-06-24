@@ -91,18 +91,31 @@ def main():
                 break
             time.sleep(5)
         _run(rsync_up_cmd(ip, port, args.key, "./", REMOTE_DIR + "/", EXCLUDES))
+        # Detach setup + vLLM (subshell, stdin from /dev/null) so ssh returns immediately
+        # instead of hanging on the backgrounded process's channel. Errors land in vllm.log,
+        # which the health-poll below checks (fail-fast).
         _run(ssh_run_cmd(ip, port, args.key,
-             f"cd {REMOTE_DIR} && INSTALL_CLAUDE=0 ./scripts/setup_pod.sh {args.config} "
-             f"&& nohup ./scripts/start_vllm.sh {args.config} > /workspace/vllm.log 2>&1 &"))
+             f"(cd {REMOTE_DIR} && INSTALL_CLAUDE=0 ./scripts/setup_pod.sh {args.config} "
+             f"&& ./scripts/start_vllm.sh {args.config}) </dev/null >/workspace/vllm.log 2>&1 &"))
 
-        # 3. tunnel to vLLM and wait until reachable
+        # 3. tunnel to vLLM and wait until reachable (fail fast if vLLM died on the pod)
         tunnel = subprocess.Popen(ssh_tunnel_cmd(ip, port, args.key))
         reachable = False
-        for _ in range(720):
+        for i in range(360):
             if subprocess.run(["curl", "-sf", "http://localhost:8000/health"],
                               stdout=subprocess.DEVNULL).returncode == 0:
                 reachable = True
                 break
+            if i % 12 == 11:  # ~every 60s, check vLLM didn't fail to start on the pod
+                chk = subprocess.run(ssh_run_cmd(ip, port, args.key,
+                    "grep -qE 'not found|Traceback|RuntimeError|No available' /workspace/vllm.log "
+                    "&& tail -25 /workspace/vllm.log || true"),
+                    capture_output=True, text=True)
+                if chk.stdout.strip():
+                    print("vLLM failed to start on the pod:\n" + chk.stdout)
+                    raise SystemExit("vLLM startup failed")
+            if tunnel.poll() is not None:  # tunnel died — reopen it
+                tunnel = subprocess.Popen(ssh_tunnel_cmd(ip, port, args.key))
             time.sleep(5)
         if not reachable:
             raise SystemExit("vLLM did not become reachable via the tunnel")
@@ -114,7 +127,7 @@ def main():
             "ANTHROPIC_BASE_URL": "http://localhost:4000",
             "ANTHROPIC_AUTH_TOKEN": "sk-dev-lab",
             "ANTHROPIC_MODEL": "dev-model",
-            "LITELLM_UPSTREAM_MODEL": f"openai/{served}",
+            "LITELLM_UPSTREAM_MODEL": f"hosted_vllm/{served}",  # -> /chat/completions, not /responses
             "VLLM_BASE": "http://host.docker.internal:8000/v1",
             "PYTHONPATH": "/repo",
             "MODEL": served,

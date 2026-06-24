@@ -5,6 +5,10 @@ set -euo pipefail
 
 CONFIG=${1:-configs/qwen3coder.yaml}
 
+# vllm + pyyaml live in the setup_pod venv; put it on PATH if present (run_pod.sh also
+# does this, but the SDD orchestrator calls start_vllm.sh directly).
+[ -d /workspace/venv ] && export PATH="/workspace/venv/bin:$PATH"
+
 # Export the config's env block (e.g. VLLM_USE_FLASHINFER_SAMPLER).
 while IFS='=' read -r key value; do
   [ -n "$key" ] && export "$key=$value"

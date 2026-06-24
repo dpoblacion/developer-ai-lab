@@ -15,5 +15,9 @@ gpu_memory_utilization: 0.92
 max_model_len: 32768
 max_num_seqs: 8
 
+# Tool calling (Claude Code sends tools): required for the agent to work.
+tool_call_parser: qwen3_coder
+enable_auto_tool_choice: true
+
 env:
   VLLM_USE_FLASHINFER_SAMPLER: "0"
