@@ -21,7 +21,7 @@ from scripts.lib.stream import compute_stream_metrics
 from scripts.lib.slo import summarize_level, evaluate_slo, find_knee
 from scripts.lib.hardware import gather, write_env
 
-MODEL = os.getenv("MODEL", "glm-5.2-fp8")
+MODEL = os.getenv("MODEL", "dev-model")  # run_pod.sh sets this from the served config
 BASE_URL = os.getenv("BASE_URL", "http://localhost:8000")  # vLLM directly (no proxy)
 MAX_TOKENS = int(os.getenv("MAX_TOKENS", "512"))
 CONCURRENCY = [int(v) for v in os.getenv("CONCURRENCY", "1,2,4,8,16,32").split(",") if v.strip()]

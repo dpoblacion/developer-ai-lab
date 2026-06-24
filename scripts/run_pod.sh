@@ -6,7 +6,7 @@
 #   vLLM (serves model) -> LiteLLM (Anthropic API) -> Claude Code
 #
 # Usage: scripts/run_pod.sh [configs/glm5.2.yaml]
-# Prereq: `claude` CLI installed; deps installed (pip install -r requirements.txt).
+# Prereq: run scripts/setup_pod.sh first (installs vLLM + deps in a venv + the claude CLI).
 set -euo pipefail
 
 CONFIG=${1:-configs/glm5.2.yaml}

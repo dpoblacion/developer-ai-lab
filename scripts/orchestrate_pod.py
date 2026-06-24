@@ -4,12 +4,13 @@ Creates a pod from a spec, waits until it's ready, rsyncs this repo up, runs set
 benchmark over SSH, rsyncs results back, then terminates the pod so per-second billing
 stops. The in-pod stack is unchanged (make setup / make pod). No git on the pod.
 
-Requires: RUNPOD_API_KEY in the environment, and an SSH public key registered with the
-RunPod account (the matching private key passed via --key).
+Requires (from .env): RUNPOD_API_KEY and SSH_KEY_PATH (a passphrase-less private key).
+Its public key is injected into the pod via the PUBLIC_KEY env var, so it does NOT need
+to be registered in the RunPod account.
 
 Usage:
   python -m scripts.orchestrate_pod [--spec infra/runpod/pod.yaml] \
-      [--config configs/qwen3coder.yaml] [--key ~/.ssh/id_ed25519] [--keep]
+      [--config configs/qwen3coder.yaml] [--key PATH] [--keep]
 """
 
 import argparse
