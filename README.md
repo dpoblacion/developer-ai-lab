@@ -34,13 +34,16 @@ concurrent requests at vLLM, measures per-stream **TTFT** and **decode throughpu
 finds the highest concurrency that still holds an SLO (the **knee**). This is pure
 inference load, so it runs on the pod.
 
-```
-  your machine                          GPU pod
-  ──────────────         RunPod API     ───────────────────────────────────
-  make orchestrate  ──────  create  ──>  setup vLLM + LiteLLM
-        |                                concurrency sweep: 1,2,4,8,16,32 streams
-        |  <───── rsync results ──────   -> results/<ts>/concurrency-slo/ (knee)
-        └──────── terminate pod
+```mermaid
+flowchart LR
+    M["your machine<br/>make orchestrate"]
+    subgraph POD["GPU pod"]
+        SW["concurrency sweep<br/>1,2,4,8,16,32 streams"] --> V["vLLM"]
+        L["LiteLLM"] --> V
+    end
+    M -->|"RunPod API · create"| POD
+    POD -->|"rsync results"| R["results/.../concurrency-slo<br/>knee = max streams at SLO"]
+    M -.->|"terminate pod"| POD
 ```
 
 ### 2. SDD lifecycle — `make sdd-run`  (agent local, pod = inference only)
@@ -51,22 +54,22 @@ its build-fix loop, and the gates all run locally** in a Docker toolchain contai
 pod serves vLLM only, reached over an SSH tunnel. The pod stops the moment generation
 ends — you pay GPU only while the model is actually generating.
 
-```
-              YOUR MACHINE                                      GPU POD
-  ┌──────────────────────────────────────────┐             ┌───────────────┐
-  │ orchestrate_sdd  ──── RunPod API ── create ────────────>│               │
-  │                                            │            │     vLLM      │
-  │  toolchain container (Docker):             │  ssh -L    │  (inference   │
-  │    Claude Code ──> LiteLLM ────────────────┼── 8000 ───>│    only)      │
-  │      builds the Todo App in /workspace     │  tunnel    │               │
-  │      dotnet/npm build-fix · docker (DinD)  │            └───────┬───────┘
-  │    (.NET 10 + Node + Docker + claude)      │                    │
-  └──────────────────────────────────────────┘        terminate after generation
-                    │                                           │
-   pod stopped  <───┴───────────────────────────────────────────┘
-                    │
-                    ▼  (no pod from here on)
-   gates: dotnet build · dotnet test · npm build · Aspire  ->  hard-score.json
+```mermaid
+flowchart LR
+    subgraph LOCAL["your machine"]
+        O["orchestrate_sdd"]
+        subgraph CON["Docker toolchain container<br/>.NET 10 · Node · Docker · claude"]
+            CC["Claude Code"] --> LL["LiteLLM (local)"]
+            CC --> APP["builds the Todo App<br/>dotnet / npm build-fix"]
+        end
+        GATES["gates — pod already stopped<br/>dotnet build · test · npm · Aspire<br/>→ hard-score.json"]
+    end
+    subgraph POD["GPU pod"]
+        V["vLLM<br/>inference only"]
+    end
+    O -->|"RunPod API · create / terminate"| POD
+    LL -->|"ssh -L 8000 tunnel"| V
+    APP -.->|"after generation"| GATES
 ```
 
 SDD phases — one Claude Code session per phase, shared workspace:
