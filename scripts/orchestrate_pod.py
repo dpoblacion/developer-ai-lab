@@ -32,12 +32,12 @@ def _run(cmd):
     subprocess.run(cmd, check=True)
 
 
-def create_with_fallback(runpod, spec):
+def create_with_fallback(runpod, spec, public_key):
     last = None
     for gpu in spec["gpu_type_ids"]:
         try:
             print(f"Creating pod on {gpu} ...")
-            return runpod.create_pod(**build_create_kwargs(spec, gpu))
+            return runpod.create_pod(**build_create_kwargs(spec, gpu, public_key))
         except Exception as exc:  # bad id or no capacity — try the next candidate
             print(f"  {gpu} unavailable: {exc}")
             last = exc
@@ -57,7 +57,8 @@ def wait_for_ssh(ip, port, key, retries=24, nap=5):
     """Probe SSH with an idempotent mkdir until sshd accepts (ports up != sshd ready)."""
     cmd = ssh_run_cmd(ip, port, key, f"mkdir -p {REMOTE_DIR}")
     for _ in range(retries):
-        if subprocess.run(cmd).returncode == 0:
+        # Quiet: sshd not-up-yet noise (Connection refused, etc.) is expected while probing.
+        if subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode == 0:
             return
         time.sleep(nap)
     raise SystemExit("SSH did not become available")
@@ -86,7 +87,12 @@ def main():
 
     spec = yaml.safe_load(pathlib.Path(args.spec).read_text())
 
-    pod = create_with_fallback(runpod, spec)
+    pub_path = args.key + ".pub"
+    if not os.path.exists(pub_path):
+        raise SystemExit(f"Public key not found at {pub_path} (needed to authorize the pod).")
+    public_key = pathlib.Path(pub_path).read_text().strip()
+
+    pod = create_with_fallback(runpod, spec, public_key)
     pod_id = pod["id"]
     print(f"Pod {pod_id} created.")
 

@@ -33,6 +33,13 @@ class BuildCreateKwargsTest(unittest.TestCase):
         kw = build_create_kwargs(SPEC, gpu_type_id="NVIDIA A100 80GB PCIe")
         self.assertEqual(kw["gpu_type_id"], "NVIDIA A100 80GB PCIe")
 
+    def test_public_key_injected_into_env(self):
+        kw = build_create_kwargs(SPEC, public_key="ssh-rsa AAAA test")
+        self.assertEqual(kw["env"]["PUBLIC_KEY"], "ssh-rsa AAAA test")
+        self.assertEqual(kw["env"]["FOO"], "bar")  # spec env preserved
+        # not mutating the spec dict
+        self.assertNotIn("PUBLIC_KEY", SPEC.get("env", {}))
+
 
 class ReadinessTest(unittest.TestCase):
     def test_is_ready(self):
@@ -58,6 +65,7 @@ class CommandBuilderTest(unittest.TestCase):
         self.assertEqual(cmd[0], "ssh")
         self.assertEqual(cmd[cmd.index("-p") + 1], "40022")
         self.assertEqual(cmd[cmd.index("-i") + 1], "/k")
+        self.assertEqual(cmd[cmd.index("PasswordAuthentication=no") - 1], "-o")
         self.assertEqual(cmd[-2:], ["root@1.2.3.4", "echo hi"])
 
     def test_rsync_up_cmd_has_excludes_and_endpoint(self):

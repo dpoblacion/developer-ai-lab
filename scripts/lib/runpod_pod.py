@@ -6,8 +6,15 @@ detect readiness, and find the SSH endpoint.
 """
 
 
-def build_create_kwargs(spec, gpu_type_id=None):
-    """Map a pod spec (infra/runpod/pod.yaml) to runpod.create_pod kwargs."""
+def build_create_kwargs(spec, gpu_type_id=None, public_key=None):
+    """Map a pod spec (infra/runpod/pod.yaml) to runpod.create_pod kwargs.
+
+    ``public_key`` (contents of an .pub) is injected as the PUBLIC_KEY env var, which
+    RunPod images write into authorized_keys on boot — that's what authorizes our SSH.
+    """
+    env = dict(spec.get("env", {}))
+    if public_key:
+        env["PUBLIC_KEY"] = public_key
     return {
         "name": spec.get("name", "developer-ai-lab"),
         "image_name": spec["image"],
@@ -19,7 +26,7 @@ def build_create_kwargs(spec, gpu_type_id=None):
         "ports": spec.get("ports", "8000/http,22/tcp"),
         "support_public_ip": True,
         "start_ssh": True,
-        "env": spec.get("env", {}),
+        "env": env,
     }
 
 
@@ -46,7 +53,9 @@ def ssh_opts(port, key_path):
     this into a context where MITM protection matters.
     """
     return ["-p", str(port), "-i", key_path,
-            "-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
+            "-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null",
+            "-o", "PreferredAuthentications=publickey", "-o", "PasswordAuthentication=no",
+            "-o", "ConnectTimeout=10"]
 
 
 def ssh_run_cmd(ip, port, key_path, remote_cmd):

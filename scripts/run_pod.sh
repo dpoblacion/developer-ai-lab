@@ -14,6 +14,9 @@ CONFIG=${1:-configs/glm5.2.yaml}
 # Defaults (ANTHROPIC_*, SLO_*, CONCURRENCY, HW_* ...).
 set -a && . ./config.env && set +a
 
+# Use the venv that setup_pod.sh created (vllm, python deps) and the claude CLI install dir.
+export PATH="/workspace/venv/bin:$HOME/.local/bin:$PATH"
+
 # Tie the served-model name across vLLM, the raw sweep, and the LiteLLM upstream.
 SERVED=$(python3 -c "import yaml; print(yaml.safe_load(open('$CONFIG'))['served_model_name'])")
 export MODEL="$SERVED"
@@ -34,7 +37,17 @@ wait_for() {  # name url retries sleep
 
 echo "== Starting vLLM ($SERVED) =="
 scripts/start_vllm.sh "$CONFIG" > "$LOG_DIR/vllm.log" 2>&1 &
-wait_for vLLM http://localhost:8000/health 720 5 || { tail -50 "$LOG_DIR/vllm.log"; exit 1; }
+VLLM_PID=$!
+echo "Waiting for vLLM (pid $VLLM_PID) ..."
+# Generous ceiling (~60 min) for first-boot weight downloads of large models; the PID
+# check below makes a crash bail immediately, so a high ceiling costs nothing on failure.
+for _ in $(seq 1 720); do
+  curl -sf http://localhost:8000/health >/dev/null 2>&1 && { echo "vLLM ready."; break; }
+  # Fail fast if vLLM died (e.g. driver/CUDA error) instead of waiting out the timeout.
+  kill -0 "$VLLM_PID" 2>/dev/null || { echo "ERROR: vLLM exited during startup"; tail -60 "$LOG_DIR/vllm.log"; exit 1; }
+  sleep 5
+done
+curl -sf http://localhost:8000/health >/dev/null 2>&1 || { echo "ERROR: vLLM not ready (timeout)"; tail -60 "$LOG_DIR/vllm.log"; exit 1; }
 
 echo "== Starting LiteLLM =="
 infra/litellm/start-litellm.sh > "$LOG_DIR/litellm.log" 2>&1 &
