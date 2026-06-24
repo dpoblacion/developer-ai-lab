@@ -1,11 +1,9 @@
-"""Run an SDD scenario: drive the model through each phase with Claude Code, then
-score the produced workspace with the deterministic hard-score gates.
+"""Generation phase of an SDD scenario: drive the model through each phase with Claude
+Code, producing the app in a clean workspace and capturing per-phase metrics.
 
-Phases run in a single clean workspace (later phases read earlier artifacts). Per-phase
-metrics and the gate results are written under ``results/<timestamp>/sdd/``.
-
-Requires Claude Code, the LiteLLM proxy + vLLM, and the build toolchain (dotnet, npm) for
-the gates — i.e. a pod, not local.
+Scoring is separate (scripts/run_gates.py) so the GPU pod can stop before gates run.
+Phases run in a single workspace (later phases read earlier artifacts); output goes to
+``results/<timestamp>/sdd/``.
 """
 
 import json
@@ -15,7 +13,6 @@ import sys
 import time
 
 from scripts.lib.claude import invoke_claude
-from scripts.lib.gates import run_gates
 from scripts.lib.transcript import parse_metrics
 
 MODEL = os.getenv("ANTHROPIC_MODEL", "dev-model")
@@ -24,17 +21,6 @@ MODEL = os.getenv("ANTHROPIC_MODEL", "dev-model")
 def load_scenario(path):
     import yaml  # deferred: only needed when actually running a scenario (on a pod)
     return yaml.safe_load(pathlib.Path(path).read_text())
-
-
-def build_hard_score(run_id, model, scenario_name, gate_summary, phases):
-    """Assemble the hard-score document (deterministic output schema)."""
-    return {
-        "run_id": run_id,
-        "model": model,
-        "scenario": scenario_name,
-        "gates": gate_summary,
-        "phases": phases,
-    }
 
 
 def run(scenario_path):
@@ -63,17 +49,16 @@ def run(scenario_path):
         metrics.update({"phase": phase["id"], "wall_time": wall_time})
         phase_metrics.append(metrics)
 
-    gate_summary = run_gates(scenario.get("gates", []), cwd=str(workspace))
-    hard_score = build_hard_score(
-        run_id, MODEL, scenario["name"], gate_summary, phase_metrics)
-    (out_dir / "hard-score.json").write_text(json.dumps(hard_score, indent=2))
-
-    print(json.dumps({
+    result = {
+        "run_id": run_id,
+        "model": MODEL,
         "scenario": scenario["name"],
-        "gates_passed": f"{gate_summary['passed']}/{gate_summary['total']}",
-        "results": str(out_dir),
-    }, indent=2))
-    return hard_score
+        "workspace": str(workspace),
+        "phases": phase_metrics,
+    }
+    (out_dir / "generation.json").write_text(json.dumps(result, indent=2))
+    print(f"Generation done. Workspace: {workspace}")
+    return result
 
 
 if __name__ == "__main__":
