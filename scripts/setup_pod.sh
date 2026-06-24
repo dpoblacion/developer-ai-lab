@@ -38,12 +38,17 @@ else
   $PIP install vllm "${CONSTRAINTS[@]+"${CONSTRAINTS[@]}"}"
 fi
 
-echo "== Claude Code CLI =="
-if ! command -v claude >/dev/null 2>&1; then
-  curl -fsSL https://claude.ai/install.sh | bash
+# Skip on an inference-only pod (SDD runs the agent locally): INSTALL_CLAUDE=0.
+if [ "${INSTALL_CLAUDE:-1}" = "1" ]; then
+  echo "== Claude Code CLI =="
+  if ! command -v claude >/dev/null 2>&1; then
+    curl -fsSL https://claude.ai/install.sh | bash
+  fi
 fi
 
 echo "== Versions =="
 "$VENV/bin/vllm" --version || echo "WARN: vllm not installed in venv"
-(command -v claude >/dev/null && claude --version) || echo "WARN: claude not on PATH"
+if [ "${INSTALL_CLAUDE:-1}" = "1" ]; then
+  (command -v claude >/dev/null && claude --version) || echo "WARN: claude not on PATH"
+fi
 echo "Setup complete."
