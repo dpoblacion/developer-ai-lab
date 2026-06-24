@@ -1,0 +1,78 @@
+# Todo App SDD scenario.
+#
+# The agent works through these phases in order, in a single clean workspace.
+# Each phase is one headless Claude Code invocation; later phases read the
+# artifacts produced by earlier ones. Prompts are model-independent.
+#
+# Gates are the deterministic hard score (run after the build phases). The gate
+# runner is scripts/run_sdd_scenario.py; this file is the declarative source
+# of what "working" means for this scenario.
+name: todo-app
+description: Full SDD lifecycle building a Todo App on the project stack.
+
+phases:
+  - id: 01-spec
+    title: Functional specification
+    prompt: phases/01-spec.md
+    allowed_tools: [Read, Write, Edit]
+    max_turns: 10
+  - id: 02-acceptance
+    title: Acceptance criteria
+    prompt: phases/02-acceptance.md
+    allowed_tools: [Read, Write, Edit]
+    max_turns: 10
+  - id: 03-architecture
+    title: Architecture design
+    prompt: phases/03-architecture.md
+    allowed_tools: [Read, Write, Edit]
+    max_turns: 10
+  - id: 04-plan
+    title: Implementation plan
+    prompt: phases/04-plan.md
+    allowed_tools: [Read, Write, Edit]
+    max_turns: 10
+  - id: 05-backend
+    title: Backend implementation
+    prompt: phases/05-backend.md
+    allowed_tools: [Read, Write, Edit, Bash]
+    max_turns: 60
+  - id: 06-frontend
+    title: Frontend implementation
+    prompt: phases/06-frontend.md
+    allowed_tools: [Read, Write, Edit, Bash]
+    max_turns: 60
+  - id: 07-aspire
+    title: .NET Aspire orchestration
+    prompt: phases/07-aspire.md
+    allowed_tools: [Read, Write, Edit, Bash]
+    max_turns: 40
+  - id: 08-tests
+    title: Tests
+    prompt: phases/08-tests.md
+    allowed_tools: [Read, Write, Edit, Bash]
+    max_turns: 40
+  - id: 09-review
+    title: Final review
+    prompt: phases/09-review.md
+    allowed_tools: [Read, Write, Edit, Bash]
+    max_turns: 30
+
+# Deterministic hard-score gates. Each: a shell command run at the workspace root,
+# passing when its exit code equals expect_exit. (Runner: scripts/run_sdd_scenario.py.)
+gates:
+  - id: artifacts-present
+    description: All SDD design artifacts exist and are non-empty.
+    cmd: "test -s docs/spec.md && test -s docs/acceptance-criteria.md && test -s docs/architecture.md && test -s docs/plan.md"
+    expect_exit: 0
+  - id: backend-builds
+    description: The solution builds.
+    cmd: "dotnet build"
+    expect_exit: 0
+  - id: tests-pass
+    description: Backend tests pass.
+    cmd: "dotnet test --no-build"
+    expect_exit: 0
+  - id: frontend-builds
+    description: The frontend builds.
+    cmd: "npm --prefix frontend ci && npm --prefix frontend run build"
+    expect_exit: 0

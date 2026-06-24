@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Superpowers scratch (progress ledger, etc.)
+docs/superpowers/
+.superpowers/
+
+# Raw benchmark output (not committed; curated reports live in docs/results/)
+results/
+
+# Local secrets
+.env
+
+# OS / editor
+.DS_Store
+*.swp
+.idea/
+.vscode/

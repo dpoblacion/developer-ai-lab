@@ -1,0 +1,32 @@
+# GLM-5.2 on 8x H200 (NVIDIA). Recipe: https://recipes.vllm.ai/zai-org/GLM-5.2
+# Requires vLLM 0.23.0. max_model_len kept modest to maximise concurrency headroom
+# for the team-sizing sweep (raise it only if you need long context).
+model: zai-org/GLM-5.2-FP8
+
+served_model_name: glm-5.2-fp8
+
+vllm_version: "0.23.0"
+
+host: 0.0.0.0
+port: 8000
+
+download_dir: /workspace/huggingface
+
+gpu_memory_utilization: 0.95
+max_model_len: 32768
+max_num_seqs: 256
+
+tensor_parallel_size: 8
+kv_cache_dtype: fp8
+tool_call_parser: glm47
+reasoning_parser: glm45
+enable_auto_tool_choice: true
+
+extra_args:
+  - --speculative-config.method
+  - mtp
+  - --speculative-config.num_speculative_tokens
+  - "5"
+
+env:
+  VLLM_USE_FLASHINFER_SAMPLER: "0"

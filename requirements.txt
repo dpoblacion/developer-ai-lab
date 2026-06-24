@@ -1,0 +1,7 @@
+aiohttp
+pyyaml
+tabulate
+rich
+litellm[proxy]
+huggingface_hub
+hf_transfer

@@ -1,0 +1,3 @@
+# Local-only deps for the RunPod orchestrator. NOT installed on the pod.
+runpod
+pyyaml

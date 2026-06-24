@@ -1,0 +1,13 @@
+# Declarative pod spec for the RunPod orchestrator (scripts/orchestrate_pod.py).
+# gpu_type_ids are tried in order until one has capacity.
+# This one is the cheap Qwen validation pod.
+name: developer-ai-lab-qwen
+image: runpod/pytorch:1.0.2-cu1281-torch280-ubuntu2404
+gpu_type_ids:
+  - "NVIDIA L40S"
+  - "NVIDIA A100 80GB PCIe"
+gpu_count: 1
+container_disk_gb: 100
+volume_gb: 0
+ports: "8000/http,22/tcp"
+env: {}

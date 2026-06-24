@@ -1,0 +1,77 @@
+"""Pure helpers for the RunPod pod orchestrator.
+
+No ``runpod`` SDK import here, so these unit-test offline. The orchestrator
+(scripts/orchestrate_pod.py) imports the SDK and uses these to build create args,
+detect readiness, and find the SSH endpoint.
+"""
+
+
+def build_create_kwargs(spec, gpu_type_id=None):
+    """Map a pod spec (infra/runpod/pod.yaml) to runpod.create_pod kwargs."""
+    return {
+        "name": spec.get("name", "developer-ai-lab"),
+        "image_name": spec["image"],
+        "gpu_type_id": gpu_type_id or spec["gpu_type_ids"][0],
+        "gpu_count": spec.get("gpu_count", 1),
+        "container_disk_in_gb": spec.get("container_disk_gb", 50),
+        "volume_in_gb": spec.get("volume_gb", 0),
+        "volume_mount_path": spec.get("volume_mount_path", "/workspace"),
+        "ports": spec.get("ports", "8000/http,22/tcp"),
+        "support_public_ip": True,
+        "start_ssh": True,
+        "env": spec.get("env", {}),
+    }
+
+
+def is_ready(pod):
+    """A pod is ready once its runtime exists and its ports are populated."""
+    runtime = pod.get("runtime")
+    return bool(runtime and runtime.get("ports"))
+
+
+def ssh_endpoint(pod):
+    """Return (ip, public_port) for full SSH (public port 22), or None."""
+    runtime = pod.get("runtime") or {}
+    for port in runtime.get("ports", []):
+        if port.get("privatePort") == 22 and port.get("isIpPublic"):
+            return port["ip"], port["publicPort"]
+    return None
+
+
+def ssh_opts(port, key_path):
+    """Common ssh flags for a RunPod pod.
+
+    Host-key checking is intentionally disabled: pods are ephemeral with rotating IPs,
+    so known-hosts would churn. Acceptable for a throwaway benchmark pod — do NOT copy
+    this into a context where MITM protection matters.
+    """
+    return ["-p", str(port), "-i", key_path,
+            "-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
+
+
+def ssh_run_cmd(ip, port, key_path, remote_cmd):
+    """ssh command list that runs ``remote_cmd`` on the pod."""
+    return ["ssh", *ssh_opts(port, key_path), f"root@{ip}", remote_cmd]
+
+
+def rsync_up_cmd(ip, port, key_path, local_dir, remote_dir, excludes=()):
+    """rsync command list to push local_dir -> pod:remote_dir.
+
+    Uses --delete (mirror). Safe because it is scoped to remote_dir and the things that
+    must survive a re-push live outside it or are excluded: model weights cache in
+    download_dir (/workspace/huggingface, outside) and results/ (in excludes). Keep it
+    that way — moving download_dir inside remote_dir would wipe weights on every push.
+    """
+    cmd = ["rsync", "-az", "--delete"]
+    for exclude in excludes:
+        cmd += ["--exclude", exclude]
+    cmd += ["-e", "ssh " + " ".join(ssh_opts(port, key_path)),
+            local_dir, f"root@{ip}:{remote_dir}"]
+    return cmd
+
+
+def rsync_down_cmd(ip, port, key_path, remote_dir, local_dir):
+    """rsync command list to pull pod:remote_dir -> local_dir."""
+    return ["rsync", "-az",
+            "-e", "ssh " + " ".join(ssh_opts(port, key_path)),
+            f"root@{ip}:{remote_dir}", local_dir]

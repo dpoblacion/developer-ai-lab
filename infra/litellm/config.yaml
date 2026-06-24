@@ -1,0 +1,18 @@
+# LiteLLM proxy config: exposes the Anthropic Messages API and routes the
+# constant alias `dev-model` to the vLLM OpenAI-compatible endpoint.
+#
+# Model independence: to benchmark another model, change ONLY litellm_params.model
+# below. Everything else (Claude Code, scenario, gates) stays identical.
+model_list:
+  - model_name: dev-model
+    litellm_params:
+      # Upstream served-model name, set per run (e.g. openai/glm-5.2-fp8).
+      # run_pod.sh exports it from the chosen config's served_model_name.
+      model: os.environ/LITELLM_UPSTREAM_MODEL
+      api_base: http://localhost:8000/v1
+      api_key: "none"
+
+general_settings:
+  # Non-secret loopback token: LiteLLM and vLLM run on the same ephemeral pod and are
+  # never exposed publicly. It only gates the localhost proxy, hence committed.
+  master_key: sk-dev-lab
