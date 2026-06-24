@@ -1,0 +1,26 @@
+# Tooling configuration. This repo is a harness (scripts + Makefile), not an installable
+# package — dependencies live in per-target requirements files:
+#   requirements-orchestrator.txt  local machine (runs the benchmark against RunPod)
+#   requirements-report.txt        local dashboard (streamlit + plotly)
+#   requirements.txt               pod / toolchain image (litellm proxy, yaml)
+# Python >= 3.11 for the local orchestrator.
+
+[tool.ruff]
+line-length = 110
+target-version = "py311"
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes (unused imports, undefined names)
+    "B",   # bugbear (likely bugs: mutable defaults, useless expressions)
+    "UP",  # pyupgrade (modern syntax for the targeted Python)
+]
+ignore = [
+    "E731",  # lambda assignments — used deliberately for tiny injected callbacks
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Tests re-import modules mid-file on purpose (e.g. env-sensitive import checks).
+"tests/*" = ["E402"]

@@ -1,0 +1,80 @@
+{
+  "run_id": "20260702-180913",
+  "date": "2026-07-02",
+  "benchmark": "smoke",
+  "family": "qwen3-14b",
+  "quant": "awq",
+  "model": "qwen3-14b-awq",
+  "hardware": "rtx-a5000",
+  "gpu_count": 1,
+  "price_usd_per_gpu_hour": 0.27,
+  "cost_per_hour": 0.27,
+  "slo": {
+    "max_ttft": 2.0,
+    "min_tps": 20.0
+  },
+  "by_devs": [
+    {
+      "devs": 1,
+      "holds_slo": false,
+      "median_ttft": 3.75,
+      "median_tps": 57.14285714285714,
+      "cost_per_dev_hour": 0.27,
+      "cost_per_dev_month": 197.10000000000002,
+      "valid": false,
+      "agents_ok": 1,
+      "tokens_per_dev": 347,
+      "agents": [
+        {
+          "agent": 0,
+          "passed": true,
+          "gates": [
+            {
+              "id": "hello-exists",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 260,
+            "completion": 87,
+            "total": 347
+          },
+          "wall_time": 20.38912057876587
+        }
+      ]
+    }
+  ],
+  "tokens": {
+    "prompt": 260,
+    "completion": 87,
+    "total": 347
+  },
+  "timeline": [
+    {
+      "label": "create\u2192ready",
+      "seconds": 33.640360832214355,
+      "cost_usd": 0.002523027062416077,
+      "pct": 0.0701394873859353
+    },
+    {
+      "label": "rsync",
+      "seconds": 5.095906019210815,
+      "cost_usd": 0.0003821929514408112,
+      "pct": 0.010624863322276723
+    },
+    {
+      "label": "vLLM startup",
+      "seconds": 411.432993888855,
+      "cost_usd": 0.030857474541664126,
+      "pct": 0.8578296597042
+    },
+    {
+      "label": "generation",
+      "seconds": 29.451593160629272,
+      "cost_usd": 0.0022088694870471956,
+      "pct": 0.061405989587587924
+    }
+  ],
+  "pod_cost_usd": 0.03597156404256821
+}

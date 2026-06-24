@@ -1,0 +1,12 @@
+# Single NVIDIA RTX A5000 (24GB, Ampere). The budget single-tenant option — usually
+# plentiful capacity when the L4 has none. Fits ~14B-class models (awq; fp8 via Marlin);
+# 30B-class models do NOT fit its VRAM.
+gpu_type_ids:
+  - "NVIDIA RTX A5000"
+price_usd_per_gpu_hour: 0.27  # RunPod on-demand, per GPU (edit when prices change)
+provider: RunPod
+instance: "NVIDIA RTX A5000"
+gpu_memory_utilization: 0.92
+# Ampere: prefer native low-bit quants (also leaves KV room for the 65k window on 24GB);
+# fp8 last (Marlin dequant).
+supported_quants: [awq, gptq, bf16, fp8]

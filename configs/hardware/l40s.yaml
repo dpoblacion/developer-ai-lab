@@ -1,0 +1,8 @@
+# Single NVIDIA L40S (48GB). Cheap validation GPU. Pick --hardware a100-80gb if L40S is unavailable.
+gpu_type_ids:
+  - "NVIDIA L40S"
+price_usd_per_gpu_hour: 0.79  # RunPod community on-demand, per GPU (edit when prices change)
+provider: RunPod
+instance: "NVIDIA L40S"
+gpu_memory_utilization: 0.92
+supported_quants: [fp8, awq, bf16]

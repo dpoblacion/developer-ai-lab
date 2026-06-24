@@ -1,0 +1,49 @@
+# Canonical capacity benchmark. N concurrent agents each build the SAME small TypeScript
+# TaskBoard module to a pinned API; a hidden acceptance test scores them. Runs on the base
+# dail-toolchain (Node 22) — no overlay.
+name: dev-load
+description: Canonical dev-load capacity task (build a small TS module under concurrent load).
+devs: [4, 8, 16, 32]
+# NOTE: measure bigger teams as separate [16] / [32] top-up runs — the dashboard merges
+# points per combo×N across runs, and chunking keeps each run inside the watchdog
+# ceiling (an aborted run writes no report, losing every level it completed; a 4-level
+# run on a slow card blows the 3h MAX_RUN — learned live 2026-07-02).
+slo:
+  max_ttft: 2.0
+  min_tps: 20.0
+serving:
+  # Must exceed the agent's per-request max_tokens (Claude Code sends 32000) + input, or
+  # vLLM 400s every request. 65536 leaves ~33k for input. max_num_seqs is derived from
+  # devs (max of the list).
+  max_model_len: 65536
+task:
+  phases:
+    - id: 01-spec
+      title: Spec the module
+      prompt: phases/01-spec.md
+      allowed_tools: [Read, Write]
+      max_turns: 8
+    - id: 02-implement
+      title: Implement the module
+      prompt: phases/02-implement.md
+      allowed_tools: [Read, Write, Edit, Bash]
+      max_turns: 40
+    - id: 03-tests
+      title: Write and run tests
+      prompt: phases/03-tests.md
+      allowed_tools: [Read, Write, Edit, Bash]
+      max_turns: 40
+    - id: 04-review
+      title: Review and fix
+      prompt: phases/04-review.md
+      allowed_tools: [Read, Write, Edit, Bash]
+      max_turns: 20
+  gates:
+    - id: typecheck
+      description: The TypeScript project type-checks with no errors.
+      cmd: "npx tsc --noEmit"
+      expect_exit: 0
+    - id: acceptance
+      description: The hidden acceptance suite passes against the agent's src/board.ts.
+      cmd: "cp /repo/benchmarks/dev-load/acceptance/acceptance.test.ts ./acceptance.test.ts && npx vitest run acceptance.test.ts"
+      expect_exit: 0

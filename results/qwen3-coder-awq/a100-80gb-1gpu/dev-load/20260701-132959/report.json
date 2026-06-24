@@ -1,0 +1,350 @@
+{
+  "run_id": "20260701-132959",
+  "date": "2026-07-01",
+  "benchmark": "dev-load",
+  "family": "qwen3-coder",
+  "quant": "awq",
+  "model": "qwen3-coder-30b-awq",
+  "hardware": "a100-80gb",
+  "gpu_count": 1,
+  "price_usd_per_gpu_hour": 1.19,
+  "cost_per_hour": 1.19,
+  "slo": {
+    "max_ttft": 2.0,
+    "min_tps": 20.0
+  },
+  "by_devs": [
+    {
+      "devs": 4,
+      "holds_slo": true,
+      "median_ttft": 0.07511627906976745,
+      "median_tps": 65.27536806622713,
+      "cost_per_dev_hour": 0.2975,
+      "cost_per_dev_month": 217.17499999999998,
+      "valid": true,
+      "agents_ok": 3,
+      "tokens_per_dev": 532399,
+      "agents": [
+        {
+          "agent": 0,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": false,
+              "exit_code": 2,
+              "output": "en add 'jest' or 'mocha' to the types field in your tsconfig.\ntest/board.test.ts(55,7): error TS2304: Cannot find name 'expect'.\ntest/board.test.ts(60,7): error TS2304: Cannot find name 'expect'.\ntest/board.test.ts(61,7): error TS2304: Cannot find name 'expect'.\ntest/board.test.ts(62,7): error TS2304: Cannot find name 'expect'.\ntest/board.test.ts(65,5): error TS2593: Cannot find name 'it'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.\ntest/board.test.ts(74,7): error TS2304: Cannot find name 'expect'.\ntest/board.test.ts(75,7): error TS2304: Cannot find name 'expect'.\ntest/board.test.ts(76,7): error TS2304: Cannot find name 'expect'.\ntest/board.test.ts(77,7): error TS2304: Cannot find name 'expect'.\ntest/board.test.ts(80,7): error TS2304: Cannot find name 'expect'.\ntest/board.test.ts(84,3): error TS2593: Cannot find name 'describe'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.\ntest/board.test.ts(85,5): error TS2593: Cannot find name 'it'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.\ntest/board.test.ts(90,7): error TS2304: Cannot find name 'expect'.\ntest/board.test.ts(93,5): error TS2593: Cannot find name 'it'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.\ntest/board.test.ts(98,7): error TS2304: Cannot find name 'expect'.\ntest/board.test.ts(99,7): error TS2304: Cannot find name 'expect'.\ntest/board.test.ts(104,7): error TS2304: Cannot find name 'expect'.\ntest/board.test.ts(105,7): error TS2304: Cannot find name 'expect'.\n"
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "\n\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv4.1.9 \u001b[39m\u001b[90m/out/workspace\u001b[39m\n\n\u001b[31mNo test files found, exiting with code 1\n\u001b[39m\n\u001b[2mfilter: \u001b[22m\u001b[33macceptance.test.ts\u001b[39m\n\u001b[2minclude: \u001b[22m\u001b[33mtest/**/*.test.ts\u001b[39m\n\u001b[2mexclude:  \u001b[22m\u001b[33m**/node_modules/**\u001b[2m, \u001b[22m**/.git/**\u001b[39m\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 599523,
+            "completion": 27035,
+            "total": 626558
+          },
+          "wall_time": 363.36740899086
+        },
+        {
+          "agent": 1,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 211258,
+            "completion": 12049,
+            "total": 223307
+          },
+          "wall_time": 175.52343606948853
+        },
+        {
+          "agent": 2,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 971831,
+            "completion": 29937,
+            "total": 1001768
+          },
+          "wall_time": 399.7865116596222
+        },
+        {
+          "agent": 3,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 418781,
+            "completion": 19460,
+            "total": 438241
+          },
+          "wall_time": 284.66143774986267
+        }
+      ]
+    },
+    {
+      "devs": 8,
+      "holds_slo": true,
+      "median_ttft": 0.07800904977375565,
+      "median_tps": 57.92191233871539,
+      "cost_per_dev_hour": 0.14875,
+      "cost_per_dev_month": 108.58749999999999,
+      "valid": true,
+      "agents_ok": 6,
+      "tokens_per_dev": 482831,
+      "agents": [
+        {
+          "agent": 0,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 149592,
+            "completion": 10224,
+            "total": 159816
+          },
+          "wall_time": 186.42973852157593
+        },
+        {
+          "agent": 1,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 251275,
+            "completion": 14194,
+            "total": 265469
+          },
+          "wall_time": 292.11101245880127
+        },
+        {
+          "agent": 2,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 504778,
+            "completion": 20988,
+            "total": 525766
+          },
+          "wall_time": 350.96698021888733
+        },
+        {
+          "agent": 3,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "\n RUN  v1.6.1 /out/workspace\n\n \u276f acceptance.test.ts  (6 tests | 1 failed) 7ms\n   \u276f acceptance.test.ts > TaskBoard acceptance > listTasks filters by done and by priority\n     \u2192 expected 2 to be 1 // Object.is equality\n\n Test Files  1 failed (1)\n      Tests  1 failed | 5 passed (6)\n   Start at  11:50:31\n   Duration  444ms (transform 44ms, setup 1ms, collect 42ms, tests 7ms, environment 0ms, prepare 104ms)\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af\n\n FAIL  acceptance.test.ts > TaskBoard acceptance > listTasks filters by done and by priority\nAssertionError: expected 2 to be 1 // Object.is equality\n\n- Expected\n+ Received\n\n- 1\n+ 2\n\n \u276f acceptance.test.ts:34:50\n     32|     addTask(b, { title: \"lo\", priority: \"low\" });\n     33|     completeTask(b, hi);\n     34|     expect(listTasks(b, { done: false }).length).toBe(1);\n       |                                                  ^\n     35|     expect(listTasks(b, { priority: \"high\" }).map((t) => t.id)).toEqua\u2026\n     36|   });\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[1/1]\u23af\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 220994,
+            "completion": 15695,
+            "total": 236689
+          },
+          "wall_time": 269.26967549324036
+        },
+        {
+          "agent": 4,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 553488,
+            "completion": 20214,
+            "total": 573702
+          },
+          "wall_time": 348.00523853302
+        },
+        {
+          "agent": 5,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 528898,
+            "completion": 25049,
+            "total": 553947
+          },
+          "wall_time": 403.43962717056274
+        },
+        {
+          "agent": 6,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "   \u001b[34mcompleteTask\u001b[39m(b\u001b[33m,\u001b[39m hi)\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[3/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mlistTasks sorts by priority then createdAt ascending\n\u001b[31m\u001b[1mTypeError\u001b[22m: addTask is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m40:15\u001b[22m\u001b[39m\n    \u001b[90m 38|\u001b[39m   \u001b[34mit\u001b[39m(\u001b[32m\"listTasks sorts by priority then createdAt ascending\"\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n    \u001b[90m 39|\u001b[39m     \u001b[35mconst\u001b[39m b \u001b[33m=\u001b[39m \u001b[34mcreateBoard\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m 40|\u001b[39m     \u001b[35mconst\u001b[39m m \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"m\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"medium\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m   |\u001b[39m               \u001b[31m^\u001b[39m\n    \u001b[90m 41|\u001b[39m     \u001b[35mconst\u001b[39m h1 \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"h1\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"high\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m 42|\u001b[39m     \u001b[35mconst\u001b[39m h2 \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"h2\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"high\"\u001b[39m })\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[4/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mstats counts total, done, pending\n\u001b[31m\u001b[1mTypeError\u001b[22m: addTask is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m49:15\u001b[22m\u001b[39m\n    \u001b[90m 47|\u001b[39m   \u001b[34mit\u001b[39m(\u001b[32m\"stats counts total, done, pending\"\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n    \u001b[90m 48|\u001b[39m     \u001b[35mconst\u001b[39m b \u001b[33m=\u001b[39m \u001b[34mcreateBoard\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m 49|\u001b[39m     \u001b[35mconst\u001b[39m a \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"a\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m   |\u001b[39m               \u001b[31m^\u001b[39m\n    \u001b[90m 50|\u001b[39m     \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"b\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m 51|\u001b[39m     \u001b[34mcompleteTask\u001b[39m(b\u001b[33m,\u001b[39m a)\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[5/5]\u23af\u001b[22m\u001b[39m\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 538257,
+            "completion": 26865,
+            "total": 565122
+          },
+          "wall_time": 408.24533009529114
+        },
+        {
+          "agent": 7,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 422760,
+            "completion": 17137,
+            "total": 439897
+          },
+          "wall_time": 307.21182131767273
+        }
+      ]
+    }
+  ],
+  "tokens": {
+    "prompt": 5371435,
+    "completion": 238847,
+    "total": 5610282
+  },
+  "timeline": [
+    {
+      "label": "create\u2192ready",
+      "seconds": 12.059770822525024,
+      "cost_usd": 0.003986424244112438,
+      "pct": 0.009720697848224458
+    },
+    {
+      "label": "rsync",
+      "seconds": 3.7870640754699707,
+      "cost_usd": 0.0012518350693914626,
+      "pct": 0.0030525377431510226
+    },
+    {
+      "label": "vLLM startup",
+      "seconds": 374.06983494758606,
+      "cost_usd": 0.12365086210767429,
+      "pct": 0.30151649589136564
+    },
+    {
+      "label": "generation",
+      "seconds": 826.4903228282928,
+      "cost_usd": 0.27320096782379677,
+      "pct": 0.666187013080667
+    },
+    {
+      "label": "gates",
+      "seconds": 24.221099138259888,
+      "cost_usd": 0.008006418881813684,
+      "pct": 0.019523255436591908
+    }
+  ],
+  "pod_cost_usd": 0.41009650812678866
+}

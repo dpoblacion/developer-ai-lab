@@ -1,0 +1,8 @@
+# NVIDIA H200 (141GB). GPU count is the run's --gpus; GLM-5.2 needs --gpus 8.
+gpu_type_ids:
+  - "NVIDIA H200"
+price_usd_per_gpu_hour: 3.59  # RunPod community on-demand, per GPU
+provider: RunPod
+instance: "NVIDIA H200"
+gpu_memory_utilization: 0.95
+supported_quants: [fp8, awq, bf16]

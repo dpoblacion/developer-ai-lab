@@ -1,0 +1,11 @@
+# Single NVIDIA L4 (24GB, Ada). The cheapest single-tenant option: fits ~14B-class models
+# (fp8/awq); 30B-class models do NOT fit its VRAM — use l40s or bigger for those.
+gpu_type_ids:
+  - "NVIDIA L4"
+price_usd_per_gpu_hour: 0.39  # RunPod on-demand, per GPU (edit when prices change)
+provider: RunPod
+instance: "NVIDIA L4"
+gpu_memory_utilization: 0.92
+# Ada has native FP8, but on 24GB the deciding factor is KV-cache room for the 65k
+# window: prefer 4-bit AWQ (~9GB weights for a 14B) over fp8 (~15GB, marginal KV).
+supported_quants: [awq, fp8, bf16]

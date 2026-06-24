@@ -1,0 +1,341 @@
+{
+  "run_id": "20260702-212532",
+  "date": "2026-07-02",
+  "benchmark": "dev-load",
+  "family": "qwen3-coder",
+  "quant": "awq",
+  "model": "qwen3-coder-30b-awq",
+  "hardware": "a40",
+  "gpu_count": 1,
+  "price_usd_per_gpu_hour": 0.35,
+  "cost_per_hour": 0.35,
+  "slo": {
+    "max_ttft": 2.0,
+    "min_tps": 20.0
+  },
+  "by_devs": [
+    {
+      "devs": 4,
+      "holds_slo": true,
+      "median_ttft": 0.09988372093023257,
+      "median_tps": 57.10950098140081,
+      "cost_per_dev_hour": 0.0875,
+      "cost_per_dev_month": 63.87499999999999,
+      "valid": true,
+      "agents_ok": 4,
+      "tokens_per_dev": 450207,
+      "agents": [
+        {
+          "agent": 0,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 355862,
+            "completion": 17581,
+            "total": 373443
+          },
+          "wall_time": 348.71630001068115
+        },
+        {
+          "agent": 1,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 507408,
+            "completion": 19563,
+            "total": 526971
+          },
+          "wall_time": 374.56178855895996
+        },
+        {
+          "agent": 2,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 600109,
+            "completion": 20840,
+            "total": 620949
+          },
+          "wall_time": 396.8298783302307
+        },
+        {
+          "agent": 3,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 213643,
+            "completion": 14215,
+            "total": 227858
+          },
+          "wall_time": 277.99450850486755
+        }
+      ]
+    },
+    {
+      "devs": 8,
+      "holds_slo": true,
+      "median_ttft": 0.17105263157894737,
+      "median_tps": 31.195553182803124,
+      "cost_per_dev_hour": 0.04375,
+      "cost_per_dev_month": 31.937499999999996,
+      "valid": true,
+      "agents_ok": 7,
+      "tokens_per_dev": 424463,
+      "agents": [
+        {
+          "agent": 0,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 408335,
+            "completion": 18708,
+            "total": 427043
+          },
+          "wall_time": 538.4809379577637
+        },
+        {
+          "agent": 1,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 332373,
+            "completion": 19799,
+            "total": 352172
+          },
+          "wall_time": 535.2571969032288
+        },
+        {
+          "agent": 2,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": false,
+              "exit_code": 2,
+              "output": "tests/board.test.ts(1,50): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.\n"
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 255196,
+            "completion": 15278,
+            "total": 270474
+          },
+          "wall_time": 465.8358693122864
+        },
+        {
+          "agent": 3,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 424748,
+            "completion": 16889,
+            "total": 441637
+          },
+          "wall_time": 495.7780456542969
+        },
+        {
+          "agent": 4,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 404166,
+            "completion": 17717,
+            "total": 421883
+          },
+          "wall_time": 516.9313600063324
+        },
+        {
+          "agent": 5,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 192878,
+            "completion": 15972,
+            "total": 208850
+          },
+          "wall_time": 459.4158453941345
+        },
+        {
+          "agent": 6,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 466288,
+            "completion": 17241,
+            "total": 483529
+          },
+          "wall_time": 514.263783454895
+        },
+        {
+          "agent": 7,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 450878,
+            "completion": 15751,
+            "total": 466629
+          },
+          "wall_time": 487.1628520488739
+        }
+      ]
+    }
+  ],
+  "tokens": {
+    "prompt": 4611884,
+    "completion": 209554,
+    "total": 4821438
+  },
+  "timeline": [
+    {
+      "label": "create\u2192ready",
+      "seconds": 18.250417232513428,
+      "cost_usd": 0.0017743461198276942,
+      "pct": 0.013836978761660913
+    },
+    {
+      "label": "rsync",
+      "seconds": 3.848659038543701,
+      "cost_usd": 0.00037417518430285984,
+      "pct": 0.002917950461008142
+    },
+    {
+      "label": "vLLM startup",
+      "seconds": 343.4580409526825,
+      "cost_usd": 0.0333917539815108,
+      "pct": 0.26040071071457
+    },
+    {
+      "label": "generation",
+      "seconds": 953.4025738239288,
+      "cost_usd": 0.09269191689954864,
+      "pct": 0.722844360062761
+    }
+  ],
+  "pod_cost_usd": 0.12823219218519
+}

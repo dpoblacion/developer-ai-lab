@@ -1,0 +1,5 @@
+# Default to light mode (the charts' palette is validated against the light surface).
+# Visitors can still switch themes from the app menu.
+[theme]
+base = "light"
+primaryColor = "#2a78d6"

@@ -1,0 +1,26 @@
+# Qwen3-Coder 30B-A3B AWQ (4-bit) — MODEL axis only. Sibling of qwen3-coder-fp8.yaml.
+# Purpose: a native low-bit variant for Ampere (A100), which has no native FP8 and otherwise
+# falls back to fp8-via-Marlin (dequant, slower). resolve_variant picks this on hardware whose
+# supported_quants lists awq before fp8 (a100-80gb); l40s/h200 still get fp8.
+#
+# UNVALIDATED on a pod yet. The model repo is an editable default — other AWQ quants exist
+# (cpatonn/…-AWQ-4bit, cyankiwi/…-AWQ-4bit, nm-testing/…-W4A16-awq). Note: 4-bit AWQ of this
+# model is reported to lose noticeable quality vs fp8.
+family: qwen3-coder
+quant: awq
+model: QuantTrio/Qwen3-Coder-30B-A3B-Instruct-AWQ
+served_model_name: qwen3-coder-30b-awq
+# Aligned to the pinned pod image (torch 2.8 / cu128). The upstream AWQ guide suggests vLLM
+# 0.10.0, but 0.11.0 serves AWQ (awq_marlin, auto-detected from the model's config) and matches
+# our image; bump only if a real A100 run shows an incompatibility.
+vllm_version: "0.11.0"
+image: runpod/pytorch:1.0.2-cu1281-torch280-ubuntu2404
+container_disk_gb: 100
+pip_constraints:
+  - "transformers<5"          # vLLM 0.11.0's tokenizer code predates the transformers 5.x API
+tool_call_parser: qwen3_xml   # same model family → same vLLM streaming-parse workaround as fp8
+enable_auto_tool_choice: true
+extra_args:
+  - "--enable-expert-parallel"  # mandatory for this MoE AWQ per the upstream serving guide
+env:
+  VLLM_USE_FLASHINFER_SAMPLER: "0"

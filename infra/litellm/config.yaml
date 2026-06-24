@@ -1,0 +1,25 @@
+# LiteLLM proxy config: exposes the Anthropic Messages API and routes the
+# constant alias `dev-model` to the vLLM OpenAI-compatible endpoint.
+#
+# Model independence: to benchmark another model, change ONLY litellm_params.model
+# below. Everything else (Claude Code, scenario, gates) stays identical.
+model_list:
+  - model_name: dev-model
+    litellm_params:
+      # Upstream served-model name, set per run (e.g. hosted_vllm/qwen3-coder-30b-fp8).
+      # bench_sdd exports it from the composed config's served_model_name.
+      model: os.environ/LITELLM_UPSTREAM_MODEL
+      # Where "vLLM" is reachable from the toolchain container: the local destream proxy
+      # (localhost:8011), which forwards to the pod's vLLM via the SSH tunnel.
+      api_base: os.environ/VLLM_BASE
+      api_key: "none"
+
+litellm_settings:
+  # Claude Code sends Anthropic-only params (cache_control, thinking, …) that vLLM's
+  # chat/completions doesn't accept — drop them instead of erroring.
+  drop_params: true
+
+general_settings:
+  # Non-secret loopback token: LiteLLM and vLLM run on the same ephemeral pod and are
+  # never exposed publicly. It only gates the localhost proxy, hence committed.
+  master_key: sk-dev-lab

@@ -1,0 +1,22 @@
+# Minimal benchmark: each agent must use the Write tool to create a file; a gate checks it.
+# Stack pre-flight: single-agent run to validate the serving + agent + gate stack.
+name: smoke
+description: Minimal task to validate the agent stack + a low concurrency level.
+devs: [1]
+slo:
+  max_ttft: 2.0
+  min_tps: 20.0
+serving:
+  max_model_len: 65536
+task:
+  phases:
+    - id: 01-hello
+      title: Hello file
+      prompt: phases/01-hello.md
+      allowed_tools: [Write, Read, Bash]
+      max_turns: 5
+  gates:
+    - id: hello-exists
+      description: hello.txt exists and contains PONG (proves the agent's Write tool worked)
+      cmd: "test -f hello.txt && grep -q PONG hello.txt"
+      expect_exit: 0

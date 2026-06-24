@@ -1,0 +1,35 @@
+# Llama 3.3 70B Instruct FP8 (dynamic) — MODEL axis only. ~70GB of weights: does NOT fit a
+# single 48/80GB card with useful KV cache — plan on 2× L40S (`GPUS=2`) or 1× H200.
+# Ungated RedHatAI quant (no Meta license gate on the pod). UNVALIDATED on a pod yet.
+family: llama3.3-70b
+quant: fp8
+model: RedHatAI/Llama-3.3-70B-Instruct-FP8-dynamic
+served_model_name: llama3.3-70b-fp8
+vllm_version: "0.11.0"
+image: runpod/pytorch:1.0.2-cu1281-torch280-ubuntu2404
+container_disk_gb: 200
+pip_constraints:
+  - "transformers<5"          # vLLM 0.11.0's tokenizer code predates the transformers 5.x API
+# KNOWN ISSUE (validated live 2026-07-02, 2×L40S): Llama 3.3 emits its calls wrapped as
+# {"type": "function", "name": ..., "parameters": ...} and vLLM 0.11's llama3_json parser
+# misses that shape — the call leaks into message content as text and the agent does no
+# work (gates 0/N). Decode was ~16 tok/s/stream on 2×L40S (below the 20 SLO floor), so the
+# capacity verdict there is NO regardless. Revisit the parser on a newer vLLM.
+tool_call_parser: llama3_json
+enable_auto_tool_choice: true
+# On 2× L40S the 65k window needs 10GiB of KV and only ~6.5GiB is left after weights;
+# fp8 KV halves it. Safe here: this fp8-weights variant only targets Ada/Hopper, where
+# e4m3 KV kernels exist (Ampere would reject them — see the qwen3-14b history).
+kv_cache_dtype: fp8
+extra_args:
+  # vLLM's custom all-reduce uses CUDA IPC/P2P directly (NCCL env vars don't govern it);
+  # on community pods without P2P it hangs at the first collective, right after
+  # "Registering ... cuda graph addresses" (observed live). NCCL flags below cover the
+  # NCCL path for the same reason.
+  - "--disable-custom-all-reduce"
+env:
+  VLLM_USE_FLASHINFER_SAMPLER: "0"
+  # Community multi-GPU pods often lack working P2P/NVLink; NCCL then hangs silently in
+  # the tp=2 process-group init (observed: startup progress died at minute ~2, twice).
+  NCCL_P2P_DISABLE: "1"
+  NCCL_IB_DISABLE: "1"

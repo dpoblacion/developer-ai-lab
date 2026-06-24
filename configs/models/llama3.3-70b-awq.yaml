@@ -1,0 +1,17 @@
+# Llama 3.3 70B Instruct AWQ (4-bit) — MODEL axis only. Matches the llama3.3:70b deployed
+# in the local lab. ~40GB of weights: tight on 1× L40S (little KV headroom); comfortable on
+# 2× L40S (`GPUS=2`) or 1× A100-80GB. Ungated community quant (no Meta license gate on the
+# pod). UNVALIDATED on a pod yet.
+family: llama3.3-70b
+quant: awq
+model: casperhansen/llama-3.3-70b-instruct-awq
+served_model_name: llama3.3-70b-awq
+vllm_version: "0.11.0"
+image: runpod/pytorch:1.0.2-cu1281-torch280-ubuntu2404
+container_disk_gb: 150
+pip_constraints:
+  - "transformers<5"          # vLLM 0.11.0's tokenizer code predates the transformers 5.x API
+tool_call_parser: llama3_json
+enable_auto_tool_choice: true
+env:
+  VLLM_USE_FLASHINFER_SAMPLER: "0"

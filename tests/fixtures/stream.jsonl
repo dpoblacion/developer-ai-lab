@@ -1,0 +1,4 @@
+{"type":"system","subtype":"init","model":"dev-model"}
+{"type":"assistant","message":{"content":[{"type":"tool_use","name":"Read"}],"usage":{"input_tokens":100,"output_tokens":20}}}
+{"type":"assistant","message":{"content":[{"type":"tool_use","name":"Edit"}],"usage":{"input_tokens":140,"output_tokens":35}}}
+{"type":"result","subtype":"success","result":"done","usage":{"input_tokens":300,"output_tokens":80}}

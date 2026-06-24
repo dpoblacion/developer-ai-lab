@@ -1,0 +1,5 @@
+# Dependencies for the Streamlit Community Cloud deployment (entrypoint: scripts/dashboard.py).
+# Community Cloud searches the entrypoint's directory first, so this takes precedence over the
+# repo-root requirements.txt (which is the pod/toolchain stack, not the dashboard).
+streamlit>=1.30
+plotly>=5.18

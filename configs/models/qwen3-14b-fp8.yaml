@@ -1,0 +1,25 @@
+# Qwen3-14B FP8 (dense) — MODEL axis only. General-purpose sibling of qwen3-coder,
+# matching the qwen3:14b deployed in the local lab so results compare 1:1.
+# UNVALIDATED on a pod yet — run `make validate MODEL=qwen3-14b HARDWARE=<hw>` first.
+family: qwen3-14b
+quant: fp8
+model: Qwen/Qwen3-14B-FP8
+served_model_name: qwen3-14b-fp8
+vllm_version: "0.11.0"
+image: runpod/pytorch:1.0.2-cu1281-torch280-ubuntu2404
+container_disk_gb: 60
+pip_constraints:
+  - "transformers<5"          # vLLM 0.11.0's tokenizer code predates the transformers 5.x API
+# Qwen3 (non-coder) uses Hermes-style tool calls. vLLM's hermes STREAMING parser has the
+# same class of bug the destream proxy already works around (vllm#31871), so agent traffic
+# is safe: the proxy forces non-streaming upstream.
+tool_call_parser: hermes
+reasoning_parser: qwen3       # strip the thinking block from replies
+enable_auto_tool_choice: true
+extra_args:
+  # Qwen3's native context is 40960 — below the benchmark's 65536 window. Qwen's
+  # documented recipe for longer contexts is YaRN scaling (2.0 × 32768 = 65536).
+  - "--rope-scaling"
+  - '{"rope_type":"yarn","factor":2.0,"original_max_position_embeddings":32768}'
+env:
+  VLLM_USE_FLASHINFER_SAMPLER: "0"

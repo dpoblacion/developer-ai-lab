@@ -1,0 +1,10 @@
+# Single NVIDIA A100 80GB PCIe.
+gpu_type_ids:
+  - "NVIDIA A100 80GB PCIe"
+price_usd_per_gpu_hour: 1.19  # RunPod community on-demand, per GPU
+provider: RunPod
+instance: "NVIDIA A100 80GB PCIe"
+gpu_memory_utilization: 0.92
+# Ampere has no native FP8, but vLLM runs FP8 via the Marlin kernel (dequant, slower than
+# native) — so fp8 is last: prefer a real awq/gptq/bf16 variant if one exists, else run fp8.
+supported_quants: [awq, gptq, bf16, fp8]

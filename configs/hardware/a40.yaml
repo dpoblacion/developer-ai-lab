@@ -1,0 +1,11 @@
+# Single NVIDIA A40 (48GB, Ampere). Same VRAM as the L40S at roughly half the price, but a
+# previous-gen part: lower bandwidth and no native FP8.
+gpu_type_ids:
+  - "NVIDIA A40"
+price_usd_per_gpu_hour: 0.35  # RunPod on-demand, per GPU (edit when prices change)
+provider: RunPod
+instance: "NVIDIA A40"
+gpu_memory_utilization: 0.92
+# Ampere: prefer native low-bit variants; fp8 last (runs via the Marlin dequant kernel,
+# slower than native) — same rationale as a100-80gb.
+supported_quants: [awq, gptq, bf16, fp8]
