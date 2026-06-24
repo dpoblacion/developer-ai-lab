@@ -1,0 +1,15 @@
+# Minimal scenario to validate the SDD-local pipeline end to end (tool calling included):
+# the agent must use the Write tool to create a file, then a gate checks it.
+name: smoke
+phases:
+  - id: 01-hello
+    title: Hello file
+    prompt: phases/01-hello.md
+    allowed_tools: [Write, Read, Bash]
+    max_turns: 5
+
+gates:
+  - id: hello-exists
+    description: hello.txt exists and contains PONG (proves the agent's Write tool worked)
+    cmd: "test -f hello.txt && grep -q PONG hello.txt"
+    expect_exit: 0

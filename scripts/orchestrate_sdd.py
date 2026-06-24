@@ -26,9 +26,13 @@ EXCLUDES = [".git", "results", "__pycache__", ".venv", "docs/superpowers"]
 IMAGE = "dail-toolchain"
 
 
-def _run(cmd):
-    print("+ " + " ".join(cmd))
-    subprocess.run(cmd, check=True)
+def log(msg):
+    print(f"[{time.strftime('%H:%M:%S')}] {msg}", flush=True)
+
+
+def _run(cmd, timeout=None):
+    log("+ " + " ".join(cmd))
+    subprocess.run(cmd, check=True, timeout=timeout)  # TimeoutExpired -> finally stops the pod
 
 
 def main():
@@ -63,63 +67,66 @@ def main():
     pod = None
     tunnel = None
     try:
-        # 1. vLLM-only pod
+        log("STEP 1/5: creating vLLM-only pod")
         for gpu in spec["gpu_type_ids"]:
             try:
                 pod = runpod.create_pod(**build_create_kwargs(spec, gpu, pub))
                 break
             except Exception as exc:
-                print(f"  {gpu} unavailable: {exc}")
+                log(f"  {gpu} unavailable: {exc}")
         if not pod:
-            raise SystemExit("No GPU candidate available")
+            raise SystemExit("FAILED step 1: no GPU candidate available")
         pod_id = pod["id"]
-        print(f"Pod {pod_id} created.")
+        log(f"  pod {pod_id} created; waiting for it to be ready ...")
         ip = port = None
-        for _ in range(180):
+        for _ in range(180):  # ~15 min
             p = runpod.get_pod(pod_id)
             if is_ready(p):
                 ip, port = ssh_endpoint(p)
                 break
             time.sleep(5)
         if not ip:
-            raise SystemExit("Pod did not become ready")
+            raise SystemExit("FAILED step 1: pod did not become ready in 15 min")
+        log(f"  pod ready at {ip}:{port}")
 
-        # 2. push repo + start vLLM (inference only; no claude/.NET on the pod)
+        log("STEP 2/5: pushing repo + launching setup/vLLM on the pod")
         for _ in range(24):
             if subprocess.run(ssh_run_cmd(ip, port, args.key, f"mkdir -p {REMOTE_DIR}"),
                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode == 0:
                 break
             time.sleep(5)
-        _run(rsync_up_cmd(ip, port, args.key, "./", REMOTE_DIR + "/", EXCLUDES))
+        _run(rsync_up_cmd(ip, port, args.key, "./", REMOTE_DIR + "/", EXCLUDES), timeout=300)
         # Detach setup + vLLM (subshell, stdin from /dev/null) so ssh returns immediately
         # instead of hanging on the backgrounded process's channel. Errors land in vllm.log,
         # which the health-poll below checks (fail-fast).
         _run(ssh_run_cmd(ip, port, args.key,
              f"(cd {REMOTE_DIR} && INSTALL_CLAUDE=0 ./scripts/setup_pod.sh {args.config} "
-             f"&& ./scripts/start_vllm.sh {args.config}) </dev/null >/workspace/vllm.log 2>&1 &"))
+             f"&& ./scripts/start_vllm.sh {args.config}) </dev/null >/workspace/vllm.log 2>&1 &"),
+             timeout=120)
 
-        # 3. tunnel to vLLM and wait until reachable (fail fast if vLLM died on the pod)
+        log("STEP 3/5: waiting for vLLM to serve (via SSH tunnel); fails fast on pod errors")
         tunnel = subprocess.Popen(ssh_tunnel_cmd(ip, port, args.key))
         reachable = False
-        for i in range(360):
+        for i in range(360):  # ~30 min ceiling (covers setup + model download/load)
             if subprocess.run(["curl", "-sf", "http://localhost:8000/health"],
                               stdout=subprocess.DEVNULL).returncode == 0:
                 reachable = True
                 break
-            if i % 12 == 11:  # ~every 60s, check vLLM didn't fail to start on the pod
+            if i % 12 == 11:  # ~every 60s: progress + check vLLM didn't fail to start
                 chk = subprocess.run(ssh_run_cmd(ip, port, args.key,
                     "grep -qE 'not found|Traceback|RuntimeError|No available' /workspace/vllm.log "
                     "&& tail -25 /workspace/vllm.log || true"),
                     capture_output=True, text=True)
                 if chk.stdout.strip():
-                    print("vLLM failed to start on the pod:\n" + chk.stdout)
+                    log("FAILED step 3: vLLM failed to start on the pod:\n" + chk.stdout)
                     raise SystemExit("vLLM startup failed")
+                log(f"  still waiting for vLLM ... ({(i + 1) * 5 // 60} min)")
             if tunnel.poll() is not None:  # tunnel died — reopen it
                 tunnel = subprocess.Popen(ssh_tunnel_cmd(ip, port, args.key))
             time.sleep(5)
         if not reachable:
-            raise SystemExit("vLLM did not become reachable via the tunnel")
-        print("vLLM reachable via tunnel.")
+            raise SystemExit("FAILED step 3: vLLM did not serve within 30 min")
+        log("  vLLM reachable via tunnel.")
 
         # 4. generation in the toolchain container (LiteLLM local -> tunnel -> pod vLLM)
         env = {
@@ -132,25 +139,27 @@ def main():
             "PYTHONPATH": "/repo",
             "MODEL": served,
         }
+        log("STEP 4/5: generation in the toolchain container (agent builds the app)")
         gen = ("set -e; "
                "litellm --config /repo/infra/litellm/config.yaml --port 4000 > /tmp/litellm.log 2>&1 & "
                "sleep 8; "
                f"python3 -m scripts.run_sdd_scenario /repo/{args.scenario}")
         _run(docker_run_cmd(IMAGE, ["bash", "-lc", gen], mounts=mounts, env=env,
-                            workdir="/repo", name="dail-sdd-gen"))
+                            workdir="/repo", name="dail-sdd-gen"),
+             timeout=int(os.getenv("SDD_GEN_TIMEOUT", "3600")))
     finally:
         if tunnel:
             tunnel.terminate()
         if pod:
-            print(f"Terminating pod {pod['id']} ...")
+            log(f"stopping pod {pod['id']} (generation done / failed) ...")
             runpod.terminate_pod(pod["id"])
 
-    # 5. gates with the pod down, in the container
+    log("STEP 5/5: scoring gates (pod stopped)")
     _run(docker_run_cmd(
         IMAGE, ["bash", "-lc", f"python3 -m scripts.run_gates /repo/{args.scenario} /out/workspace"],
         mounts=mounts, env={"PYTHONPATH": "/repo", "MODEL": served},
-        workdir="/repo", name="dail-sdd-gates", host_gateway=False))
-    print(f"Done. Results under {out_dir}")
+        workdir="/repo", name="dail-sdd-gates", host_gateway=False), timeout=600)
+    log(f"DONE. Results under {out_dir}")
 
 
 if __name__ == "__main__":
