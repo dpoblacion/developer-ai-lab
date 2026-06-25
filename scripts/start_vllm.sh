@@ -9,6 +9,20 @@ CONFIG=${1:-configs/qwen3coder.yaml}
 # does this, but the SDD orchestrator calls start_vllm.sh directly).
 [ -d /workspace/venv ] && export PATH="/workspace/venv/bin:$PATH"
 
+# Authenticate Hugging Face downloads when a token is available. Anonymous downloads share
+# the Resolver rate limit (3k requests / 5 min per IP) and 429-stall partway through a ~30GB
+# model; a token raises it to 5k/5min and scopes it per-account. Taken from the environment
+# or the rsync'd .env (the token itself is never echoed); falls back to anonymous if absent.
+if [ -z "${HF_TOKEN:-}" ] && [ -f .env ]; then
+  HF_TOKEN=$(sed -n 's/^HF_TOKEN=//p' .env | head -1)
+fi
+if [ -n "${HF_TOKEN:-}" ]; then
+  export HF_TOKEN
+  echo "HF auth: token present"
+else
+  echo "HF auth: anonymous (no HF_TOKEN — downloads may hit rate limits)"
+fi
+
 # Export the config's env block (e.g. VLLM_USE_FLASHINFER_SAMPLER).
 while IFS='=' read -r key value; do
   [ -n "$key" ] && export "$key=$value"

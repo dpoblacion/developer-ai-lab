@@ -87,7 +87,7 @@ quality) is planned.
 One-time local setup:
 
 ```bash
-cp .env.example .env            # RUNPOD_API_KEY + SSH_KEY_PATH (a passphrase-less key)
+cp .env.example .env            # RUNPOD_API_KEY + SSH_KEY_PATH (passphrase-less); optional HF_TOKEN
 pip install -r requirements-orchestrator.txt
 ```
 
@@ -131,7 +131,13 @@ Put both in `.env` (gitignored):
 cp .env.example .env
 # RUNPOD_API_KEY=...
 # SSH_KEY_PATH=~/.ssh/runpod_key      # the PRIVATE key; <path>.pub must exist
+# HF_TOKEN=hf_...                     # optional: free HF read token; see note below
 ```
+
+A free **`HF_TOKEN`** (huggingface.co/settings/tokens) is optional but recommended: the pod
+downloads model weights from the Hugging Face Hub, and anonymous downloads share a low
+per-IP rate limit (3k resolver requests / 5 min) that **429-stalls** partway through a large
+model. A token raises it to 5k/5 min per-account. `start_vllm.sh` picks it up from `.env`.
 
 Which GPU and pod image are used is declared in `infra/runpod/pod.yaml` — `gpu_type_ids` are
 tried in order until one has capacity (currently `NVIDIA L40S`, then `A100 80GB PCIe`).
