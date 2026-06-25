@@ -122,6 +122,22 @@ class PodGuardTest(unittest.TestCase):
         self.assertIn("ghost", self.killed)
         self.assertEqual(pod_guard.read_state(self.path), [])
 
+    def test_provisioning_phase_has_no_ceiling(self):
+        # Guard starts in provisioning (no max_phase ceiling).
+        # Advancing clock past MAX_STARTUP should NOT abort the pod even when
+        # stall is kept at bay via heartbeat (as the orchestrator does each poll).
+        g = self.guard(max_run=10_000)
+        g.track("p1", progress_fn=lambda: 0)
+        self.clock.t = pod_guard.MAX_STARTUP + 100
+        g.heartbeat()  # simulate the orchestrator's ready-poll heartbeat
+        self.assertIsNone(g._evaluate(self.clock.t))
+        self.assertEqual(self.killed, [])
+        # Switching to startup resets the phase clock; now the ceiling IS active.
+        g.phase("startup")
+        self.clock.t += pod_guard.MAX_STARTUP + 1
+        self.assertEqual(g._evaluate(self.clock.t), "max_phase")
+        self.assertIn("p1", self.killed)
+
     def test_set_progress_repoints_sampler_no_new_state_entry(self):
         counter = {"n": 0}
         g = self.guard(max_run=10_000)

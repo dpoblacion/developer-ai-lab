@@ -21,7 +21,9 @@ def read_state(path):
 
 def write_state(path, entries):
     """Write entries as JSON, creating parent dirs."""
-    os.makedirs(os.path.dirname(path), exist_ok=True)
+    d = os.path.dirname(path)
+    if d:
+        os.makedirs(d, exist_ok=True)
     with open(path, "w") as f:
         json.dump(entries, f)
 
@@ -88,6 +90,7 @@ DEFAULT_STATE_PATH = os.path.expanduser("~/.cache/dail/active-pods.json")
 POLL_INTERVAL = 10
 
 PHASES = {
+    "provisioning": {"stall": MAX_STARTUP, "max_phase": None},
     "startup": {"stall": STALL_STARTUP, "max_phase": MAX_STARTUP},
     "generation": {"stall": STALL_GEN, "max_phase": None},
 }
@@ -123,7 +126,7 @@ class PodGuard:
         self._phase_started_at = self._run_started_at
         self._last_progress_at = self._run_started_at
         self._last_progress = None
-        self._policy = PHASES["startup"]
+        self._policy = PHASES["provisioning"]
         self._stop = threading.Event()
         self._thread = None
         self.reap_orphans()

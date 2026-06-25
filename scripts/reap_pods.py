@@ -8,7 +8,7 @@ from scripts.lib.pod_guard import REAP_AGE, DEFAULT_STATE_PATH, read_state, sele
 
 
 def choose(pods, state, now, reap_age):
-    created = {e["pod_id"]: e.get("created_at") for e in state}
+    created = {e["pod_id"]: e.get("created_at") for e in state if e.get("pod_id")}
     return select_to_reap([p["id"] for p in pods], created, now, reap_age)
 
 
