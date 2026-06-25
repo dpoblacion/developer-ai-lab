@@ -112,6 +112,58 @@ nothing is pushed from it. You can re-score a produced SDD workspace anytime, wi
 make gates WORKSPACE=results/<run>/sdd/workspace
 ```
 
+## RunPod & costs
+
+> ⚠️ **Every benchmark run provisions real, paid GPU hardware.** Each `make orchestrate` /
+> `make sdd-run` creates an on-demand GPU pod on [RunPod](https://www.runpod.io), runs, and
+> terminates it. You are billed **per second** for as long as the pod exists.
+
+### Prerequisites
+
+1. A RunPod account with **credit loaded** — pods won't start otherwise.
+2. A RunPod **API key** (console → Settings → API Keys).
+3. A **passphrase-less SSH key** — its public half is injected into the pod at boot and the
+   orchestrator reaches the pod over SSH.
+
+Put both in `.env` (gitignored):
+
+```bash
+cp .env.example .env
+# RUNPOD_API_KEY=...
+# SSH_KEY_PATH=~/.ssh/runpod_key      # the PRIVATE key; <path>.pub must exist
+```
+
+Which GPU and pod image are used is declared in `infra/runpod/pod.yaml` — `gpu_type_ids` are
+tried in order until one has capacity (currently `NVIDIA L40S`, then `A100 80GB PCIe`).
+
+### What you pay for, and the safety net
+
+You pay GPU **only while the pod exists**, which the orchestrators keep as short as possible
+— the SDD pod is terminated the moment generation ends (gates then run locally, pod down).
+Three layers guard against runaway spend:
+
+- The pod is terminated on **every** exit path — success, error, Ctrl-C, even `SIGTERM`.
+- A **watchdog** kills the pod if vLLM stalls on startup, generation hangs, or a wall-clock
+  ceiling is hit, and reaps pods orphaned by a crashed run on the next start.
+- **`make reap`** is a panic button that terminates **all** your pods via the API, any time:
+
+```bash
+make reap
+```
+
+If you ever interrupt a run in a way that skips cleanup, run `make reap` and/or check the
+RunPod console — a forgotten pod bills until it is terminated.
+
+### Observed costs
+
+Real costs from our own runs. A run = create → serve/generate → terminate; cost ≈ the GPU's
+$/hr times how long the pod is up (model download + load + the actual benchmark). We'll
+extend this table as we test more models and hardware:
+
+| Model | Hardware | Benchmark | Approx. cost |
+|---|---|---|---|
+| Qwen3-Coder-30B-A3B-FP8 | 1× NVIDIA L40S | SDD (todo-app) | ~$0.40 |
+
 ## Layout
 
 - `configs/` — per-model vLLM serving configs (the only per-model change).
