@@ -67,7 +67,6 @@ def abort_reason(now, last_progress_at, phase_started_at, run_started_at,
 
 
 import atexit
-import os as _os
 import signal
 import threading
 import time
@@ -75,7 +74,7 @@ import time
 
 def _env_int(name, default):
     try:
-        return int(_os.environ.get(name, default))
+        return int(os.environ.get(name, default))
     except ValueError:
         return default
 
@@ -85,7 +84,7 @@ MAX_STARTUP = _env_int("MAX_STARTUP", 720)
 STALL_GEN = _env_int("STALL_GEN", 480)
 MAX_RUN = _env_int("MAX_RUN", 3600)
 REAP_AGE = _env_int("REAP_AGE", 0)
-DEFAULT_STATE_PATH = _os.path.expanduser("~/.cache/dail/active-pods.json")
+DEFAULT_STATE_PATH = os.path.expanduser("~/.cache/dail/active-pods.json")
 POLL_INTERVAL = 10
 
 PHASES = {
@@ -98,7 +97,7 @@ def _pid_alive(pid):
     if not pid:
         return False
     try:
-        _os.kill(int(pid), 0)
+        os.kill(int(pid), 0)
     except (OSError, ValueError):
         return False
     return True
@@ -138,7 +137,7 @@ class PodGuard:
     def track(self, pod_id, progress_fn=lambda: 0):
         self._tracked[pod_id] = progress_fn
         add_entry(self.state_path, {"pod_id": pod_id, "created_at": self._clock(),
-                                    "owner_pid": _os.getpid(), "label": self.label})
+                                    "owner_pid": os.getpid(), "label": self.label})
         now = self._clock()
         self._last_progress = progress_fn()
         self._last_progress_at = now
@@ -204,7 +203,10 @@ class PodGuard:
         raise SystemExit(1)
 
     def __exit__(self, *exc):
+        atexit.unregister(self.terminate_all)
         self._stop.set()
+        if self._thread is not None:
+            self._thread.join(timeout=POLL_INTERVAL + 1)
         self.terminate_all()
         for s, h in getattr(self, "_prev", {}).items():
             signal.signal(s, h)
