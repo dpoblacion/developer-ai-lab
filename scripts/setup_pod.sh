@@ -21,8 +21,12 @@ python3 -m venv "$VENV"
 PIP="$VENV/bin/pip"
 $PIP install --quiet --upgrade pip
 
-echo "== Python deps =="
-$PIP install -r requirements.txt
+# A vLLM-only pod needs just pyyaml (for config parsing here + in start_vllm.sh); vLLM pulls
+# the rest of its serving stack below. We deliberately do NOT install requirements.txt — that
+# carries litellm[proxy] and its heavy transitive deps (polars, boto3, cryptography, …) which
+# run in the LOCAL toolchain container, never on the pod, and bloated startup past 10 min.
+echo "== Python deps (pyyaml; vLLM pulls its own stack) =="
+$PIP install pyyaml
 
 VLLM_VERSION=$("$VENV/bin/python" -c "import yaml; print(yaml.safe_load(open('$CONFIG')).get('vllm_version', ''))")
 
