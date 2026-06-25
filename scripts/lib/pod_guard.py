@@ -35,3 +35,20 @@ def add_entry(path, entry):
 def remove_entry(path, pod_id):
     entries = [e for e in read_state(path) if e.get("pod_id") != pod_id]
     write_state(path, entries)
+
+
+def select_orphans(entries, is_alive):
+    """Entries whose owner process is no longer alive."""
+    return [e for e in entries if not is_alive(e.get("owner_pid"))]
+
+
+def select_to_reap(pod_ids, created_at_by_id, now, reap_age):
+    """Pod ids to terminate. reap_age<=0 -> all; else age>=reap_age, unknown treated ancient."""
+    if reap_age <= 0:
+        return list(pod_ids)
+    out = []
+    for pid in pod_ids:
+        created = created_at_by_id.get(pid)
+        if created is None or (now - created) >= reap_age:
+            out.append(pid)
+    return out
