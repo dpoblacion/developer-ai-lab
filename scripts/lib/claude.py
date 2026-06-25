@@ -12,12 +12,19 @@ import time
 def build_claude_cmd(prompt, allowed_tools, max_turns, permission_mode="acceptEdits"):
     """Build the ``claude -p`` stream-json command line.
 
-    ``--bare`` skips local skills/plugins/hooks/MCP/CLAUDE.md: a much smaller system
-    prompt (fits self-hosted context windows) and an isolated, reproducible benchmark
-    that doesn't leak the operator's local config into the run.
+    ``--tools`` sets the AVAILABLE built-in toolset to exactly the phase's tools, so the
+    model actually gets ``Write`` (not just Bash/Edit/Read) and can't reach tools the phase
+    didn't grant. ``--allowedTools`` then auto-approves them so headless ``-p`` never blocks
+    on a permission prompt.
+
+    We deliberately do NOT use ``--bare``: it hard-forces the toolset to ``[Bash, Edit,
+    Read]`` (no ``Write``), which made file-creation phases fail. Its other benefits are
+    preserved another way — the small system prompt comes from restricting ``--tools``, and
+    isolation comes from the clean toolchain container (no ~/.claude, CLAUDE.md, or plugins).
     """
     return [
-        "claude", "-p", prompt, "--bare",
+        "claude", "-p", prompt,
+        "--tools", allowed_tools.replace(",", " "),
         "--output-format", "stream-json", "--verbose",
         "--allowedTools", allowed_tools,
         "--permission-mode", permission_mode,
