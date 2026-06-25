@@ -63,5 +63,5 @@ def run(scenario_path):
 
 
 if __name__ == "__main__":
-    path = sys.argv[1] if len(sys.argv) > 1 else "benchmarks/scenarios/todo-app/scenario.yaml"
+    path = sys.argv[1] if len(sys.argv) > 1 else "benchmarks/todo-app/scenario.yaml"
     run(path)

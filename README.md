@@ -169,7 +169,7 @@ extend this table as we test more models and hardware:
 - `configs/` — per-model vLLM serving configs (the only per-model change).
 - `scripts/` — runners + orchestrators (`orchestrate_pod.py`, `orchestrate_sdd.py`);
   `scripts/lib/` is tested pure logic (slo, hardware, gates, command builders, …).
-- `benchmarks/scenarios/todo-app/` — the SDD scenario (per-phase prompts + gate defs).
+- `benchmarks/todo-app/` — the SDD scenario (per-phase prompts + gate defs).
 - `infra/litellm/` — the Anthropic↔OpenAI proxy. `infra/runpod/` — pod spec.
   `infra/toolchain/` — the local SDD toolchain image.
 - `docs/` — goals, methodology, results.

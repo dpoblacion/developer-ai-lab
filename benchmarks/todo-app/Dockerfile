@@ -4,7 +4,7 @@
 #
 # Build order (the orchestrator picks this image automatically for the todo-app scenario):
 #   docker build -t dail-toolchain          -f infra/toolchain/Dockerfile .
-#   docker build -t dail-toolchain-todo-app -f benchmarks/scenarios/todo-app/Dockerfile .
+#   docker build -t dail-toolchain-todo-app -f benchmarks/todo-app/Dockerfile .
 FROM dail-toolchain
 
 # .NET SDK 10 from Microsoft's package feed (pulls the ICU/SSL/etc. runtime deps that the

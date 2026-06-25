@@ -3,7 +3,7 @@
 # run time (not baked), so iteration doesn't need a rebuild. Pinned base for reproducibility.
 #
 # Scenario-specific runtimes (e.g. the .NET SDK the todo-app gates build/score with) live in
-# a per-scenario overlay image that FROMs this one — see benchmarks/scenarios/<name>/Dockerfile.
+# a per-scenario overlay image that FROMs this one — see benchmarks/<name>/Dockerfile.
 # The orchestrator picks the overlay automatically when a scenario ships its own Dockerfile.
 FROM debian:bookworm-slim
 

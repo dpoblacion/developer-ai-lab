@@ -5,12 +5,12 @@ ends; gates run with the pod down.
 
 Requires (.env): RUNPOD_API_KEY, SSH_KEY_PATH. Local Docker + the dail-toolchain image
 (build: docker build -t dail-toolchain -f infra/toolchain/Dockerfile .). Scenarios that
-need extra runtime (e.g. todo-app's .NET SDK) ship benchmarks/scenarios/<name>/Dockerfile,
+need extra runtime (e.g. todo-app's .NET SDK) ship benchmarks/<name>/Dockerfile,
 an overlay on dail-toolchain; the orchestrator then uses dail-toolchain-<name>, which you
 build alongside the base (docker build -t dail-toolchain-<name> -f <that Dockerfile> .).
 
 Usage: python -m scripts.orchestrate_sdd [--config configs/qwen3coder.yaml]
-       [--spec infra/runpod/pod.yaml] [--scenario benchmarks/scenarios/todo-app/scenario.yaml]
+       [--spec infra/runpod/pod.yaml] [--scenario benchmarks/todo-app/scenario.yaml]
 """
 
 import argparse
@@ -78,7 +78,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--spec", default="infra/runpod/pod.yaml")
     ap.add_argument("--config", default="configs/qwen3coder.yaml")
-    ap.add_argument("--scenario", default="benchmarks/scenarios/todo-app/scenario.yaml")
+    ap.add_argument("--scenario", default="benchmarks/todo-app/scenario.yaml")
     ap.add_argument("--key", default=os.environ.get("SSH_KEY_PATH"))
     args = ap.parse_args()
 

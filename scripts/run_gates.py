@@ -1,7 +1,7 @@
 """Score a produced SDD workspace with the scenario's deterministic gates.
 
 Runs with the pod DOWN (no model needed). Usage:
-  python -m scripts.run_gates benchmarks/scenarios/todo-app/scenario.yaml <workspace_dir>
+  python -m scripts.run_gates benchmarks/todo-app/scenario.yaml <workspace_dir>
 """
 
 import json

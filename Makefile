@@ -32,11 +32,11 @@ sdd-run:
 # Score an already-produced SDD workspace with the scenario gates (no pod needed).
 # Usage: make gates WORKSPACE=results/<run>/sdd/workspace
 gates:
-	$(PYTHON) -m scripts.run_gates benchmarks/scenarios/todo-app/scenario.yaml $(WORKSPACE)
+	$(PYTHON) -m scripts.run_gates benchmarks/todo-app/scenario.yaml $(WORKSPACE)
 
 # Generation only (in-process; expects a reachable model). Mostly for debugging.
 sdd:
-	$(PYTHON) -m scripts.run_sdd_scenario benchmarks/scenarios/todo-app/scenario.yaml
+	$(PYTHON) -m scripts.run_sdd_scenario benchmarks/todo-app/scenario.yaml
 
 # Panic button: terminate paid pods (all, or older than REAP_AGE seconds).
 reap:
