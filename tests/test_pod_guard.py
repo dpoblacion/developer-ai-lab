@@ -70,3 +70,54 @@ class AbortReasonTest(unittest.TestCase):
 
     def test_no_phase_ceiling_when_none(self):
         self.assertIsNone(self.call(now=800, last=799, max_phase=None))
+
+
+class FakeClock:
+    def __init__(self): self.t = 0.0
+    def __call__(self): return self.t
+
+
+class PodGuardTest(unittest.TestCase):
+    def setUp(self):
+        self.dir = tempfile.mkdtemp()
+        self.path = os.path.join(self.dir, "active-pods.json")
+        self.killed = []
+        self.clock = FakeClock()
+
+    def guard(self, **kw):
+        return pod_guard.PodGuard("test", self.killed.append, state_path=self.path,
+                                  clock=self.clock, is_alive=lambda p: False, **kw)
+
+    def test_terminate_all_idempotent(self):
+        g = self.guard()
+        g.track("p1", progress_fn=lambda: 0)
+        g.terminate_all()
+        g.terminate_all()
+        self.assertEqual(self.killed, ["p1"])
+
+    def test_stall_evaluates_to_terminate(self):
+        g = self.guard(max_run=10_000)
+        g.track("p1", progress_fn=lambda: 0)   # progress never changes
+        g.phase("generation")                  # stall=STALL_GEN default
+        self.clock.t = pod_guard.STALL_GEN + 1
+        self.assertEqual(g._evaluate(self.clock.t), "stall")
+        self.assertEqual(self.killed, ["p1"])
+        with self.assertRaises(pod_guard.PodGuardAborted):
+            g.raise_if_aborted()
+
+    def test_progress_resets_stall(self):
+        counter = {"n": 0}
+        g = self.guard(max_run=10_000)
+        g.track("p1", progress_fn=lambda: counter["n"])
+        g.phase("generation")
+        counter["n"] = 1                       # progress advanced
+        self.clock.t = pod_guard.STALL_GEN - 1
+        self.assertIsNone(g._evaluate(self.clock.t))
+        self.assertEqual(self.killed, [])
+
+    def test_reap_orphans_on_init_kills_dead_owner(self):
+        pod_guard.add_entry(self.path, {"pod_id": "ghost", "created_at": 0,
+                                        "owner_pid": 999999, "label": "old"})
+        self.guard()  # is_alive=False -> ghost reaped
+        self.assertIn("ghost", self.killed)
+        self.assertEqual(pod_guard.read_state(self.path), [])
