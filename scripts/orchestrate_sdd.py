@@ -114,20 +114,24 @@ def main():
             raise SystemExit("FAILED step 1: no GPU candidate available")
         pod_id = pod["id"]
         log(f"  pod {pod_id} created; waiting for it to be ready ...")
-        ip = port = None
-        for _ in range(180):  # ~15 min
-            p = runpod.get_pod(pod_id)
-            if is_ready(p):
-                ip, port = ssh_endpoint(p)
-                break
-            time.sleep(5)
-        if not ip:
-            raise SystemExit("FAILED step 1: pod did not become ready in 15 min")
-        log(f"  pod ready at {ip}:{port}")
 
         with PodGuard(label=f"sdd-{cfg['served_model_name']}",
                       terminate_fn=runpod.terminate_pod) as guard:
-            guard.track(pod["id"], progress_fn=lambda: _startup_progress(ip, port, args.key))
+            guard.track(pod["id"], progress_fn=lambda: 0)
+
+            ip = port = None
+            for _ in range(180):  # ~15 min
+                guard.heartbeat()
+                p = runpod.get_pod(pod_id)
+                if is_ready(p):
+                    ip, port = ssh_endpoint(p)
+                    break
+                time.sleep(5)
+            if not ip:
+                raise SystemExit("FAILED step 1: pod did not become ready in 15 min")
+            log(f"  pod ready at {ip}:{port}")
+
+            guard.set_progress(pod["id"], lambda: _startup_progress(ip, port, args.key))
             guard.phase("startup")
 
             log("STEP 2/5: pushing repo + launching setup/vLLM on the pod")
@@ -148,7 +152,7 @@ def main():
             log("STEP 3/5: waiting for vLLM to serve (via SSH tunnel); fails fast on pod errors")
             tunnel = subprocess.Popen(ssh_tunnel_cmd(ip, port, args.key))
             reachable = False
-            for i in range(360):  # ~30 min ceiling (covers setup + model download/load)
+            for i in range(360):  # backstop ceiling; guard MAX_STARTUP (~12 min) governs
                 guard.raise_if_aborted()
                 if subprocess.run(["curl", "-sf", "http://localhost:8000/health"],
                                   stdout=subprocess.DEVNULL).returncode == 0:
@@ -171,7 +175,7 @@ def main():
                     tunnel = subprocess.Popen(ssh_tunnel_cmd(ip, port, args.key))
                 time.sleep(5)
             if not reachable:
-                raise SystemExit("FAILED step 3: vLLM did not serve within 30 min")
+                raise SystemExit("FAILED step 3: vLLM did not serve within backstop window (guard MAX_STARTUP governs)")
             log("  vLLM reachable via tunnel.")
 
             # Optional diagnostic (SDD_VLLM_PROBE=1): hit vLLM directly through the tunnel with a
