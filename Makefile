@@ -1,7 +1,7 @@
 PYTHON ?= python3
 CONFIG ?= configs/qwen3coder.yaml
 
-.PHONY: test orchestrate sdd-run gates setup pod concurrency sdd
+.PHONY: test orchestrate sdd-run gates setup pod concurrency sdd reap
 
 test:
 	$(PYTHON) -m unittest discover -s tests
@@ -37,3 +37,7 @@ gates:
 # Generation only (in-process; expects a reachable model). Mostly for debugging.
 sdd:
 	$(PYTHON) -m scripts.run_sdd_scenario benchmarks/scenarios/todo-app/scenario.yaml
+
+# Panic button: terminate paid pods (all, or older than REAP_AGE seconds).
+reap:
+	$(PYTHON) -m scripts.reap_pods
