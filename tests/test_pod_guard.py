@@ -49,3 +49,24 @@ class SelectionTest(unittest.TestCase):
         created = {"old": 0.0, "young": 90.0}  # now=100
         got = pod_guard.select_to_reap(["old", "young", "unknown"], created, now=100.0, reap_age=30)
         self.assertEqual(sorted(got), ["old", "unknown"])
+
+
+class AbortReasonTest(unittest.TestCase):
+    def call(self, now, last, phase_start=0.0, run_start=0.0, stall=300, max_phase=720, max_run=3600):
+        return pod_guard.abort_reason(now, last, phase_start, run_start,
+                                      stall=stall, max_phase=max_phase, max_run=max_run)
+
+    def test_ok_when_recent_progress(self):
+        self.assertIsNone(self.call(now=100, last=50))
+
+    def test_stall_trips(self):
+        self.assertEqual(self.call(now=400, last=50), "stall")
+
+    def test_phase_ceiling_trips(self):
+        self.assertEqual(self.call(now=800, last=799), "max_phase")
+
+    def test_max_run_wins(self):
+        self.assertEqual(self.call(now=4000, last=3999, max_phase=720), "max_run")
+
+    def test_no_phase_ceiling_when_none(self):
+        self.assertIsNone(self.call(now=800, last=799, max_phase=None))

@@ -52,3 +52,15 @@ def select_to_reap(pod_ids, created_at_by_id, now, reap_age):
         if created is None or (now - created) >= reap_age:
             out.append(pid)
     return out
+
+
+def abort_reason(now, last_progress_at, phase_started_at, run_started_at,
+                 *, stall, max_phase, max_run):
+    """Return why the pod should be killed now, or None. Global ceiling wins first."""
+    if now - run_started_at >= max_run:
+        return "max_run"
+    if max_phase is not None and now - phase_started_at >= max_phase:
+        return "max_phase"
+    if now - last_progress_at >= stall:
+        return "stall"
+    return None
