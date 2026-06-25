@@ -121,3 +121,18 @@ class PodGuardTest(unittest.TestCase):
         self.guard()  # is_alive=False -> ghost reaped
         self.assertIn("ghost", self.killed)
         self.assertEqual(pod_guard.read_state(self.path), [])
+
+    def test_set_progress_repoints_sampler_no_new_state_entry(self):
+        counter = {"n": 0}
+        g = self.guard(max_run=10_000)
+        g.track("p1", progress_fn=lambda: counter["n"])
+        # State file has exactly one entry for p1
+        self.assertEqual(len(pod_guard.read_state(self.path)), 1)
+        # Re-point the sampler to a different function
+        new_fn = lambda: 999
+        g.set_progress("p1", new_fn)
+        # _sample() now uses the new fn
+        self.assertEqual(g._sample(), 999)
+        # State file still has exactly one entry (no duplicate)
+        self.assertEqual(len(pod_guard.read_state(self.path)), 1)
+        self.assertEqual(pod_guard.read_state(self.path)[0]["pod_id"], "p1")

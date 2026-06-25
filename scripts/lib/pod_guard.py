@@ -142,6 +142,10 @@ class PodGuard:
         self._last_progress = progress_fn()
         self._last_progress_at = now
 
+    def set_progress(self, pod_id, progress_fn):
+        """Re-point a tracked pod's progress sampler (no new state entry)."""
+        self._tracked[pod_id] = progress_fn
+
     def phase(self, name):
         self._policy = PHASES[name]
         now = self._clock()

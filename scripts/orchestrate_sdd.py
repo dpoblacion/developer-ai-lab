@@ -21,6 +21,7 @@ import sys
 import time
 
 from scripts.lib.dotenv import load_dotenv
+from scripts.lib.pod_guard import PodGuard, PodGuardAborted
 from scripts.lib.runpod_pod import (
     build_create_kwargs, is_ready, ssh_endpoint, ssh_run_cmd, rsync_up_cmd)
 from scripts.lib.sdd_cmds import ssh_tunnel_cmd, docker_run_cmd
@@ -46,6 +47,27 @@ def log(msg):
 def _run(cmd, timeout=None):
     log("+ " + " ".join(cmd))
     subprocess.run(cmd, check=True, timeout=timeout)  # TimeoutExpired -> finally stops the pod
+
+
+def _startup_progress(ip, port, key):
+    """A monotonic-ish token: pod vllm.log line count + HF dir bytes. 0 on SSH error."""
+    out = subprocess.run(ssh_run_cmd(ip, port, key,
+        "wc -l < /workspace/vllm.log 2>/dev/null; du -sb /workspace/huggingface 2>/dev/null | cut -f1"),
+        capture_output=True, text=True)
+    nums = [int(x) for x in out.stdout.split() if x.strip().isdigit()]
+    return sum(nums)
+
+
+def _gen_progress(out_dir):
+    """Largest mtime under the SDD out dir; advances as phases write files."""
+    latest = 0.0
+    for root, _dirs, files in os.walk(out_dir):
+        for f in files:
+            try:
+                latest = max(latest, os.path.getmtime(os.path.join(root, f)))
+            except OSError:
+                pass
+    return latest
 
 
 def main():
@@ -103,90 +125,96 @@ def main():
             raise SystemExit("FAILED step 1: pod did not become ready in 15 min")
         log(f"  pod ready at {ip}:{port}")
 
-        log("STEP 2/5: pushing repo + launching setup/vLLM on the pod")
-        for _ in range(24):
-            if subprocess.run(ssh_run_cmd(ip, port, args.key, f"mkdir -p {REMOTE_DIR}"),
-                              stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode == 0:
-                break
-            time.sleep(5)
-        _run(rsync_up_cmd(ip, port, args.key, "./", REMOTE_DIR + "/", EXCLUDES), timeout=300)
-        # Detach setup + vLLM (subshell, stdin from /dev/null) so ssh returns immediately
-        # instead of hanging on the backgrounded process's channel. Errors land in vllm.log,
-        # which the health-poll below checks (fail-fast).
-        _run(ssh_run_cmd(ip, port, args.key,
-             f"(cd {REMOTE_DIR} && INSTALL_CLAUDE=0 ./scripts/setup_pod.sh {args.config} "
-             f"&& ./scripts/start_vllm.sh {args.config}) </dev/null >/workspace/vllm.log 2>&1 &"),
-             timeout=120)
+        with PodGuard(label=f"sdd-{cfg['served_model_name']}",
+                      terminate_fn=runpod.terminate_pod) as guard:
+            guard.track(pod["id"], progress_fn=lambda: _startup_progress(ip, port, args.key))
+            guard.phase("startup")
 
-        log("STEP 3/5: waiting for vLLM to serve (via SSH tunnel); fails fast on pod errors")
-        tunnel = subprocess.Popen(ssh_tunnel_cmd(ip, port, args.key))
-        reachable = False
-        for i in range(360):  # ~30 min ceiling (covers setup + model download/load)
-            if subprocess.run(["curl", "-sf", "http://localhost:8000/health"],
-                              stdout=subprocess.DEVNULL).returncode == 0:
-                reachable = True
-                break
-            if i % 12 == 11:  # ~every 60s: progress + check vLLM didn't fail to start
-                # Match fatal patterns only on non-WARNING/INFO lines: vLLM emits benign FP8
-                # warnings like "Config file not found at ..." that would otherwise false-trip
-                # 'not found' and abort a healthy (still-loading) startup.
-                chk = subprocess.run(ssh_run_cmd(ip, port, args.key,
-                    "grep -vE 'WARNING|INFO' /workspace/vllm.log "
-                    "| grep -qE 'not found|Traceback|RuntimeError|No available' "
-                    "&& tail -25 /workspace/vllm.log || true"),
+            log("STEP 2/5: pushing repo + launching setup/vLLM on the pod")
+            for _ in range(24):
+                if subprocess.run(ssh_run_cmd(ip, port, args.key, f"mkdir -p {REMOTE_DIR}"),
+                                  stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode == 0:
+                    break
+                time.sleep(5)
+            _run(rsync_up_cmd(ip, port, args.key, "./", REMOTE_DIR + "/", EXCLUDES), timeout=300)
+            # Detach setup + vLLM (subshell, stdin from /dev/null) so ssh returns immediately
+            # instead of hanging on the backgrounded process's channel. Errors land in vllm.log,
+            # which the health-poll below checks (fail-fast).
+            _run(ssh_run_cmd(ip, port, args.key,
+                 f"(cd {REMOTE_DIR} && INSTALL_CLAUDE=0 ./scripts/setup_pod.sh {args.config} "
+                 f"&& ./scripts/start_vllm.sh {args.config}) </dev/null >/workspace/vllm.log 2>&1 &"),
+                 timeout=120)
+
+            log("STEP 3/5: waiting for vLLM to serve (via SSH tunnel); fails fast on pod errors")
+            tunnel = subprocess.Popen(ssh_tunnel_cmd(ip, port, args.key))
+            reachable = False
+            for i in range(360):  # ~30 min ceiling (covers setup + model download/load)
+                guard.raise_if_aborted()
+                if subprocess.run(["curl", "-sf", "http://localhost:8000/health"],
+                                  stdout=subprocess.DEVNULL).returncode == 0:
+                    reachable = True
+                    break
+                if i % 12 == 11:  # ~every 60s: progress + check vLLM didn't fail to start
+                    # Match fatal patterns only on non-WARNING/INFO lines: vLLM emits benign FP8
+                    # warnings like "Config file not found at ..." that would otherwise false-trip
+                    # 'not found' and abort a healthy (still-loading) startup.
+                    chk = subprocess.run(ssh_run_cmd(ip, port, args.key,
+                        "grep -vE 'WARNING|INFO' /workspace/vllm.log "
+                        "| grep -qE 'not found|Traceback|RuntimeError|No available' "
+                        "&& tail -25 /workspace/vllm.log || true"),
+                        capture_output=True, text=True)
+                    if chk.stdout.strip():
+                        log("FAILED step 3: vLLM failed to start on the pod:\n" + chk.stdout)
+                        raise SystemExit("vLLM startup failed")
+                    log(f"  still waiting for vLLM ... ({(i + 1) * 5 // 60} min)")
+                if tunnel.poll() is not None:  # tunnel died — reopen it
+                    tunnel = subprocess.Popen(ssh_tunnel_cmd(ip, port, args.key))
+                time.sleep(5)
+            if not reachable:
+                raise SystemExit("FAILED step 3: vLLM did not serve within 30 min")
+            log("  vLLM reachable via tunnel.")
+
+            # Optional diagnostic (SDD_VLLM_PROBE=1): hit vLLM directly through the tunnel with a
+            # tool, streaming + non-streaming, to see whether vLLM populates tool_calls or leaves
+            # the call in content — isolates the vLLM tool parser from LiteLLM + Claude Code.
+            if os.getenv("SDD_VLLM_PROBE") == "1":
+                log("STEP 3b: probing vLLM tool parsing directly (SDD_VLLM_PROBE=1)")
+                probe = subprocess.run(
+                    [sys.executable, "-m", "scripts.probe_vllm_tools",
+                     "http://localhost:8000/v1", served, str(out_dir / "vllm_probe.json")],
                     capture_output=True, text=True)
-                if chk.stdout.strip():
-                    log("FAILED step 3: vLLM failed to start on the pod:\n" + chk.stdout)
-                    raise SystemExit("vLLM startup failed")
-                log(f"  still waiting for vLLM ... ({(i + 1) * 5 // 60} min)")
-            if tunnel.poll() is not None:  # tunnel died — reopen it
-                tunnel = subprocess.Popen(ssh_tunnel_cmd(ip, port, args.key))
-            time.sleep(5)
-        if not reachable:
-            raise SystemExit("FAILED step 3: vLLM did not serve within 30 min")
-        log("  vLLM reachable via tunnel.")
+                log(probe.stdout + (probe.stderr or ""))
 
-        # Optional diagnostic (SDD_VLLM_PROBE=1): hit vLLM directly through the tunnel with a
-        # tool, streaming + non-streaming, to see whether vLLM populates tool_calls or leaves
-        # the call in content — isolates the vLLM tool parser from LiteLLM + Claude Code.
-        if os.getenv("SDD_VLLM_PROBE") == "1":
-            log("STEP 3b: probing vLLM tool parsing directly (SDD_VLLM_PROBE=1)")
-            probe = subprocess.run(
-                [sys.executable, "-m", "scripts.probe_vllm_tools",
-                 "http://localhost:8000/v1", served, str(out_dir / "vllm_probe.json")],
-                capture_output=True, text=True)
-            log(probe.stdout + (probe.stderr or ""))
-
-        # 4. generation in the toolchain container. Chain: Claude Code -> LiteLLM -> destream
-        # proxy -> tunnel -> pod vLLM. The proxy forces the upstream vLLM call non-streaming
-        # (vLLM's qwen3 streaming tool parser leaks tool calls into content; non-streaming is
-        # correct) and re-emits SSE, so Claude Code still streams with tool calls intact.
-        env = {
-            "SDD_OUT_DIR": "/out",
-            "ANTHROPIC_BASE_URL": "http://localhost:4000",
-            "ANTHROPIC_AUTH_TOKEN": "sk-dev-lab",
-            "ANTHROPIC_MODEL": "dev-model",
-            "LITELLM_UPSTREAM_MODEL": f"hosted_vllm/{served}",  # -> /chat/completions, not /responses
-            "VLLM_BASE": "http://localhost:8011/v1",            # LiteLLM -> destream proxy
-            "DESTREAM_UPSTREAM": "http://host.docker.internal:8000",  # proxy -> pod vLLM (tunnel)
-            "PYTHONPATH": "/repo",
-            "MODEL": served,
-        }
-        log("STEP 4/5: generation in the toolchain container (agent builds the app)")
-        gen = ("set -e; "
-               "python3 -m scripts.destream_proxy > /tmp/destream.log 2>&1 & "
-               "litellm --config /repo/infra/litellm/config.yaml --port 4000 > /tmp/litellm.log 2>&1 & "
-               "sleep 8; "
-               f"python3 -m scripts.run_sdd_scenario /repo/{args.scenario}")
-        _run(docker_run_cmd(image, ["bash", "-lc", gen], mounts=mounts, env=env,
-                            workdir="/repo", name="dail-sdd-gen"),
-             timeout=int(os.getenv("SDD_GEN_TIMEOUT", "3600")))
+            # 4. generation in the toolchain container. Chain: Claude Code -> LiteLLM -> destream
+            # proxy -> tunnel -> pod vLLM. The proxy forces the upstream vLLM call non-streaming
+            # (vLLM's qwen3 streaming tool parser leaks tool calls into content; non-streaming is
+            # correct) and re-emits SSE, so Claude Code still streams with tool calls intact.
+            guard.phase("generation")
+            guard.set_progress(pod["id"], lambda: _gen_progress(str(out_dir)))
+            env = {
+                "SDD_OUT_DIR": "/out",
+                "ANTHROPIC_BASE_URL": "http://localhost:4000",
+                "ANTHROPIC_AUTH_TOKEN": "sk-dev-lab",
+                "ANTHROPIC_MODEL": "dev-model",
+                "LITELLM_UPSTREAM_MODEL": f"hosted_vllm/{served}",  # -> /chat/completions, not /responses
+                "VLLM_BASE": "http://localhost:8011/v1",            # LiteLLM -> destream proxy
+                "DESTREAM_UPSTREAM": "http://host.docker.internal:8000",  # proxy -> pod vLLM (tunnel)
+                "PYTHONPATH": "/repo",
+                "MODEL": served,
+            }
+            log("STEP 4/5: generation in the toolchain container (agent builds the app)")
+            gen = ("set -e; "
+                   "python3 -m scripts.destream_proxy > /tmp/destream.log 2>&1 & "
+                   "litellm --config /repo/infra/litellm/config.yaml --port 4000 > /tmp/litellm.log 2>&1 & "
+                   "sleep 8; "
+                   f"python3 -m scripts.run_sdd_scenario /repo/{args.scenario}")
+            _run(docker_run_cmd(image, ["bash", "-lc", gen], mounts=mounts, env=env,
+                                workdir="/repo", name="dail-sdd-gen"),
+                 timeout=int(os.getenv("SDD_GEN_TIMEOUT", "3600")))
+        # PodGuard.__exit__ terminates the pod; runpod.terminate_pod not called here.
     finally:
         if tunnel:
             tunnel.terminate()
-        if pod:
-            log(f"stopping pod {pod['id']} (generation done / failed) ...")
-            runpod.terminate_pod(pod["id"])
 
     log("STEP 5/5: scoring gates (pod stopped)")
     _run(docker_run_cmd(
