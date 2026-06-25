@@ -46,14 +46,17 @@ def log(msg):
 
 def _run(cmd, timeout=None):
     log("+ " + " ".join(cmd))
-    subprocess.run(cmd, check=True, timeout=timeout)  # TimeoutExpired -> finally stops the pod
+    subprocess.run(cmd, check=True, timeout=timeout)  # TimeoutExpired propagates; PodGuard.__exit__ terminates the pod
 
 
 def _startup_progress(ip, port, key):
-    """A monotonic-ish token: pod vllm.log line count + HF dir bytes. 0 on SSH error."""
-    out = subprocess.run(ssh_run_cmd(ip, port, key,
-        "wc -l < /workspace/vllm.log 2>/dev/null; du -sb /workspace/huggingface 2>/dev/null | cut -f1"),
-        capture_output=True, text=True)
+    """A monotonic-ish token: pod vllm.log line count + HF dir bytes. 0 on SSH error/timeout."""
+    try:
+        out = subprocess.run(ssh_run_cmd(ip, port, key,
+            "wc -l < /workspace/vllm.log 2>/dev/null; du -sb /workspace/huggingface 2>/dev/null | cut -f1"),
+            capture_output=True, text=True, timeout=15)
+    except subprocess.TimeoutExpired:
+        return 0
     nums = [int(x) for x in out.stdout.split() if x.strip().isdigit()]
     return sum(nums)
 
@@ -104,20 +107,19 @@ def main():
     tunnel = None
     try:
         log("STEP 1/5: creating vLLM-only pod")
-        for gpu in spec["gpu_type_ids"]:
-            try:
-                pod = runpod.create_pod(**build_create_kwargs(spec, gpu, pub))
-                break
-            except Exception as exc:
-                log(f"  {gpu} unavailable: {exc}")
-        if not pod:
-            raise SystemExit("FAILED step 1: no GPU candidate available")
-        pod_id = pod["id"]
-        log(f"  pod {pod_id} created; waiting for it to be ready ...")
-
         with PodGuard(label=f"sdd-{cfg['served_model_name']}",
                       terminate_fn=runpod.terminate_pod) as guard:
-            guard.track(pod["id"], progress_fn=lambda: 0)
+            for gpu in spec["gpu_type_ids"]:
+                try:
+                    pod = runpod.create_pod(**build_create_kwargs(spec, gpu, pub))
+                    guard.track(pod["id"], progress_fn=lambda: 0)
+                    break
+                except Exception as exc:
+                    log(f"  {gpu} unavailable: {exc}")
+            if not pod:
+                raise SystemExit("FAILED step 1: no GPU candidate available")
+            pod_id = pod["id"]
+            log(f"  pod {pod_id} created; waiting for it to be ready ...")
 
             ip = port = None
             for _ in range(180):  # ~15 min

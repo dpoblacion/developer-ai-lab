@@ -5,8 +5,12 @@ or threads. ``PodGuard`` drives them over a real pod lifecycle and is injected w
 clock / terminate_fn / progress samplers so its watchdog is testable deterministically.
 """
 
+import atexit
 import json
 import os
+import signal
+import threading
+import time
 
 
 def read_state(path):
@@ -29,12 +33,16 @@ def write_state(path, entries):
 
 
 def add_entry(path, entry):
+    # Single-writer assumption: one orchestrator run at a time. Concurrent runs could
+    # clobber each other's entries because this is an unlocked read-modify-write. The
+    # backstop is `make reap` (REAP_AGE=0 terminates all tracked pods via the API).
     entries = read_state(path)
     entries.append(entry)
     write_state(path, entries)
 
 
 def remove_entry(path, pod_id):
+    # See add_entry: single-writer assumption applies here too.
     entries = [e for e in read_state(path) if e.get("pod_id") != pod_id]
     write_state(path, entries)
 
@@ -66,12 +74,6 @@ def abort_reason(now, last_progress_at, phase_started_at, run_started_at,
     if now - last_progress_at >= stall:
         return "stall"
     return None
-
-
-import atexit
-import signal
-import threading
-import time
 
 
 def _env_int(name, default):
