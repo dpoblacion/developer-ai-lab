@@ -16,7 +16,10 @@ max_model_len: 32768
 max_num_seqs: 8
 
 # Tool calling (Claude Code sends tools): required for the agent to work.
-tool_call_parser: qwen3_coder
+# qwen3_xml, not qwen3_coder: the qwen3_coder parser leaves Qwen3-Coder's tool calls in
+# the message content (tool_calls stays empty) — a known vLLM bug for this model. The vLLM
+# docs list qwen3_xml as the parser for Qwen3-Coder-30B-A3B-Instruct; it ships in 0.11.0.
+tool_call_parser: qwen3_xml
 enable_auto_tool_choice: true
 
 env:

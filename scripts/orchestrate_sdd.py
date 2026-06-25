@@ -4,7 +4,10 @@ an SSH tunnel (LiteLLM runs locally in the container). The pod stops as soon as 
 ends; gates run with the pod down.
 
 Requires (.env): RUNPOD_API_KEY, SSH_KEY_PATH. Local Docker + the dail-toolchain image
-(build: docker build -t dail-toolchain -f infra/toolchain/Dockerfile .).
+(build: docker build -t dail-toolchain -f infra/toolchain/Dockerfile .). Scenarios that
+need extra runtime (e.g. todo-app's .NET SDK) ship benchmarks/scenarios/<name>/Dockerfile,
+an overlay on dail-toolchain; the orchestrator then uses dail-toolchain-<name>, which you
+build alongside the base (docker build -t dail-toolchain-<name> -f <that Dockerfile> .).
 
 Usage: python -m scripts.orchestrate_sdd [--config configs/qwen3coder.yaml]
        [--spec infra/runpod/pod.yaml] [--scenario benchmarks/scenarios/todo-app/scenario.yaml]
@@ -14,6 +17,7 @@ import argparse
 import os
 import pathlib
 import subprocess
+import sys
 import time
 
 from scripts.lib.dotenv import load_dotenv
@@ -23,7 +27,16 @@ from scripts.lib.sdd_cmds import ssh_tunnel_cmd, docker_run_cmd
 
 REMOTE_DIR = "/workspace/developer-ai-lab"
 EXCLUDES = [".git", "results", "__pycache__", ".venv", "docs/superpowers"]
-IMAGE = "dail-toolchain"
+BASE_IMAGE = "dail-toolchain"
+
+
+def toolchain_image(scenario_path):
+    """Pick the toolchain image for a scenario: its overlay (dail-toolchain-<name>) when the
+    scenario ships its own Dockerfile, else the scenario-agnostic base."""
+    scenario_dir = pathlib.Path(scenario_path).parent
+    if (scenario_dir / "Dockerfile").exists():
+        return f"{BASE_IMAGE}-{scenario_dir.name}"
+    return BASE_IMAGE
 
 
 def log(msg):
@@ -48,6 +61,7 @@ def main():
     if not api_key or not args.key:
         raise SystemExit("Set RUNPOD_API_KEY and SSH_KEY_PATH in .env")
     args.key = os.path.expanduser(args.key)
+    image = toolchain_image(args.scenario)
 
     import yaml
     import runpod
@@ -113,8 +127,12 @@ def main():
                 reachable = True
                 break
             if i % 12 == 11:  # ~every 60s: progress + check vLLM didn't fail to start
+                # Match fatal patterns only on non-WARNING/INFO lines: vLLM emits benign FP8
+                # warnings like "Config file not found at ..." that would otherwise false-trip
+                # 'not found' and abort a healthy (still-loading) startup.
                 chk = subprocess.run(ssh_run_cmd(ip, port, args.key,
-                    "grep -qE 'not found|Traceback|RuntimeError|No available' /workspace/vllm.log "
+                    "grep -vE 'WARNING|INFO' /workspace/vllm.log "
+                    "| grep -qE 'not found|Traceback|RuntimeError|No available' "
                     "&& tail -25 /workspace/vllm.log || true"),
                     capture_output=True, text=True)
                 if chk.stdout.strip():
@@ -128,23 +146,39 @@ def main():
             raise SystemExit("FAILED step 3: vLLM did not serve within 30 min")
         log("  vLLM reachable via tunnel.")
 
-        # 4. generation in the toolchain container (LiteLLM local -> tunnel -> pod vLLM)
+        # Optional diagnostic (SDD_VLLM_PROBE=1): hit vLLM directly through the tunnel with a
+        # tool, streaming + non-streaming, to see whether vLLM populates tool_calls or leaves
+        # the call in content — isolates the vLLM tool parser from LiteLLM + Claude Code.
+        if os.getenv("SDD_VLLM_PROBE") == "1":
+            log("STEP 3b: probing vLLM tool parsing directly (SDD_VLLM_PROBE=1)")
+            probe = subprocess.run(
+                [sys.executable, "-m", "scripts.probe_vllm_tools",
+                 "http://localhost:8000/v1", served, str(out_dir / "vllm_probe.json")],
+                capture_output=True, text=True)
+            log(probe.stdout + (probe.stderr or ""))
+
+        # 4. generation in the toolchain container. Chain: Claude Code -> LiteLLM -> destream
+        # proxy -> tunnel -> pod vLLM. The proxy forces the upstream vLLM call non-streaming
+        # (vLLM's qwen3 streaming tool parser leaks tool calls into content; non-streaming is
+        # correct) and re-emits SSE, so Claude Code still streams with tool calls intact.
         env = {
             "SDD_OUT_DIR": "/out",
             "ANTHROPIC_BASE_URL": "http://localhost:4000",
             "ANTHROPIC_AUTH_TOKEN": "sk-dev-lab",
             "ANTHROPIC_MODEL": "dev-model",
             "LITELLM_UPSTREAM_MODEL": f"hosted_vllm/{served}",  # -> /chat/completions, not /responses
-            "VLLM_BASE": "http://host.docker.internal:8000/v1",
+            "VLLM_BASE": "http://localhost:8011/v1",            # LiteLLM -> destream proxy
+            "DESTREAM_UPSTREAM": "http://host.docker.internal:8000",  # proxy -> pod vLLM (tunnel)
             "PYTHONPATH": "/repo",
             "MODEL": served,
         }
         log("STEP 4/5: generation in the toolchain container (agent builds the app)")
         gen = ("set -e; "
+               "python3 -m scripts.destream_proxy > /tmp/destream.log 2>&1 & "
                "litellm --config /repo/infra/litellm/config.yaml --port 4000 > /tmp/litellm.log 2>&1 & "
                "sleep 8; "
                f"python3 -m scripts.run_sdd_scenario /repo/{args.scenario}")
-        _run(docker_run_cmd(IMAGE, ["bash", "-lc", gen], mounts=mounts, env=env,
+        _run(docker_run_cmd(image, ["bash", "-lc", gen], mounts=mounts, env=env,
                             workdir="/repo", name="dail-sdd-gen"),
              timeout=int(os.getenv("SDD_GEN_TIMEOUT", "3600")))
     finally:
@@ -156,7 +190,7 @@ def main():
 
     log("STEP 5/5: scoring gates (pod stopped)")
     _run(docker_run_cmd(
-        IMAGE, ["bash", "-lc", f"python3 -m scripts.run_gates /repo/{args.scenario} /out/workspace"],
+        image, ["bash", "-lc", f"python3 -m scripts.run_gates /repo/{args.scenario} /out/workspace"],
         mounts=mounts, env={"PYTHONPATH": "/repo", "MODEL": served},
         workdir="/repo", name="dail-sdd-gates", host_gateway=False), timeout=600)
     log(f"DONE. Results under {out_dir}")

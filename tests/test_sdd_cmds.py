@@ -1,6 +1,19 @@
 import unittest
 
 from scripts.lib.sdd_cmds import ssh_tunnel_cmd, docker_run_cmd
+from scripts.orchestrate_sdd import toolchain_image
+
+
+class ToolchainImageTest(unittest.TestCase):
+    def test_scenario_without_dockerfile_uses_base(self):
+        self.assertEqual(
+            toolchain_image("benchmarks/scenarios/smoke/scenario.yaml"),
+            "dail-toolchain")
+
+    def test_scenario_with_dockerfile_uses_overlay(self):
+        self.assertEqual(
+            toolchain_image("benchmarks/scenarios/todo-app/scenario.yaml"),
+            "dail-toolchain-todo-app")
 
 
 class SddCmdsTest(unittest.TestCase):
