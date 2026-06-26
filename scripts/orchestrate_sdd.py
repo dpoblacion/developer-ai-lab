@@ -44,8 +44,13 @@ def log(msg):
     print(f"[{time.strftime('%H:%M:%S')}] {msg}", flush=True)
 
 
-def _run(cmd, timeout=None):
-    log("+ " + " ".join(cmd))
+def _run(cmd, timeout=None, label=None):
+    # Log a short label by default (the STEP n/5 lines already say what's happening); the
+    # full command — long rsync/ssh/docker lines — only with SDD_VERBOSE=1 for debugging.
+    if os.getenv("SDD_VERBOSE"):
+        log("+ " + " ".join(cmd))
+    else:
+        log("+ " + (label or " ".join(cmd[:2]) + " …"))
     subprocess.run(cmd, check=True, timeout=timeout)  # TimeoutExpired propagates; PodGuard.__exit__ terminates the pod
 
 
@@ -142,14 +147,15 @@ def main():
                                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode == 0:
                     break
                 time.sleep(5)
-            _run(rsync_up_cmd(ip, port, args.key, "./", REMOTE_DIR + "/", EXCLUDES), timeout=300)
+            _run(rsync_up_cmd(ip, port, args.key, "./", REMOTE_DIR + "/", EXCLUDES),
+                 timeout=300, label="rsync repo -> pod")
             # Detach setup + vLLM (subshell, stdin from /dev/null) so ssh returns immediately
             # instead of hanging on the backgrounded process's channel. Errors land in vllm.log,
             # which the health-poll below checks (fail-fast).
             _run(ssh_run_cmd(ip, port, args.key,
                  f"(cd {REMOTE_DIR} && INSTALL_CLAUDE=0 ./scripts/setup_pod.sh {args.config} "
                  f"&& ./scripts/start_vllm.sh {args.config}) </dev/null >/workspace/vllm.log 2>&1 &"),
-                 timeout=120)
+                 timeout=120, label="ssh: setup_pod + start_vllm (detached)")
 
             log("STEP 3/5: waiting for vLLM to serve (via SSH tunnel); fails fast on pod errors")
             # stderr -> DEVNULL: until vLLM binds :8000, the tunnel logs a benign
@@ -219,7 +225,8 @@ def main():
                    f"python3 -m scripts.run_sdd_scenario /repo/{args.scenario}")
             _run(docker_run_cmd(image, ["bash", "-lc", gen], mounts=mounts, env=env,
                                 workdir="/repo", name="dail-sdd-gen"),
-                 timeout=int(os.getenv("SDD_GEN_TIMEOUT", "3600")))
+                 timeout=int(os.getenv("SDD_GEN_TIMEOUT", "3600")),
+                 label=f"docker run {image} (generation)")
         # PodGuard.__exit__ terminates the pod; runpod.terminate_pod not called here.
     finally:
         if tunnel:
@@ -229,7 +236,8 @@ def main():
     _run(docker_run_cmd(
         image, ["bash", "-lc", f"python3 -m scripts.run_gates /repo/{args.scenario} /out/workspace"],
         mounts=mounts, env={"PYTHONPATH": "/repo", "MODEL": served},
-        workdir="/repo", name="dail-sdd-gates", host_gateway=False), timeout=600)
+        workdir="/repo", name="dail-sdd-gates", host_gateway=False),
+        timeout=600, label=f"docker run {image} (gates)")
     log(f"DONE. Results under {out_dir}")
 
 
