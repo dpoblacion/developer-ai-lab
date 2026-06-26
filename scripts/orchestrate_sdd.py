@@ -152,7 +152,10 @@ def main():
                  timeout=120)
 
             log("STEP 3/5: waiting for vLLM to serve (via SSH tunnel); fails fast on pod errors")
-            tunnel = subprocess.Popen(ssh_tunnel_cmd(ip, port, args.key))
+            # stderr -> DEVNULL: until vLLM binds :8000, the tunnel logs a benign
+            # "channel N: open failed: connect failed" on every health poll — pure noise that
+            # buries the progress lines. Tunnel death is detected via poll() below, not stderr.
+            tunnel = subprocess.Popen(ssh_tunnel_cmd(ip, port, args.key), stderr=subprocess.DEVNULL)
             reachable = False
             for i in range(360):  # backstop ceiling; guard MAX_STARTUP (~12 min) governs
                 guard.raise_if_aborted()
@@ -174,7 +177,7 @@ def main():
                         raise SystemExit("vLLM startup failed")
                     log(f"  still waiting for vLLM ... ({(i + 1) * 5 // 60} min)")
                 if tunnel.poll() is not None:  # tunnel died — reopen it
-                    tunnel = subprocess.Popen(ssh_tunnel_cmd(ip, port, args.key))
+                    tunnel = subprocess.Popen(ssh_tunnel_cmd(ip, port, args.key), stderr=subprocess.DEVNULL)
                 time.sleep(5)
             if not reachable:
                 raise SystemExit("FAILED step 3: vLLM did not serve within backstop window (guard MAX_STARTUP governs)")

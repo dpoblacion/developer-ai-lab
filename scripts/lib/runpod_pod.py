@@ -50,12 +50,14 @@ def ssh_opts(port, key_path):
 
     Host-key checking is intentionally disabled: pods are ephemeral with rotating IPs,
     so known-hosts would churn. Acceptable for a throwaway benchmark pod — do NOT copy
-    this into a context where MITM protection matters.
+    this into a context where MITM protection matters. LogLevel=ERROR silences the
+    "Warning: Permanently added ... to the list of known hosts" line that disabling
+    known-hosts would otherwise print on every connection, while keeping real errors.
     """
     return ["-p", str(port), "-i", key_path,
             "-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null",
             "-o", "PreferredAuthentications=publickey", "-o", "PasswordAuthentication=no",
-            "-o", "ConnectTimeout=10"]
+            "-o", "ConnectTimeout=10", "-o", "LogLevel=ERROR"]
 
 
 def ssh_run_cmd(ip, port, key_path, remote_cmd):
