@@ -21,12 +21,20 @@ python3 -m venv "$VENV"
 PIP="$VENV/bin/pip"
 $PIP install --quiet --upgrade pip
 
-# A vLLM-only pod needs just pyyaml (for config parsing here + in start_vllm.sh); vLLM pulls
-# the rest of its serving stack below. We deliberately do NOT install requirements.txt — that
-# carries litellm[proxy] and its heavy transitive deps (polars, boto3, cryptography, …) which
-# run in the LOCAL toolchain container, never on the pod, and bloated startup past 10 min.
-echo "== Python deps (pyyaml; vLLM pulls its own stack) =="
-$PIP install pyyaml
+# Python deps depend on what this pod runs (INSTALL_CLAUDE is the signal):
+# - vLLM-only pod (INSTALL_CLAUDE=0, the SDD benchmark): LiteLLM + the agent + gates run in
+#   the LOCAL toolchain container, so the pod needs only pyyaml (config parsing); vLLM pulls
+#   its own serving stack below. Keeps startup lean (requirements.txt's litellm[proxy] drags
+#   in polars/boto3/cryptography and bloated startup past 10 min).
+# - full-stack pod (INSTALL_CLAUDE=1, the concurrency benchmark via run_pod.sh): LiteLLM, the
+#   aiohttp load sweep, and Claude Code all run ON the pod, so it needs the full requirements.
+if [ "${INSTALL_CLAUDE:-1}" = "1" ]; then
+  echo "== Python deps (full stack: requirements.txt) =="
+  $PIP install -r requirements.txt
+else
+  echo "== Python deps (vLLM-only: pyyaml) =="
+  $PIP install pyyaml
+fi
 
 VLLM_VERSION=$("$VENV/bin/python" -c "import yaml; print(yaml.safe_load(open('$CONFIG')).get('vllm_version', ''))")
 
