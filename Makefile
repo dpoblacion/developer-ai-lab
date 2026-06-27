@@ -1,5 +1,8 @@
-PYTHON ?= python3
+# Use the repo venv if present (it carries the orchestrator deps: runpod, pyyaml, ...);
+# otherwise fall back to python3. Override explicitly with `make PYTHON=/path/to/python ...`.
+PYTHON ?= $(shell [ -x .venv/bin/python ] && echo .venv/bin/python || echo python3)
 CONFIG ?= configs/qwen3coder.yaml
+SCENARIO ?= benchmarks/todo-app/scenario.yaml
 
 .PHONY: test orchestrate sdd-run gates setup pod concurrency sdd reap
 
@@ -26,17 +29,18 @@ concurrency:
 
 # SDD benchmark, agent-local: pod serves vLLM only; agent + gates run in a local
 # toolchain container. One command (create pod -> generate -> stop pod -> gates).
+# Pick a scenario with SCENARIO=... (default todo-app; e.g. benchmarks/smoke/scenario.yaml).
 sdd-run:
-	$(PYTHON) -m scripts.orchestrate_sdd --config $(CONFIG)
+	$(PYTHON) -m scripts.orchestrate_sdd --config $(CONFIG) --scenario $(SCENARIO)
 
 # Score an already-produced SDD workspace with the scenario gates (no pod needed).
 # Usage: make gates WORKSPACE=results/<run>/sdd/workspace
 gates:
-	$(PYTHON) -m scripts.run_gates benchmarks/todo-app/scenario.yaml $(WORKSPACE)
+	$(PYTHON) -m scripts.run_gates $(SCENARIO) $(WORKSPACE)
 
 # Generation only (in-process; expects a reachable model). Mostly for debugging.
 sdd:
-	$(PYTHON) -m scripts.run_sdd_scenario benchmarks/todo-app/scenario.yaml
+	$(PYTHON) -m scripts.run_sdd_scenario $(SCENARIO)
 
 # Panic button: terminate paid pods (all, or older than REAP_AGE seconds).
 reap:
