@@ -57,6 +57,14 @@ class ComposeTest(unittest.TestCase):
         vllm_cfg, _ = compose(MODEL, HW_1GPU, bench)
         self.assertEqual(vllm_cfg["gpu_memory_utilization"], 0.85)  # benchmark wins
 
+    def test_model_without_image_raises_clear_error(self):
+        model = {k: v for k, v in MODEL.items() if k != "image"}  # e.g. unprovisioned GLM
+        with self.assertRaises(ValueError) as ctx:
+            compose(model, HW_1GPU, BENCH_SDD)
+        msg = str(ctx.exception)
+        self.assertIn("qwen3-coder-30b-fp8", msg)   # names the offending model
+        self.assertIn("image", msg)
+
 
 from scripts.lib.compose import load_config
 import scripts.lib.compose as compose_module

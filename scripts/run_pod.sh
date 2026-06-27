@@ -15,12 +15,17 @@ SCENARIO=${SCENARIO:-benchmarks/concurrency/scenario.yaml}
 # Defaults (ANTHROPIC_*, BASE_URL, ...).
 set -a && . ./config.env && set +a
 
-# Export sweep params from the benchmark def for run_concurrency_slo.
+# Export sweep params from the benchmark def for run_concurrency_slo (single parse).
 # These override any sweep vars that may have been in config.env.
-export CONCURRENCY=$(python3 -c "import yaml;print(','.join(str(x) for x in yaml.safe_load(open('$SCENARIO'))['levels']))")
-export MAX_TOKENS=$(python3 -c "import yaml;print(yaml.safe_load(open('$SCENARIO')).get('max_tokens',512))")
-export SLO_MAX_TTFT=$(python3 -c "import yaml;print(yaml.safe_load(open('$SCENARIO'))['slo']['max_ttft'])")
-export SLO_MIN_TPS=$(python3 -c "import yaml;print(yaml.safe_load(open('$SCENARIO'))['slo']['min_tps'])")
+eval "$(python3 - "$SCENARIO" <<'PY'
+import sys, yaml
+d = yaml.safe_load(open(sys.argv[1]))
+print(f"export CONCURRENCY={','.join(str(x) for x in d['levels'])}")
+print(f"export MAX_TOKENS={d.get('max_tokens', 512)}")
+print(f"export SLO_MAX_TTFT={d['slo']['max_ttft']}")
+print(f"export SLO_MIN_TPS={d['slo']['min_tps']}")
+PY
+)"
 
 # Use the venv that setup_pod.sh created (vllm, python deps) and the claude CLI install dir.
 export PATH="/workspace/venv/bin:$HOME/.local/bin:$PATH"

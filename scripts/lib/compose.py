@@ -37,6 +37,10 @@ def compose(model, hardware, benchmark):
         ("HW_INSTANCE", hardware.get("instance")),
     ) if v}
     pod_spec["name"] = f"dail-{model['served_model_name']}"
+    if "image" not in model:
+        raise ValueError(
+            f"model '{model.get('served_model_name', '?')}' has no 'image' — set it in "
+            "its configs/models/<model>.yaml before provisioning a pod.")
     pod_spec["image"] = model["image"]
     pod_spec["container_disk_gb"] = model["container_disk_gb"]
     pod_spec["gpu_type_ids"] = hardware["gpu_type_ids"]
