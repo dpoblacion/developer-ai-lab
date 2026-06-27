@@ -9,8 +9,8 @@ Its public key is injected into the pod via the PUBLIC_KEY env var, so it does N
 to be registered in the RunPod account.
 
 Usage:
-  python -m scripts.orchestrate_pod [--spec infra/runpod/pod.yaml] \
-      [--config configs/qwen3coder.yaml] [--key PATH] [--keep]
+  python -m scripts.orchestrate_pod [--model qwen3-coder] [--hardware l40s] \
+      [--scenario benchmarks/concurrency/scenario.yaml] [--key PATH] [--keep]
 """
 
 import argparse
@@ -19,6 +19,7 @@ import pathlib
 import subprocess
 import time
 
+from scripts.lib.compose import load_config
 from scripts.lib.dotenv import load_dotenv
 from scripts.lib.runpod_pod import (
     build_create_kwargs, is_ready, ssh_endpoint,
@@ -75,8 +76,9 @@ def main():
     load_dotenv()  # local secrets from .env (RUNPOD_API_KEY, SSH_KEY_PATH); env wins
 
     ap = argparse.ArgumentParser()
-    ap.add_argument("--spec", default="infra/runpod/pod.yaml")
-    ap.add_argument("--config", default="configs/qwen3coder.yaml")
+    ap.add_argument("--model", default="qwen3-coder")
+    ap.add_argument("--hardware", default="l40s")
+    ap.add_argument("--scenario", default="benchmarks/concurrency/scenario.yaml")
     ap.add_argument("--key", default=os.environ.get("SSH_KEY_PATH"))
     ap.add_argument("--keep", action="store_true", help="do not terminate the pod at the end")
     args = ap.parse_args()
@@ -91,8 +93,8 @@ def main():
     import yaml
     import runpod
     runpod.api_key = api_key
-
-    spec = yaml.safe_load(pathlib.Path(args.spec).read_text())
+    vllm_cfg, pod_spec = load_config(args.model, args.hardware, args.scenario)
+    pathlib.Path("configs/_composed.yaml").write_text(yaml.safe_dump(vllm_cfg))
 
     pub_path = args.key + ".pub"
     if not os.path.exists(pub_path):
@@ -100,7 +102,7 @@ def main():
     public_key = pathlib.Path(pub_path).read_text().strip()
 
     t_start = time.time()
-    pod = create_with_fallback(runpod, spec, public_key)
+    pod = create_with_fallback(runpod, pod_spec, public_key)
     pod_id = pod["id"]
     print(f"Pod {pod_id} created.")
 
@@ -111,8 +113,8 @@ def main():
         wait_for_ssh(ip, port, args.key)  # mkdir -p {REMOTE_DIR} happens as the probe
         _run(rsync_up_cmd(ip, port, args.key, "./", REMOTE_DIR + "/", EXCLUDES))
 
-        remote = (f"cd {REMOTE_DIR} && make setup CONFIG={args.config} "
-                  f"&& make pod CONFIG={args.config}")
+        remote = (f"cd {REMOTE_DIR} && make setup CONFIG=configs/_composed.yaml "
+                  f"&& make pod CONFIG=configs/_composed.yaml SCENARIO={args.scenario}")
         t_remote = time.time()
         _run(ssh_run_cmd(ip, port, args.key, remote))
         print(f"  pod run (setup + benchmark): {_fmt(time.time() - t_remote)}")

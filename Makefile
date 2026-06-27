@@ -3,6 +3,8 @@
 PYTHON ?= $(shell [ -x .venv/bin/python ] && echo .venv/bin/python || echo python3)
 CONFIG ?= configs/qwen3coder.yaml
 SCENARIO ?= benchmarks/todo-app/scenario.yaml
+MODEL ?= qwen3-coder
+HARDWARE ?= l40s
 
 .PHONY: test orchestrate sdd-run gates setup pod concurrency sdd reap
 
@@ -13,7 +15,7 @@ test:
 # (create -> rsync repo -> setup -> run -> fetch results -> terminate).
 # Needs RUNPOD_API_KEY and: pip install -r requirements-orchestrator.txt
 orchestrate:
-	$(PYTHON) -m scripts.orchestrate_pod --config $(CONFIG)
+	$(PYTHON) -m scripts.orchestrate_pod --model $(MODEL) --hardware $(HARDWARE) --scenario $(SCENARIO)
 
 # Prepare a fresh pod (install vLLM + deps + claude CLI). Run once per pod.
 setup:
@@ -21,7 +23,7 @@ setup:
 
 # Full pod run: vLLM -> LiteLLM -> smoke -> concurrency sweep.
 pod:
-	./scripts/run_pod.sh $(CONFIG)
+	SCENARIO=$(SCENARIO) ./scripts/run_pod.sh $(CONFIG)
 
 # Concurrency sweep with SLO (vLLM must be up).
 concurrency:

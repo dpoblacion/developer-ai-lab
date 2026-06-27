@@ -10,9 +10,17 @@
 set -euo pipefail
 
 CONFIG=${1:-configs/glm5.2.yaml}
+SCENARIO=${SCENARIO:-benchmarks/concurrency/scenario.yaml}
 
-# Defaults (ANTHROPIC_*, SLO_*, CONCURRENCY, HW_* ...).
+# Defaults (ANTHROPIC_*, BASE_URL, ...).
 set -a && . ./config.env && set +a
+
+# Export sweep params from the benchmark def for run_concurrency_slo.
+# These override any sweep vars that may have been in config.env.
+export CONCURRENCY=$(python3 -c "import yaml;print(','.join(str(x) for x in yaml.safe_load(open('$SCENARIO'))['levels']))")
+export MAX_TOKENS=$(python3 -c "import yaml;print(yaml.safe_load(open('$SCENARIO')).get('max_tokens',512))")
+export SLO_MAX_TTFT=$(python3 -c "import yaml;print(yaml.safe_load(open('$SCENARIO'))['slo']['max_ttft'])")
+export SLO_MIN_TPS=$(python3 -c "import yaml;print(yaml.safe_load(open('$SCENARIO'))['slo']['min_tps'])")
 
 # Use the venv that setup_pod.sh created (vllm, python deps) and the claude CLI install dir.
 export PATH="/workspace/venv/bin:$HOME/.local/bin:$PATH"
