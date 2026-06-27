@@ -33,6 +33,12 @@ def _run(cmd):
     subprocess.run(cmd, check=True)
 
 
+def _fmt(secs):
+    """Human elapsed: '7s' / '5m12s'."""
+    m, s = divmod(int(secs), 60)
+    return f"{m}m{s:02d}s" if m else f"{s}s"
+
+
 def create_with_fallback(runpod, spec, public_key):
     last = None
     for gpu in spec["gpu_type_ids"]:
@@ -93,6 +99,7 @@ def main():
         raise SystemExit(f"Public key not found at {pub_path} (needed to authorize the pod).")
     public_key = pathlib.Path(pub_path).read_text().strip()
 
+    t_start = time.time()
     pod = create_with_fallback(runpod, spec, public_key)
     pod_id = pod["id"]
     print(f"Pod {pod_id} created.")
@@ -100,13 +107,15 @@ def main():
     try:
         pod = wait_ready(runpod, pod_id)
         ip, port = ssh_endpoint(pod)
-        print(f"SSH at {ip}:{port}")
+        print(f"SSH at {ip}:{port}  (pod ready in {_fmt(time.time() - t_start)})")
         wait_for_ssh(ip, port, args.key)  # mkdir -p {REMOTE_DIR} happens as the probe
         _run(rsync_up_cmd(ip, port, args.key, "./", REMOTE_DIR + "/", EXCLUDES))
 
         remote = (f"cd {REMOTE_DIR} && make setup CONFIG={args.config} "
                   f"&& make pod CONFIG={args.config}")
+        t_remote = time.time()
         _run(ssh_run_cmd(ip, port, args.key, remote))
+        print(f"  pod run (setup + benchmark): {_fmt(time.time() - t_remote)}")
 
         pathlib.Path("results").mkdir(exist_ok=True)
         _run(rsync_down_cmd(ip, port, args.key, REMOTE_DIR + "/results/", "results/"))
@@ -117,6 +126,7 @@ def main():
         else:
             print(f"Terminating pod {pod_id} ...")
             runpod.terminate_pod(pod_id)
+        print(f"Total wall-clock: {_fmt(time.time() - t_start)}")
 
 
 if __name__ == "__main__":

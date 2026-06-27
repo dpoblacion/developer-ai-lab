@@ -9,6 +9,11 @@ set -euo pipefail
 CONFIG=${1:-configs/qwen3coder.yaml}
 VENV=/workspace/venv
 
+# Stage timing: pip runs quiet (-q) to drop the repetitive "Downloading ..." spam, so each
+# step prints its own duration instead — the process stays visible and timed. $SECONDS is
+# bash's seconds-since-script-start; _since echoes the delta from a captured value.
+_since() { echo "$(( SECONDS - ${1:-0} ))s"; }
+
 # The claude installer drops its binary here; have it on PATH so the post-install check sees it.
 export PATH="$HOME/.local/bin:$PATH"
 
@@ -30,10 +35,10 @@ $PIP install --quiet --upgrade pip
 #   aiohttp load sweep, and Claude Code all run ON the pod, so it needs the full requirements.
 if [ "${INSTALL_CLAUDE:-1}" = "1" ]; then
   echo "== Python deps (full stack: requirements.txt) =="
-  $PIP install -r requirements.txt
+  _t=$SECONDS; $PIP install -q -r requirements.txt; echo "   ↳ done in $(_since $_t)"
 else
   echo "== Python deps (vLLM-only: pyyaml) =="
-  $PIP install pyyaml
+  _t=$SECONDS; $PIP install -q pyyaml; echo "   ↳ done in $(_since $_t)"
 fi
 
 VLLM_VERSION=$("$VENV/bin/python" -c "import yaml; print(yaml.safe_load(open('$CONFIG')).get('vllm_version', ''))")
@@ -43,11 +48,11 @@ CONSTRAINTS=()
 while IFS= read -r line; do [ -n "$line" ] && CONSTRAINTS+=("$line"); done < <("$VENV/bin/python" -c "import yaml; [print(c) for c in (yaml.safe_load(open('$CONFIG')).get('pip_constraints') or [])]")
 
 if [ -n "$VLLM_VERSION" ]; then
-  echo "== vLLM $VLLM_VERSION ${CONSTRAINTS[*]:-} =="
-  $PIP install "vllm==$VLLM_VERSION" "${CONSTRAINTS[@]+"${CONSTRAINTS[@]}"}"
+  echo "== vLLM $VLLM_VERSION ${CONSTRAINTS[*]:-} (pulls torch etc., ~2-3 min) =="
+  _t=$SECONDS; $PIP install -q "vllm==$VLLM_VERSION" "${CONSTRAINTS[@]+"${CONSTRAINTS[@]}"}"; echo "   ↳ done in $(_since $_t)"
 else
-  echo "== vLLM (latest) ${CONSTRAINTS[*]:-} =="
-  $PIP install vllm "${CONSTRAINTS[@]+"${CONSTRAINTS[@]}"}"
+  echo "== vLLM (latest) ${CONSTRAINTS[*]:-} (pulls torch etc., ~2-3 min) =="
+  _t=$SECONDS; $PIP install -q vllm "${CONSTRAINTS[@]+"${CONSTRAINTS[@]}"}"; echo "   ↳ done in $(_since $_t)"
 fi
 
 # Skip on an inference-only pod (SDD runs the agent locally): INSTALL_CLAUDE=0.
@@ -63,4 +68,4 @@ echo "== Versions =="
 if [ "${INSTALL_CLAUDE:-1}" = "1" ]; then
   (command -v claude >/dev/null && claude --version) || echo "WARN: claude not on PATH"
 fi
-echo "Setup complete."
+echo "Setup complete in ${SECONDS}s."
