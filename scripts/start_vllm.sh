@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Start vLLM from a model config (configs/*.yaml). Config-driven and model-independent:
+# Start vLLM from a composed run config (configs/_composed.yaml). Config-driven and model-independent:
 # the arg list is built by scripts/lib/vllm_args.py, so adding a model is a new YAML.
 set -euo pipefail
 

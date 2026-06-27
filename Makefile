@@ -14,7 +14,7 @@ test:
 # (create -> rsync repo -> setup -> run -> fetch results -> terminate).
 # Needs RUNPOD_API_KEY and: pip install -r requirements-orchestrator.txt
 orchestrate:
-	$(PYTHON) -m scripts.orchestrate_pod --model $(MODEL) --hardware $(HARDWARE) --scenario $(SCENARIO)
+	$(PYTHON) -m scripts.orchestrate_pod --model $(MODEL) --hardware $(HARDWARE) --scenario benchmarks/concurrency/scenario.yaml
 
 # Prepare a fresh pod (install vLLM + deps + claude CLI). Run once per pod.
 # Called remotely by orchestrate_pod.py with CONFIG=configs/_composed.yaml.
