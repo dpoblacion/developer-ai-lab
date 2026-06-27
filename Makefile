@@ -30,6 +30,9 @@ concurrency:
 # SDD benchmark, agent-local: pod serves vLLM only; agent + gates run in a local
 # toolchain container. One command (create pod -> generate -> stop pod -> gates).
 # Pick a scenario with SCENARIO=... (default todo-app; e.g. benchmarks/smoke/scenario.yaml).
+# Defaults CONFIG to the SDD serving config (large context, max_num_seqs low) rather than
+# the global concurrency default; a command-line CONFIG=... still overrides this.
+sdd-run: CONFIG := configs/qwen3coder-sdd.yaml
 sdd-run:
 	$(PYTHON) -m scripts.orchestrate_sdd --config $(CONFIG) --scenario $(SCENARIO)
 
