@@ -1,0 +1,12 @@
+# Concurrency & capacity benchmark — fires N concurrent streaming requests at vLLM for each
+# level and finds the knee (highest level holding the SLO). type drives the runner.
+name: concurrency
+type: concurrency
+serving:
+  max_model_len: 32768
+  max_num_seqs: 8
+levels: [1, 2, 4, 8, 16, 32]
+max_tokens: 512
+slo:
+  max_ttft: 2.0      # seconds; median stream's time-to-first-token
+  min_tps: 20.0      # tokens/s; median stream's decode throughput

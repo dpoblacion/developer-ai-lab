@@ -1,0 +1,14 @@
+# Qwen3-Coder 30B-A3B FP8 — MODEL axis only. Hardware comes from configs/hardware/<hw>.yaml;
+# workload (max_model_len / max_num_seqs) from the benchmark's serving: block.
+model: Qwen/Qwen3-Coder-30B-A3B-Instruct-FP8
+served_model_name: qwen3-coder-30b-fp8
+vllm_version: "0.11.0"
+# Pod base image — its torch/CUDA must match vllm_version (2.8.0 / cu128 here).
+image: runpod/pytorch:1.0.2-cu1281-torch280-ubuntu2404
+container_disk_gb: 100
+pip_constraints:
+  - "transformers<5"          # vLLM 0.11.0's tokenizer code predates the transformers 5.x API
+tool_call_parser: qwen3_xml   # NOT qwen3_coder: known vLLM streaming-parse bug for this model
+enable_auto_tool_choice: true
+env:
+  VLLM_USE_FLASHINFER_SAMPLER: "0"

@@ -56,3 +56,26 @@ class ComposeTest(unittest.TestCase):
                              "gpu_memory_utilization": 0.85}}
         vllm_cfg, _ = compose(MODEL, HW_1GPU, bench)
         self.assertEqual(vllm_cfg["gpu_memory_utilization"], 0.85)  # benchmark wins
+
+
+from scripts.lib.compose import load_config
+
+
+class LoadConfigTest(unittest.TestCase):
+    def test_qwen_l40s_todo_app(self):
+        vllm_cfg, pod_spec = load_config("qwen3-coder", "l40s",
+                                         "benchmarks/todo-app/scenario.yaml")
+        self.assertEqual(vllm_cfg["model"], "Qwen/Qwen3-Coder-30B-A3B-Instruct-FP8")
+        self.assertEqual(vllm_cfg["tool_call_parser"], "qwen3_xml")
+        self.assertEqual(vllm_cfg["max_model_len"], 65536)   # from the todo-app serving block
+        self.assertEqual(vllm_cfg["max_num_seqs"], 2)
+        self.assertEqual(vllm_cfg["gpu_memory_utilization"], 0.92)
+        self.assertEqual(vllm_cfg["tensor_parallel_size"], 1)
+        self.assertEqual(pod_spec["gpu_type_ids"][0], "NVIDIA L40S")
+        self.assertEqual(pod_spec["image"], "runpod/pytorch:1.0.2-cu1281-torch280-ubuntu2404")
+
+    def test_qwen_l40s_concurrency(self):
+        vllm_cfg, _ = load_config("qwen3-coder", "l40s",
+                                  "benchmarks/concurrency/scenario.yaml")
+        self.assertEqual(vllm_cfg["max_num_seqs"], 8)        # concurrency workload
+        self.assertEqual(vllm_cfg["max_model_len"], 32768)

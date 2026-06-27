@@ -38,3 +38,17 @@ def compose(model, hardware, benchmark):
     pod_spec["gpu_type_ids"] = hardware["gpu_type_ids"]
     pod_spec["gpu_count"] = hardware["gpu_count"]
     return vllm_cfg, pod_spec
+
+
+def _load_yaml(path):
+    import yaml
+    return yaml.safe_load(pathlib.Path(path).read_text())
+
+
+def load_config(model_name, hardware_name, scenario_path,
+                models_dir="configs/models", hardware_dir="configs/hardware"):
+    """Resolve names to config files and compose them. Returns (vllm_cfg, pod_spec)."""
+    model = _load_yaml(pathlib.Path(models_dir) / f"{model_name}.yaml")
+    hardware = _load_yaml(pathlib.Path(hardware_dir) / f"{hardware_name}.yaml")
+    benchmark = _load_yaml(scenario_path)
+    return compose(model, hardware, benchmark)

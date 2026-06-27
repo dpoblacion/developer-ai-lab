@@ -1,6 +1,10 @@
 # Minimal scenario to validate the SDD-local pipeline end to end (tool calling included):
 # the agent must use the Write tool to create a file, then a gate checks it.
 name: smoke
+type: sdd
+serving:
+  max_model_len: 65536
+  max_num_seqs: 2
 phases:
   - id: 01-hello
     title: Hello file

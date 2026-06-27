@@ -1,0 +1,6 @@
+# 8x NVIDIA H200 (141GB each) — minimum for GLM-5.2.
+gpu_type_ids:
+  - "NVIDIA H200"
+gpu_count: 8
+price_usd_per_hour: 28.72     # 8 x $3.59 (RunPod community on-demand)
+gpu_memory_utilization: 0.95

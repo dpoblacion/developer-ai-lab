@@ -1,0 +1,6 @@
+# Single NVIDIA A100 80GB PCIe.
+gpu_type_ids:
+  - "NVIDIA A100 80GB PCIe"
+gpu_count: 1
+price_usd_per_hour: 1.19
+gpu_memory_utilization: 0.92

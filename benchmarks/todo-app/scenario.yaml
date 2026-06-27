@@ -9,6 +9,10 @@
 # of what "working" means for this scenario.
 name: todo-app
 description: Full SDD lifecycle building a Todo App on the project stack.
+type: sdd
+serving:
+  max_model_len: 65536    # the single agent needs a large context (system prompt + growing app)
+  max_num_seqs: 2
 
 phases:
   - id: 01-spec

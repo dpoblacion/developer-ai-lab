@@ -1,0 +1,20 @@
+# GLM-5.2 FP8 (~743B MoE) — MODEL axis only. tensor_parallel_size is derived from the
+# hardware's gpu_count. NOTE: `image` is intentionally omitted — GLM needs vLLM 0.23.0
+# (torch 2.11 / newer CUDA) so it requires a different RunPod base image, to be filled in
+# when GLM is actually provisioned. compose() requires `image`, so a GLM run fails loudly
+# until it is set.
+model: zai-org/GLM-5.2-FP8
+served_model_name: glm-5.2-fp8
+vllm_version: "0.23.0"
+container_disk_gb: 400
+kv_cache_dtype: fp8
+tool_call_parser: glm47
+reasoning_parser: glm45
+enable_auto_tool_choice: true
+extra_args:
+  - --speculative-config.method
+  - mtp
+  - --speculative-config.num_speculative_tokens
+  - "5"
+env:
+  VLLM_USE_FLASHINFER_SAMPLER: "0"
