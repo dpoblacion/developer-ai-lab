@@ -9,8 +9,8 @@ need extra runtime (e.g. todo-app's .NET SDK) ship benchmarks/<name>/Dockerfile,
 an overlay on dail-toolchain; the orchestrator then uses dail-toolchain-<name>, which you
 build alongside the base (docker build -t dail-toolchain-<name> -f <that Dockerfile> .).
 
-Usage: python -m scripts.orchestrate_sdd [--config configs/qwen3coder.yaml]
-       [--spec infra/runpod/pod.yaml] [--scenario benchmarks/todo-app/scenario.yaml]
+Usage: python -m scripts.orchestrate_sdd [--model qwen3-coder] [--hardware l40s]
+       [--scenario benchmarks/todo-app/scenario.yaml]
 """
 
 import argparse
@@ -20,6 +20,7 @@ import subprocess
 import sys
 import time
 
+from scripts.lib.compose import load_config
 from scripts.lib.dotenv import load_dotenv
 from scripts.lib.pod_guard import PodGuard, PodGuardAborted
 from scripts.lib.runpod_pod import (
@@ -81,8 +82,8 @@ def _gen_progress(out_dir):
 def main():
     load_dotenv()
     ap = argparse.ArgumentParser()
-    ap.add_argument("--spec", default="infra/runpod/pod.yaml")
-    ap.add_argument("--config", default="configs/qwen3coder.yaml")
+    ap.add_argument("--model", default="qwen3-coder")
+    ap.add_argument("--hardware", default="l40s")
     ap.add_argument("--scenario", default="benchmarks/todo-app/scenario.yaml")
     ap.add_argument("--key", default=os.environ.get("SSH_KEY_PATH"))
     args = ap.parse_args()
@@ -91,14 +92,15 @@ def main():
     if not api_key or not args.key:
         raise SystemExit("Set RUNPOD_API_KEY and SSH_KEY_PATH in .env")
     args.key = os.path.expanduser(args.key)
-    image = toolchain_image(args.scenario)
 
     import yaml
     import runpod
     runpod.api_key = api_key
-    spec = yaml.safe_load(pathlib.Path(args.spec).read_text())
-    cfg = yaml.safe_load(pathlib.Path(args.config).read_text())
-    served = cfg["served_model_name"]
+    vllm_cfg, pod_spec = load_config(args.model, args.hardware, args.scenario)
+    served = vllm_cfg["served_model_name"]
+    composed_path = "configs/_composed.yaml"
+    pathlib.Path(composed_path).write_text(yaml.safe_dump(vllm_cfg))
+    image = toolchain_image(args.scenario)
     pub = pathlib.Path(args.key + ".pub").read_text().strip()
 
     run_id = time.strftime("%Y%m%d-%H%M%S")
@@ -112,11 +114,11 @@ def main():
     tunnel = None
     try:
         log("STEP 1/5: creating vLLM-only pod")
-        with PodGuard(label=f"sdd-{cfg['served_model_name']}",
+        with PodGuard(label=f"sdd-{vllm_cfg['served_model_name']}",
                       terminate_fn=runpod.terminate_pod) as guard:
-            for gpu in spec["gpu_type_ids"]:
+            for gpu in pod_spec["gpu_type_ids"]:
                 try:
-                    pod = runpod.create_pod(**build_create_kwargs(spec, gpu, pub))
+                    pod = runpod.create_pod(**build_create_kwargs(pod_spec, gpu, pub))
                     guard.track(pod["id"], progress_fn=lambda: 0)
                     break
                 except Exception as exc:
@@ -153,8 +155,8 @@ def main():
             # instead of hanging on the backgrounded process's channel. Errors land in vllm.log,
             # which the health-poll below checks (fail-fast).
             _run(ssh_run_cmd(ip, port, args.key,
-                 f"(cd {REMOTE_DIR} && INSTALL_CLAUDE=0 ./scripts/setup_pod.sh {args.config} "
-                 f"&& ./scripts/start_vllm.sh {args.config}) </dev/null >/workspace/vllm.log 2>&1 &"),
+                 f"(cd {REMOTE_DIR} && INSTALL_CLAUDE=0 ./scripts/setup_pod.sh {composed_path} "
+                 f"&& ./scripts/start_vllm.sh {composed_path}) </dev/null >/workspace/vllm.log 2>&1 &"),
                  timeout=120, label="ssh: setup_pod + start_vllm (detached)")
 
             log("STEP 3/5: waiting for vLLM to serve (via SSH tunnel); fails fast on pod errors")
