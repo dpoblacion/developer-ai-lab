@@ -3,4 +3,6 @@ gpu_type_ids:
   - "NVIDIA H200"
 gpu_count: 8
 price_usd_per_hour: 28.72     # 8 x $3.59 (RunPod community on-demand)
+provider: RunPod
+instance: "8x NVIDIA H200"
 gpu_memory_utilization: 0.95

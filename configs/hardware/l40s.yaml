@@ -4,4 +4,6 @@ gpu_type_ids:
   - "NVIDIA A100 80GB PCIe"
 gpu_count: 1
 price_usd_per_hour: 0.79      # RunPod community on-demand (edit when prices change)
+provider: RunPod
+instance: "1x NVIDIA L40S"
 gpu_memory_utilization: 0.92

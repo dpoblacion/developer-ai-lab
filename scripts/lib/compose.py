@@ -32,6 +32,10 @@ def compose(model, hardware, benchmark):
     vllm_cfg.update(benchmark.get("serving") or {})
 
     pod_spec = dict(POD_CONSTANTS)
+    pod_spec["env"] = {k: v for k, v in (
+        ("HW_PROVIDER", hardware.get("provider")),
+        ("HW_INSTANCE", hardware.get("instance")),
+    ) if v}
     pod_spec["name"] = f"dail-{model['served_model_name']}"
     pod_spec["image"] = model["image"]
     pod_spec["container_disk_gb"] = model["container_disk_gb"]

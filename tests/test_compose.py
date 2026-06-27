@@ -59,6 +59,29 @@ class ComposeTest(unittest.TestCase):
 
 
 from scripts.lib.compose import load_config
+import scripts.lib.compose as compose_module
+
+HW_WITH_PROVIDER = {"gpu_type_ids": ["NVIDIA L40S"], "gpu_count": 1,
+                    "price_usd_per_hour": 0.79, "gpu_memory_utilization": 0.92,
+                    "provider": "RunPod", "instance": "1x NVIDIA L40S"}
+
+
+class PodSpecEnvTest(unittest.TestCase):
+    def test_hw_provider_instance_in_pod_spec_env(self):
+        _, pod_spec = compose(MODEL, HW_WITH_PROVIDER, BENCH_SDD)
+        self.assertEqual(pod_spec["env"]["HW_PROVIDER"], "RunPod")
+        self.assertEqual(pod_spec["env"]["HW_INSTANCE"], "1x NVIDIA L40S")
+
+    def test_hw_without_provider_yields_empty_env(self):
+        # HW_1GPU has no provider/instance — env should not contain those keys
+        _, pod_spec = compose(MODEL, HW_1GPU, BENCH_SDD)
+        self.assertNotIn("HW_PROVIDER", pod_spec["env"])
+        self.assertNotIn("HW_INSTANCE", pod_spec["env"])
+
+    def test_pod_constants_not_mutated(self):
+        # shallow copy of POD_CONSTANTS means pod_spec["env"] could alias the module dict
+        compose(MODEL, HW_WITH_PROVIDER, BENCH_SDD)
+        self.assertEqual(compose_module.POD_CONSTANTS["env"], {})
 
 
 class LoadConfigTest(unittest.TestCase):
@@ -73,6 +96,9 @@ class LoadConfigTest(unittest.TestCase):
         self.assertEqual(vllm_cfg["tensor_parallel_size"], 1)
         self.assertEqual(pod_spec["gpu_type_ids"][0], "NVIDIA L40S")
         self.assertEqual(pod_spec["image"], "runpod/pytorch:1.0.2-cu1281-torch280-ubuntu2404")
+        # provider/instance from l40s.yaml hardware config
+        self.assertEqual(pod_spec["env"]["HW_PROVIDER"], "RunPod")
+        self.assertEqual(pod_spec["env"]["HW_INSTANCE"], "1x NVIDIA L40S")
 
     def test_qwen_l40s_concurrency(self):
         vllm_cfg, _ = load_config("qwen3-coder", "l40s",
