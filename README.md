@@ -22,8 +22,9 @@ Models are driven through the agent we actually use, kept model-independent:
 Claude Code (headless)  ->  LiteLLM (Anthropic API)  ->  vLLM (OpenAI API)  ->  model
 ```
 
-Swapping models is a config change (`configs/<model>.yaml`; the LiteLLM upstream via
-`LITELLM_UPSTREAM_MODEL` / `VLLM_BASE`) — never new code. Works for Qwen, GLM, MiniMax, etc.
+Swapping models is a config change (`configs/models/<model>.yaml` + `configs/hardware/<hw>.yaml`;
+the LiteLLM upstream via `LITELLM_UPSTREAM_MODEL` / `VLLM_BASE`) — never new code. Works for
+Qwen, GLM, MiniMax, etc.
 
 ## Two benchmarks
 
@@ -94,14 +95,14 @@ pip install -r requirements-orchestrator.txt
 **Concurrency benchmark** (everything on the pod):
 
 ```bash
-make orchestrate CONFIG=configs/qwen3coder.yaml
+make orchestrate MODEL=qwen3-coder HARDWARE=l40s
 ```
 
 **SDD benchmark** (agent local). Also needs Docker and the toolchain image:
 
 ```bash
 docker build -t dail-toolchain -f infra/toolchain/Dockerfile .    # once
-make sdd-run CONFIG=configs/qwen3coder.yaml
+make sdd-run MODEL=qwen3-coder HARDWARE=l40s SCENARIO=benchmarks/todo-app/scenario.yaml
 ```
 
 Both create the pod, run, pull results to `results/<timestamp>/` (gitignored), and
@@ -139,7 +140,7 @@ downloads model weights from the Hugging Face Hub, and anonymous downloads share
 per-IP rate limit (3k resolver requests / 5 min) that **429-stalls** partway through a large
 model. A token raises it to 5k/5 min per-account. `start_vllm.sh` picks it up from `.env`.
 
-Which GPU and pod image are used is declared in `infra/runpod/pod.yaml` — `gpu_type_ids` are
+Which GPU and pod image are used is declared in `configs/hardware/<hw>.yaml` — `gpu_type_ids` are
 tried in order until one has capacity (currently `NVIDIA L40S`, then `A100 80GB PCIe`).
 
 ### What you pay for, and the safety net
@@ -172,12 +173,12 @@ extend this table as we test more models and hardware:
 
 ## Layout
 
-- `configs/` — per-model vLLM serving configs (the only per-model change).
+- `configs/models/` — per-model vLLM serving configs. `configs/hardware/` — per-hardware pod
+  specs and pricing. Benchmark `serving:` blocks add per-scenario overrides.
 - `scripts/` — runners + orchestrators (`orchestrate_pod.py`, `orchestrate_sdd.py`);
   `scripts/lib/` is tested pure logic (slo, hardware, gates, command builders, …).
 - `benchmarks/todo-app/` — the SDD scenario (per-phase prompts + gate defs).
-- `infra/litellm/` — the Anthropic↔OpenAI proxy. `infra/runpod/` — pod spec.
-  `infra/toolchain/` — the local SDD toolchain image.
+- `infra/litellm/` — the Anthropic↔OpenAI proxy. `infra/toolchain/` — the local SDD toolchain image.
 - `docs/` — goals, methodology, results.
 
 `make test` runs the unit suite. See `docs/` for goals and methodology.

@@ -5,11 +5,11 @@
 #
 #   vLLM (serves model) -> LiteLLM (Anthropic API) -> Claude Code
 #
-# Usage: scripts/run_pod.sh [configs/glm5.2.yaml]
+# Usage: scripts/run_pod.sh [configs/_composed.yaml]
 # Prereq: run scripts/setup_pod.sh first (installs vLLM + deps in a venv + the claude CLI).
 set -euo pipefail
 
-CONFIG=${1:-configs/glm5.2.yaml}
+CONFIG=${1:-configs/_composed.yaml}
 SCENARIO=${SCENARIO:-benchmarks/concurrency/scenario.yaml}
 
 # Defaults (ANTHROPIC_*, BASE_URL, ...).

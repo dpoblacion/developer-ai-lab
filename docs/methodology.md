@@ -12,8 +12,10 @@ and both run on **ephemeral pods** driven from the local machine via the RunPod 
 vLLM serves the model under test via its OpenAI-compatible API. A constant LiteLLM alias
 (`dev-model`) is exposed to Claude Code; the upstream served model is set per run via
 `LITELLM_UPSTREAM_MODEL`, and where vLLM is reachable via `VLLM_BASE` (localhost on the
-pod, `host.docker.internal` from the SDD container). Only `configs/<model>.yaml` changes
-between models, so every benchmark is identical across Qwen, GLM, MiniMax, etc.
+pod, `host.docker.internal` from the SDD container). Model selection is a `--model` /
+`--hardware` flag: `configs/models/<model>.yaml` + `configs/hardware/<hw>.yaml` are composed
+at run time (benchmark `serving:` blocks add per-scenario overrides), so every benchmark
+is identical across Qwen, GLM, MiniMax, etc.
 
 ```
 Claude Code (Anthropic API) -> LiteLLM -> vLLM (OpenAI API) -> model
@@ -26,8 +28,8 @@ pod, installs vLLM (`make setup`), and runs `scripts/run_concurrency_slo.py`, wh
 N concurrent *streaming* requests at vLLM for each level in `CONCURRENCY`, measuring
 per-stream **TTFT** and **decode throughput**.
 
-- **SLO**: a developer is "served acceptably" when the median stream meets `SLO_MAX_TTFT`
-  (default ≤ 2 s) and `SLO_MIN_TPS` (default ≥ 20 tok/s).
+- **SLO**: a developer is "served acceptably" when the median stream meets the scenario's
+  `slo.max_ttft` (default ≤ 2 s) and `slo.min_tps` (default ≥ 20 tok/s).
 - **Knee**: the highest concurrency whose whole prefix still passes the SLO — the maximum
   concurrent streams the node sustains for this model.
 

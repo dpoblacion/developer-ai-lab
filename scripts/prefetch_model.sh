@@ -3,10 +3,10 @@
 # (no/!small GPU) so the expensive serving node never pays for the download.
 # The weights land in the config's download_dir (HF cache), where start_vllm.sh reads them.
 #
-# Usage: scripts/prefetch_model.sh [configs/glm5.2.yaml]
+# Usage: scripts/prefetch_model.sh [configs/models/<model>.yaml]
 set -euo pipefail
 
-CONFIG=${1:-configs/glm5.2.yaml}
+CONFIG=${1:-configs/models/qwen3-coder.yaml}
 
 export HF_HUB_ENABLE_HF_TRANSFER=1   # faster large downloads (needs hf_transfer)
 

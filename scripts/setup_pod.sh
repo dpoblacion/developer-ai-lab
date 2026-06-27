@@ -3,10 +3,10 @@
 # Claude Code CLI. A venv avoids the pod's externally-managed system Python (PEP 668)
 # and its distutils packages that pip can't cleanly upgrade. Run once per pod.
 #
-# Usage: scripts/setup_pod.sh [configs/qwen3coder.yaml]
+# Usage: scripts/setup_pod.sh [configs/_composed.yaml]
 set -euo pipefail
 
-CONFIG=${1:-configs/qwen3coder.yaml}
+CONFIG=${1:-configs/_composed.yaml}
 VENV=/workspace/venv
 
 # Stage timing: pip runs quiet (-q) to drop the repetitive "Downloading ..." spam, so each

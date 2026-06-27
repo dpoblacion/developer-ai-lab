@@ -1,10 +1,9 @@
 # Use the repo venv if present (it carries the orchestrator deps: runpod, pyyaml, ...);
 # otherwise fall back to python3. Override explicitly with `make PYTHON=/path/to/python ...`.
 PYTHON ?= $(shell [ -x .venv/bin/python ] && echo .venv/bin/python || echo python3)
-CONFIG ?= configs/qwen3coder.yaml
-SCENARIO ?= benchmarks/todo-app/scenario.yaml
 MODEL ?= qwen3-coder
 HARDWARE ?= l40s
+SCENARIO ?= benchmarks/todo-app/scenario.yaml
 
 .PHONY: test orchestrate sdd-run gates setup pod concurrency sdd reap
 
@@ -18,10 +17,12 @@ orchestrate:
 	$(PYTHON) -m scripts.orchestrate_pod --model $(MODEL) --hardware $(HARDWARE) --scenario $(SCENARIO)
 
 # Prepare a fresh pod (install vLLM + deps + claude CLI). Run once per pod.
+# Called remotely by orchestrate_pod.py with CONFIG=configs/_composed.yaml.
 setup:
 	./scripts/setup_pod.sh $(CONFIG)
 
 # Full pod run: vLLM -> LiteLLM -> smoke -> concurrency sweep.
+# Called remotely by orchestrate_pod.py with CONFIG=configs/_composed.yaml.
 pod:
 	SCENARIO=$(SCENARIO) ./scripts/run_pod.sh $(CONFIG)
 
@@ -32,11 +33,8 @@ concurrency:
 # SDD benchmark, agent-local: pod serves vLLM only; agent + gates run in a local
 # toolchain container. One command (create pod -> generate -> stop pod -> gates).
 # Pick a scenario with SCENARIO=... (default todo-app; e.g. benchmarks/smoke/scenario.yaml).
-# Defaults CONFIG to the SDD serving config (large context, max_num_seqs low) rather than
-# the global concurrency default; a command-line CONFIG=... still overrides this.
-sdd-run: CONFIG := configs/qwen3coder-sdd.yaml
 sdd-run:
-	$(PYTHON) -m scripts.orchestrate_sdd --config $(CONFIG) --scenario $(SCENARIO)
+	$(PYTHON) -m scripts.orchestrate_sdd --model $(MODEL) --hardware $(HARDWARE) --scenario $(SCENARIO)
 
 # Score an already-produced SDD workspace with the scenario gates (no pod needed).
 # Usage: make gates WORKSPACE=results/<run>/sdd/workspace

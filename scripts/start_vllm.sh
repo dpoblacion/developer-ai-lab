@@ -3,7 +3,7 @@
 # the arg list is built by scripts/lib/vllm_args.py, so adding a model is a new YAML.
 set -euo pipefail
 
-CONFIG=${1:-configs/qwen3coder.yaml}
+CONFIG=${1:-configs/_composed.yaml}
 
 # vllm + pyyaml live in the setup_pod venv; put it on PATH if present (run_pod.sh also
 # does this, but the SDD orchestrator calls start_vllm.sh directly).

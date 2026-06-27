@@ -7,7 +7,7 @@ detect readiness, and find the SSH endpoint.
 
 
 def build_create_kwargs(spec, gpu_type_id=None, public_key=None):
-    """Map a pod spec (infra/runpod/pod.yaml) to runpod.create_pod kwargs.
+    """Map a pod spec (configs/hardware/<hw>.yaml) to runpod.create_pod kwargs.
 
     ``public_key`` (contents of an .pub) is injected as the PUBLIC_KEY env var, which
     RunPod images write into authorized_keys on boot — that's what authorizes our SSH.
