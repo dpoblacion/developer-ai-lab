@@ -17,6 +17,20 @@ _since() { echo "$(( SECONDS - ${1:-0} ))s"; }
 # The claude installer drops its binary here; have it on PATH so the post-install check sees it.
 export PATH="$HOME/.local/bin:$PATH"
 
+# Camino A — image-provided vLLM (e.g. vllm/vllm-openai): reuse it instead of building a venv
+# and reinstalling. Duplicating the ~4min vLLM install would waste time and risk a version
+# clash with the image's torch/CUDA. We only need pyyaml on the system python for our
+# config-parsing helpers (start_vllm.sh's vllm_args). The pytorch base images have no vllm on
+# PATH, so this branch is skipped there and the normal venv install below runs unchanged.
+if command -v vllm >/dev/null 2>&1; then
+  echo "== vLLM already in the image ($(vllm --version 2>/dev/null | head -1)) — reusing it, no venv =="
+  python3 -c "import yaml" 2>/dev/null \
+    || python3 -m pip install -q --break-system-packages pyyaml 2>/dev/null \
+    || python3 -m pip install -q pyyaml
+  echo "Setup complete in ${SECONDS}s (image-provided vLLM)."
+  exit 0
+fi
+
 echo "== venv ($VENV) =="
 # Clean venv (NOT --system-site-packages): vllm pins a consistent torch + transformers
 # set. With the pinned vllm matching the image's CUDA (see vllm_version), the torch it

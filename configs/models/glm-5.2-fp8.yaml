@@ -1,14 +1,17 @@
-# GLM-5.2 FP8 (~743B MoE) — MODEL axis only. tensor_parallel_size is the run's `--gpus`
-# (GLM-5.2 needs `--gpus 8`). NOTE: `image` is intentionally omitted — GLM needs vLLM 0.23.0
-# (torch 2.11 / newer CUDA) so it requires a different RunPod base image, to be filled in
-# when GLM is actually provisioned. compose() requires `image`, so a GLM run fails loudly
-# until it is set.
+# GLM-5.2 FP8 (~753B MoE, ~744GB weights) — MODEL axis only. Needs 8×H200 (--gpus 8);
+# tensor_parallel_size is derived from the run's --gpus.
+#
+# Camino A (official vLLM image): the image ALREADY ships vLLM 0.23 built against the right
+# torch/CUDA, so setup_pod.sh detects it (`command -v vllm`) and reuses it instead of
+# building a venv — no torch/CUDA compatibility guessing on a $29/h 8×H200 pod. `vllm_version`
+# below is documentation only (the image pins it); it is not installed.
 family: glm-5.2
 quant: fp8
 model: zai-org/GLM-5.2-FP8
 served_model_name: glm-5.2-fp8
-vllm_version: "0.23.0"
-container_disk_gb: 400
+vllm_version: "0.23.0"                       # informational — the image provides vLLM
+image: vllm/vllm-openai:glm52-cu129          # official GLM-5.2 image (vLLM 0.23, CUDA 12.9)
+container_disk_gb: 800                       # ~744GB FP8 weights + KV/runtime overhead
 kv_cache_dtype: fp8
 tool_call_parser: glm47
 reasoning_parser: glm45

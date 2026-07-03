@@ -201,6 +201,19 @@ class LoadRunConfigTest(unittest.TestCase):
             self.assertIn("price_usd_per_gpu_hour", data, f"{path.name} missing per-GPU price")
 
 
+class GlmComposesTest(unittest.TestCase):
+    """GLM-5.2 needs an explicit image (vLLM 0.23 / newer CUDA) and disk that fits its
+    ~744GB FP8 weights. compose() requires `image`, so a blank one fails the run loudly."""
+
+    def test_glm_h200_8gpu_composes_with_image_and_enough_disk(self):
+        _, pod_spec, variant, _, _ = load_run_config(
+            "benchmarks/dev-load/scenario.yaml", "glm-5.2", "h200", gpu_count=8)
+        self.assertTrue(pod_spec["image"], "GLM image must be set (was intentionally blank)")
+        self.assertGreaterEqual(pod_spec["container_disk_gb"], 800)  # 744GB weights + overhead
+        self.assertEqual(variant["quant"], "fp8")
+        self.assertEqual(pod_spec["gpu_count"], 8)
+
+
 class DefaultSloTest(unittest.TestCase):
     def test_default_slo_is_a_single_shared_constant(self):
         # The default SLO used to be duplicated in compose.py and bench_sdd.py — a drift
