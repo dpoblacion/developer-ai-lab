@@ -4,15 +4,16 @@
 # The official vllm/vllm-openai image was tried first but has NO sshd (it's an app image,
 # not a RunPod base) — the harness needs SSH for rsync + scripts, so it failed at
 # "SSH did not become available" (2026-07-03). So: an SSH-capable runpod/pytorch base with
-# CUDA 12.9, and vLLM 0.23 installed via pip in the venv. vLLM 0.23 defaults to CUDA-13
-# wheels; pip_extra_index_url pins the cu129 build to match the image/driver.
-# ⚠️ VERIFY THE IMAGE TAG EXISTS on RunPod/Docker Hub before the first run.
+# CUDA 12.9, and vLLM 0.23 installed via pip in the venv (a clean venv, so the image's own
+# torch is unused — only its CUDA-12.9 driver matters). vLLM 0.23 defaults to CUDA-13
+# wheels; pip_extra_index_url pins the cu129 build to match the driver.
+# Tag verified present on Docker Hub 2026-07-03 (runpod/pytorch tags API).
 family: glm-5.2
 quant: fp8
 model: zai-org/GLM-5.2-FP8
 served_model_name: glm-5.2-fp8
 vllm_version: "0.23.0"
-image: runpod/pytorch:1.0.5-cu1290-torch290-ubuntu2204   # ⚠️ verify tag before running
+image: runpod/pytorch:1.0.7-cu1290-torch291-ubuntu2404
 container_disk_gb: 800                       # ~744GB FP8 weights + KV/runtime overhead
 pip_extra_index_url: https://download.pytorch.org/whl/cu129   # match vLLM's torch to CUDA 12.9
 kv_cache_dtype: fp8
