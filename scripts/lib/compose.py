@@ -21,7 +21,7 @@ DEFAULT_SLO = {"max_ttft": 2.0, "min_tps": 20.0}
 # Model serving-recipe keys copied verbatim into vllm_cfg when present in the model config.
 _MODEL_VLLM_KEYS = ["model", "served_model_name", "vllm_version", "tool_call_parser",
                     "reasoning_parser", "enable_auto_tool_choice", "kv_cache_dtype",
-                    "extra_args", "pip_constraints", "env"]
+                    "extra_args", "pip_constraints", "pip_extra_index_url", "env"]
 
 
 def compose(model, hardware, benchmark, gpu_count=1):

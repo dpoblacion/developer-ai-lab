@@ -61,12 +61,18 @@ VLLM_VERSION=$("$VENV/bin/python" -c "import yaml; print(yaml.safe_load(open('$C
 CONSTRAINTS=()
 while IFS= read -r line; do [ -n "$line" ] && CONSTRAINTS+=("$line"); done < <("$VENV/bin/python" -c "import yaml; [print(c) for c in (yaml.safe_load(open('$CONFIG')).get('pip_constraints') or [])]")
 
+# Optional per-model extra pip index (e.g. GLM pins the cu129 torch build so vLLM 0.23's
+# default CUDA-13 wheel doesn't clash with the pod's driver).
+INDEX=()
+EXTRA_INDEX=$("$VENV/bin/python" -c "import yaml; print(yaml.safe_load(open('$CONFIG')).get('pip_extra_index_url', ''))")
+[ -n "$EXTRA_INDEX" ] && INDEX=(--extra-index-url "$EXTRA_INDEX")
+
 if [ -n "$VLLM_VERSION" ]; then
-  echo "== vLLM $VLLM_VERSION ${CONSTRAINTS[*]:-} (pulls torch etc., ~2-3 min) =="
-  _t=$SECONDS; $PIP install -q "vllm==$VLLM_VERSION" "${CONSTRAINTS[@]+"${CONSTRAINTS[@]}"}"; echo "   ↳ done in $(_since $_t)"
+  echo "== vLLM $VLLM_VERSION ${CONSTRAINTS[*]:-} ${EXTRA_INDEX:+(index $EXTRA_INDEX)} (pulls torch etc.) =="
+  _t=$SECONDS; $PIP install -q "vllm==$VLLM_VERSION" "${CONSTRAINTS[@]+"${CONSTRAINTS[@]}"}" "${INDEX[@]+"${INDEX[@]}"}"; echo "   ↳ done in $(_since $_t)"
 else
-  echo "== vLLM (latest) ${CONSTRAINTS[*]:-} (pulls torch etc., ~2-3 min) =="
-  _t=$SECONDS; $PIP install -q vllm "${CONSTRAINTS[@]+"${CONSTRAINTS[@]}"}"; echo "   ↳ done in $(_since $_t)"
+  echo "== vLLM (latest) ${CONSTRAINTS[*]:-} (pulls torch etc.) =="
+  _t=$SECONDS; $PIP install -q vllm "${CONSTRAINTS[@]+"${CONSTRAINTS[@]}"}" "${INDEX[@]+"${INDEX[@]}"}"; echo "   ↳ done in $(_since $_t)"
 fi
 
 # Skip on an inference-only pod (SDD runs the agent locally): INSTALL_CLAUDE=0.

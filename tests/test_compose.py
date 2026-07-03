@@ -206,12 +206,17 @@ class GlmComposesTest(unittest.TestCase):
     ~744GB FP8 weights. compose() requires `image`, so a blank one fails the run loudly."""
 
     def test_glm_h200_8gpu_composes_with_image_and_enough_disk(self):
-        _, pod_spec, variant, _, _ = load_run_config(
+        vllm_cfg, pod_spec, variant, _, _ = load_run_config(
             "benchmarks/dev-load/scenario.yaml", "glm-5.2", "h200", gpu_count=8)
         self.assertTrue(pod_spec["image"], "GLM image must be set (was intentionally blank)")
+        # Must be an SSH-capable base image, NOT vllm/vllm-openai (no sshd — the harness
+        # needs SSH for rsync + scripts; that combo failed live on 2026-07-03).
+        self.assertNotIn("vllm/vllm-openai", pod_spec["image"])
         self.assertGreaterEqual(pod_spec["container_disk_gb"], 800)  # 744GB weights + overhead
         self.assertEqual(variant["quant"], "fp8")
         self.assertEqual(pod_spec["gpu_count"], 8)
+        # vLLM 0.23 defaults to CUDA-13 wheels; pin the cu129 index to match the driver.
+        self.assertIn("cu129", vllm_cfg.get("pip_extra_index_url", ""))
 
 
 class DefaultSloTest(unittest.TestCase):
