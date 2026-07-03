@@ -215,8 +215,8 @@ class GlmComposesTest(unittest.TestCase):
         self.assertGreaterEqual(pod_spec["container_disk_gb"], 800)  # 744GB weights + overhead
         self.assertEqual(variant["quant"], "fp8")
         self.assertEqual(pod_spec["gpu_count"], 8)
-        # vLLM 0.23 defaults to CUDA-13 wheels; pin the cu129 index to match the driver.
-        self.assertIn("cu129", vllm_cfg.get("pip_extra_index_url", ""))
+        # vLLM 0.23's wheel is CUDA 13; the base image must match (cu130), not cu129.
+        self.assertIn("cu130", pod_spec["image"])
 
 
 class DefaultSloTest(unittest.TestCase):

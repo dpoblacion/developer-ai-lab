@@ -154,6 +154,20 @@ def _test_guard(tmpdir):
     return make_guard([], state_path=os.path.join(tmpdir, "pods.json"))
 
 
+class StartupPollIterationsTest(unittest.TestCase):
+    """The health-poll backstop must outlast MAX_STARTUP so the guard's max_phase governs
+    (not a fixed 30-min loop). A large model like GLM downloads 744GB and legitimately
+    needs a raised MAX_STARTUP; the loop must honor it."""
+
+    def test_iterations_cover_max_startup_with_margin(self):
+        # default MAX_STARTUP 720s / 5s poll = 144, + margin
+        self.assertGreaterEqual(bench_sdd.startup_poll_iterations(720, poll=5), 144 + 6)
+
+    def test_scales_with_a_raised_max_startup(self):
+        # a 60-min ceiling must give ~720 polls, not stay at the old fixed 360
+        self.assertGreaterEqual(bench_sdd.startup_poll_iterations(3600, poll=5), 720)
+
+
 class SpawnPrefixedTest(unittest.TestCase):
     """N agents share the console during generation; every line must carry its agent tag
     or the interleaving reads as turn-taking (a real user doubt)."""

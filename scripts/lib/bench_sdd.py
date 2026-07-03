@@ -61,6 +61,14 @@ def vllm_launch_cmd(remote_dir, composed_path, log_path="/workspace/vllm.log",
 SCAN_TIMEOUT = 20
 
 
+def startup_poll_iterations(max_startup, poll=5, margin=60):
+    """How many health-poll iterations back the vLLM-startup wait. Derived from
+    MAX_STARTUP (+ a margin) so the guard's max_phase truly governs — a raised MAX_STARTUP
+    for a big model (e.g. GLM downloading 744GB) actually extends the wait instead of
+    hitting a fixed 30-min loop ceiling."""
+    return (max_startup + margin) // poll
+
+
 def _scan_pod_log(ip, port, key, runner=subprocess.run):
     """Run the fail-scan on the pod; '' when the ssh exec itself stalls — a slow scan must
     read as 'nothing found this poll', not crash a healthy still-loading startup."""
@@ -328,7 +336,9 @@ def run(ctx):
         # failed" on every poll — pure noise. Tunnel death is detected via poll() below.
         tunnel = subprocess.Popen(ssh_tunnel_cmd(ctx.ip, ctx.port, ctx.key), stderr=subprocess.DEVNULL)
         reachable = False
-        for i in range(360):  # backstop ceiling; guard MAX_STARTUP (~12 min) governs
+        # Backstop derived from MAX_STARTUP so the guard's max_phase governs (not a fixed
+        # 30-min loop) — a raised MAX_STARTUP for a big model actually extends the wait.
+        for i in range(startup_poll_iterations(pod_guard.MAX_STARTUP)):
             guard.raise_if_aborted()
             if _url_ok("http://localhost:8000/health"):
                 reachable = True

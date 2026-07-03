@@ -1,21 +1,20 @@
 # GLM-5.2 FP8 (~753B MoE, ~744GB weights) — MODEL axis only. Needs 8×H200 (--gpus 8);
 # tensor_parallel_size is derived from the run's --gpus.
 #
-# The official vllm/vllm-openai image was tried first but has NO sshd (it's an app image,
-# not a RunPod base) — the harness needs SSH for rsync + scripts, so it failed at
-# "SSH did not become available" (2026-07-03). So: an SSH-capable runpod/pytorch base with
-# CUDA 12.9, and vLLM 0.23 installed via pip in the venv (a clean venv, so the image's own
-# torch is unused — only its CUDA-12.9 driver matters). vLLM 0.23 defaults to CUDA-13
-# wheels; pip_extra_index_url pins the cu129 build to match the driver.
-# Tag verified present on Docker Hub 2026-07-03 (runpod/pytorch tags API).
+# The official vllm/vllm-openai image has NO sshd (it's an app image, not a RunPod base) —
+# the harness needs SSH for rsync + scripts — so we use an SSH-capable runpod/pytorch base
+# and pip-install vLLM 0.23 in the venv. vLLM 0.23's PyPI wheel (vllm._C) is built for
+# CUDA 13 (needs libcudart.so.13), so the base image must be CUDA 13 too — a cu129 base
+# fails at import with "libcudart.so.13: cannot open shared object file" (seen live
+# 2026-07-03). Everything aligned to CUDA 13: cu130 image + vLLM/torch default wheels, no
+# extra index. Tag verified on Docker Hub (runpod/pytorch tags API).
 family: glm-5.2
 quant: fp8
 model: zai-org/GLM-5.2-FP8
 served_model_name: glm-5.2-fp8
 vllm_version: "0.23.0"
-image: runpod/pytorch:1.0.7-cu1290-torch291-ubuntu2404
+image: runpod/pytorch:1.0.7-cu1300-torch291-ubuntu2404   # CUDA 13 (matches vLLM's wheel)
 container_disk_gb: 800                       # ~744GB FP8 weights + KV/runtime overhead
-pip_extra_index_url: https://download.pytorch.org/whl/cu129   # match vLLM's torch to CUDA 12.9
 kv_cache_dtype: fp8
 tool_call_parser: glm47
 reasoning_parser: glm45
