@@ -39,6 +39,12 @@ def benchmarks(reports):
                    if r.get("benchmark") and r.get("benchmark") not in PREFLIGHT})
 
 
+def families(reports, benchmark):
+    """Distinct model families measured for a benchmark, sorted — populates the family filter."""
+    return sorted({r.get("family") for r in reports
+                   if r.get("benchmark") == benchmark and r.get("family")})
+
+
 def devs_for(reports, benchmark):
     """Sorted distinct N tested for a benchmark (across all its runs' by_devs)."""
     ns = set()
@@ -375,9 +381,22 @@ def benchmark_page(benchmark):
     if not ns:
         st.info("No runs for this benchmark yet.")
         return
-    series = combo_series(reports, benchmark)
+    all_series = combo_series(reports, benchmark)
     floor = benchmark_min_tps(reports, benchmark)
     ttft_cap = benchmark_max_ttft(reports, benchmark)
+
+    # Colors are assigned over the FULL combo set so a combo keeps its hue when the family
+    # filter hides others (color follows the entity, never its rank).
+    colors = assign_series_colors([s["label"] for s in all_series])
+
+    # Family filter: governs every figure and table on the page. Only shown when there's
+    # more than one family to choose between.
+    fams = families(reports, benchmark)
+    selected_fams = fams
+    if len(fams) > 1:
+        selected_fams = st.multiselect("Model family", fams, default=fams,
+                                       key=f"fam-{benchmark}") or fams
+    series = [s for s in all_series if s["family"] in selected_fams]
 
     # 0 — what-if pricing: every $ figure on the page recomputes from the visitor's prices
     hw_prices = {}
@@ -411,7 +430,6 @@ def benchmark_page(benchmark):
 
     # 2 — the analysis charts: every measured N (the selector below does NOT affect these)
     st.subheader("Analysis across team sizes")
-    colors = assign_series_colors([s["label"] for s in series])
     shorts = short_series_labels(series)
     for s in series:
         s["short"] = shorts[s["label"]]
@@ -442,9 +460,9 @@ def benchmark_page(benchmark):
     st.divider()
     st.subheader("Drill into one team size")
     n = st.selectbox("Developers (N)", ns, index=len(ns) - 1)
-    rows = combo_rows(reports, benchmark, n)
+    rows = [x for x in combo_rows(reports, benchmark, n) if x["family"] in selected_fams]
     if not rows:
-        st.info(f"No model × hardware measured at {n} devs.")
+        st.info(f"No model × hardware measured at {n} devs for the selected family.")
         return
     if overrides:
         rows = reprice_rows(rows, overrides, n)

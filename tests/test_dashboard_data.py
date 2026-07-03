@@ -173,6 +173,21 @@ class BestComboTest(unittest.TestCase):
         self.assertIsNone(best_combo([r], "dev-load"))
 
 
+class FamiliesTest(unittest.TestCase):
+    def test_distinct_families_sorted_for_a_benchmark(self):
+        from scripts.dashboard import families
+        reports = [_rep(family="qwen3-coder"), _rep(family="llama3.3-70b"),
+                   _rep(family="qwen3-coder"), _rep(family="qwen3-14b")]
+        self.assertEqual(families(reports, "dev-load"),
+                         ["llama3.3-70b", "qwen3-14b", "qwen3-coder"])
+
+    def test_excludes_other_benchmarks(self):
+        from scripts.dashboard import families
+        reports = [_rep(family="qwen3-coder", benchmark="dev-load"),
+                   _rep(family="glm-5.2", benchmark="other")]
+        self.assertEqual(families(reports, "dev-load"), ["qwen3-coder"])
+
+
 class SeriesMergesAcrossRunsTest(unittest.TestCase):
     """N measurements are independent: a new run that tests only new team sizes must ADD
     its points to a combo's curve, not erase the previously measured Ns. Same N measured
