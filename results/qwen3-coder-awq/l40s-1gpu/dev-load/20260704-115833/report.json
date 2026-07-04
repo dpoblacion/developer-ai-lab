@@ -1,0 +1,533 @@
+{
+  "run_id": "20260704-115833",
+  "date": "2026-07-04",
+  "benchmark": "dev-load",
+  "family": "qwen3-coder",
+  "quant": "awq",
+  "model": "qwen3-coder-30b-awq",
+  "hardware": "l40s",
+  "gpu_count": 1,
+  "price_usd_per_gpu_hour": 0.79,
+  "cost_per_hour": 0.79,
+  "slo": {
+    "max_ttft": 2.0,
+    "min_tps": 20.0
+  },
+  "by_devs": [
+    {
+      "devs": 1,
+      "holds_slo": true,
+      "slo_percentile": "p50",
+      "median_ttft": 0.05533333333333333,
+      "median_tps": 199.85198889916742,
+      "cost_per_dev_hour": 0.79,
+      "cost_per_dev_month": 576.7,
+      "valid": true,
+      "agents_ok": 1,
+      "tokens_per_dev": 460237,
+      "agents": [
+        {
+          "agent": 0,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 440685,
+            "completion": 19552,
+            "total": 460237
+          },
+          "wall_time": 196.47342944145203
+        }
+      ],
+      "p90_ttft": 0.20666666666666678,
+      "p90_tps": 111.0288827217597,
+      "holds_slo_p90": true,
+      "p99_ttft": 0.9049999999999994,
+      "p99_tps": 100.93534792887243,
+      "e2e_p50": 0.7142857142857143,
+      "e2e_p99": 11.199999999999974,
+      "server_tokens": {
+        "prompt": 679124,
+        "generation": 16291
+      },
+      "tokens_source": "server",
+      "tokens_per_hour": 12196015.478027651,
+      "cost_per_mtok": 0.06477525396907412,
+      "cost_per_mtok_output": 2.7650655723346436,
+      "utilization": 0.5802535709792329,
+      "underutilization_penalty": 1.7233844822573088
+    },
+    {
+      "devs": 2,
+      "holds_slo": true,
+      "slo_percentile": "p50",
+      "median_ttft": 0.045925925925925926,
+      "median_tps": 174.52772283980084,
+      "cost_per_dev_hour": 0.395,
+      "cost_per_dev_month": 288.35,
+      "valid": true,
+      "agents_ok": 2,
+      "tokens_per_dev": 356947,
+      "agents": [
+        {
+          "agent": 0,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 290667,
+            "completion": 14803,
+            "total": 305470
+          },
+          "wall_time": 154.1150541305542
+        },
+        {
+          "agent": 1,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 387980,
+            "completion": 20444,
+            "total": 408424
+          },
+          "wall_time": 290.225617647171
+        }
+      ],
+      "p90_ttft": 0.088,
+      "p90_tps": 75.45476792560565,
+      "holds_slo_p90": true,
+      "p99_ttft": 0.24300000000000022,
+      "p99_tps": 41.74842399699412,
+      "e2e_p50": 0.7052631578947368,
+      "e2e_p99": 13.225000000000016,
+      "server_tokens": {
+        "prompt": 1124746,
+        "generation": 29468
+      },
+      "tokens_source": "server",
+      "tokens_per_hour": 13895342.50127486,
+      "cost_per_mtok": 0.05685358240917917,
+      "cost_per_mtok_output": 2.2268630638939984,
+      "utilization": 0.6611029742353336,
+      "underutilization_penalty": 1.5126236592062718
+    },
+    {
+      "devs": 4,
+      "holds_slo": true,
+      "slo_percentile": "p50",
+      "median_ttft": 0.054634146341463415,
+      "median_tps": 63.54724048873431,
+      "cost_per_dev_hour": 0.1975,
+      "cost_per_dev_month": 144.175,
+      "valid": true,
+      "agents_ok": 3,
+      "tokens_per_dev": 264616,
+      "agents": [
+        {
+          "agent": 0,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": false,
+              "exit_code": 2,
+              "output": "tests/board.test.ts(118,41): error TS2345: Argument of type 'number | undefined' is not assignable to parameter of type 'number | bigint'.\n  Type 'undefined' is not assignable to type 'number | bigint'.\n"
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 779830,
+            "completion": 29029,
+            "total": 808859
+          },
+          "wall_time": 383.50595569610596
+        },
+        {
+          "agent": 1,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 242648,
+            "completion": 16448,
+            "total": 259096
+          },
+          "wall_time": 249.83075714111328
+        },
+        {
+          "agent": 2,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 252294,
+            "completion": 16077,
+            "total": 268371
+          },
+          "wall_time": 240.60983657836914
+        },
+        {
+          "agent": 3,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 241316,
+            "completion": 19546,
+            "total": 260862
+          },
+          "wall_time": 278.62584948539734
+        }
+      ],
+      "p90_ttft": 0.15,
+      "p90_tps": 42.98807223832096,
+      "holds_slo_p90": true,
+      "p99_ttft": 0.375,
+      "p99_tps": 40.0711605338845,
+      "e2e_p50": 0.9384615384615385,
+      "e2e_p99": 26.666666666666668,
+      "server_tokens": {
+        "prompt": 2458238,
+        "generation": 67967
+      },
+      "tokens_source": "server",
+      "tokens_per_hour": 23177497.561165083,
+      "cost_per_mtok": 0.03408478408487376,
+      "cost_per_mtok_output": 1.2668670381086193,
+      "utilization": 1.1027229139269226,
+      "underutilization_penalty": 0.9068461236911142
+    },
+    {
+      "devs": 8,
+      "holds_slo": true,
+      "slo_percentile": "p50",
+      "median_ttft": 0.0672,
+      "median_tps": 58.550801912228934,
+      "cost_per_dev_hour": 0.09875,
+      "cost_per_dev_month": 72.0875,
+      "valid": true,
+      "agents_ok": 6,
+      "tokens_per_dev": 273110,
+      "agents": [
+        {
+          "agent": 0,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "   \u001b[34mcompleteTask\u001b[39m(b\u001b[33m,\u001b[39m hi)\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[3/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mlistTasks sorts by priority then createdAt ascending\n\u001b[31m\u001b[1mTypeError\u001b[22m: addTask is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m40:15\u001b[22m\u001b[39m\n    \u001b[90m 38|\u001b[39m   \u001b[34mit\u001b[39m(\u001b[32m\"listTasks sorts by priority then createdAt ascending\"\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n    \u001b[90m 39|\u001b[39m     \u001b[35mconst\u001b[39m b \u001b[33m=\u001b[39m \u001b[34mcreateBoard\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m 40|\u001b[39m     \u001b[35mconst\u001b[39m m \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"m\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"medium\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m   |\u001b[39m               \u001b[31m^\u001b[39m\n    \u001b[90m 41|\u001b[39m     \u001b[35mconst\u001b[39m h1 \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"h1\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"high\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m 42|\u001b[39m     \u001b[35mconst\u001b[39m h2 \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"h2\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"high\"\u001b[39m })\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[4/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mstats counts total, done, pending\n\u001b[31m\u001b[1mTypeError\u001b[22m: addTask is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m49:15\u001b[22m\u001b[39m\n    \u001b[90m 47|\u001b[39m   \u001b[34mit\u001b[39m(\u001b[32m\"stats counts total, done, pending\"\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n    \u001b[90m 48|\u001b[39m     \u001b[35mconst\u001b[39m b \u001b[33m=\u001b[39m \u001b[34mcreateBoard\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m 49|\u001b[39m     \u001b[35mconst\u001b[39m a \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"a\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m   |\u001b[39m               \u001b[31m^\u001b[39m\n    \u001b[90m 50|\u001b[39m     \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"b\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m 51|\u001b[39m     \u001b[34mcompleteTask\u001b[39m(b\u001b[33m,\u001b[39m a)\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[5/5]\u23af\u001b[22m\u001b[39m\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 213340,
+            "completion": 17931,
+            "total": 231271
+          },
+          "wall_time": 329.09246468544006
+        },
+        {
+          "agent": 1,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 265510,
+            "completion": 16326,
+            "total": 281836
+          },
+          "wall_time": 327.1964662075043
+        },
+        {
+          "agent": 2,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 363356,
+            "completion": 15307,
+            "total": 378663
+          },
+          "wall_time": 319.1068296432495
+        },
+        {
+          "agent": 3,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 154555,
+            "completion": 12038,
+            "total": 166593
+          },
+          "wall_time": 243.5160117149353
+        },
+        {
+          "agent": 4,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 241619,
+            "completion": 14622,
+            "total": 256241
+          },
+          "wall_time": 300.7497148513794
+        },
+        {
+          "agent": 5,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 251997,
+            "completion": 12387,
+            "total": 264384
+          },
+          "wall_time": 261.93793630599976
+        },
+        {
+          "agent": 6,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "\n\u001b[90m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m31:16\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[3/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mlistTasks sorts by priority then createdAt ascending\n\u001b[31m\u001b[1mTypeError\u001b[22m: title.trim is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m Object.addTask src/board.ts:\u001b[2m40:27\u001b[22m\u001b[39m\n    \u001b[90m 38|\u001b[39m      */\u001b[39m\n    \u001b[90m 39|\u001b[39m     \u001b[34maddTask\u001b[39m(title\u001b[33m:\u001b[39m string\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[33mPriority\u001b[39m \u001b[33m=\u001b[39m \u001b[32m'medium'\u001b[39m)\u001b[33m:\u001b[39m \u001b[33mTask\u001b[39m {\n    \u001b[90m 40|\u001b[39m       \u001b[35mif\u001b[39m (\u001b[33m!\u001b[39mtitle \u001b[33m||\u001b[39m title\u001b[33m.\u001b[39m\u001b[34mtrim\u001b[39m() \u001b[33m===\u001b[39m \u001b[32m''\u001b[39m) {\n    \u001b[90m   |\u001b[39m                           \u001b[31m^\u001b[39m\n    \u001b[90m 41|\u001b[39m         \u001b[35mthrow\u001b[39m \u001b[35mnew\u001b[39m \u001b[33mError\u001b[39m(\u001b[32m'Task title cannot be empty'\u001b[39m)\u001b[33m;\u001b[39m\n    \u001b[90m 42|\u001b[39m       }\n\u001b[90m \u001b[2m\u276f\u001b[22m addTask src/board.ts:\u001b[2m135:16\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m40:15\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[4/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mstats counts total, done, pending\n\u001b[31m\u001b[1mTypeError\u001b[22m: title.trim is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m Object.addTask src/board.ts:\u001b[2m40:27\u001b[22m\u001b[39m\n    \u001b[90m 38|\u001b[39m      */\u001b[39m\n    \u001b[90m 39|\u001b[39m     \u001b[34maddTask\u001b[39m(title\u001b[33m:\u001b[39m string\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[33mPriority\u001b[39m \u001b[33m=\u001b[39m \u001b[32m'medium'\u001b[39m)\u001b[33m:\u001b[39m \u001b[33mTask\u001b[39m {\n    \u001b[90m 40|\u001b[39m       \u001b[35mif\u001b[39m (\u001b[33m!\u001b[39mtitle \u001b[33m||\u001b[39m title\u001b[33m.\u001b[39m\u001b[34mtrim\u001b[39m() \u001b[33m===\u001b[39m \u001b[32m''\u001b[39m) {\n    \u001b[90m   |\u001b[39m                           \u001b[31m^\u001b[39m\n    \u001b[90m 41|\u001b[39m         \u001b[35mthrow\u001b[39m \u001b[35mnew\u001b[39m \u001b[33mError\u001b[39m(\u001b[32m'Task title cannot be empty'\u001b[39m)\u001b[33m;\u001b[39m\n    \u001b[90m 42|\u001b[39m       }\n\u001b[90m \u001b[2m\u276f\u001b[22m addTask src/board.ts:\u001b[2m135:16\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m49:15\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[5/5]\u23af\u001b[22m\u001b[39m\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 267765,
+            "completion": 16243,
+            "total": 284008
+          },
+          "wall_time": 313.3536674976349
+        },
+        {
+          "agent": 7,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 506888,
+            "completion": 23951,
+            "total": 530839
+          },
+          "wall_time": 404.1652903556824
+        }
+      ],
+      "p90_ttft": 0.16586956521739138,
+      "p90_tps": 42.14602165525868,
+      "holds_slo_p90": true,
+      "p99_ttft": 0.24452173913043476,
+      "p99_tps": 16.322226244628823,
+      "e2e_p50": 1.2337662337662338,
+      "e2e_p99": 32.73333333333331,
+      "server_tokens": {
+        "prompt": 3958004,
+        "generation": 107604
+      },
+      "tokens_source": "server",
+      "tokens_per_hour": 35434558.0977013,
+      "cost_per_mtok": 0.022294619783934842,
+      "cost_per_mtok_output": 0.8423588765336211,
+      "utilization": 1.685880844387664,
+      "underutilization_penalty": 0.5931617310493935
+    }
+  ],
+  "tokens": {
+    "prompt": 4900450,
+    "completion": 264704,
+    "total": 5165154
+  },
+  "model_meta": {
+    "architecture": "moe",
+    "total_params_b": 30.5,
+    "active_params_b": 3.3
+  },
+  "theta_max": {
+    "tokens_per_hour": 21018423.82020281,
+    "output_tokens_per_hour": 492818.0750778579,
+    "server_tokens": {
+      "prompt": 1183511,
+      "generation": 28416
+    },
+    "duration_s": 207.57680201530457,
+    "shape": {
+      "prompt_tokens": 8192,
+      "output_tokens": 256
+    },
+    "concurrency": 64
+  },
+  "utilization_basis": "theta_max",
+  "timeline": [
+    {
+      "label": "create\u2192ready",
+      "seconds": 28.279218912124634,
+      "cost_usd": 0.006205717483494017,
+      "pct": 0.015404934885276254
+    },
+    {
+      "label": "rsync",
+      "seconds": 4.269397974014282,
+      "cost_usd": 0.0009368956665198008,
+      "pct": 0.0023257289387445482
+    },
+    {
+      "label": "vLLM startup",
+      "seconds": 283.4896640777588,
+      "cost_usd": 0.062210231839285965,
+      "pct": 0.15442929415190865
+    },
+    {
+      "label": "generation",
+      "seconds": 1311.1944229602814,
+      "cost_usd": 0.2877343317051729,
+      "pct": 0.714265297440033
+    },
+    {
+      "label": "saturation-probe",
+      "seconds": 208.49195981025696,
+      "cost_usd": 0.04575240229169528,
+      "pct": 0.11357474458403764
+    }
+  ],
+  "pod_cost_usd": 0.40283957898616796
+}
