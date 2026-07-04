@@ -161,6 +161,9 @@ whitelists them); the heavy `artifacts/` stay gitignored. The dashboard reads
 `BENCHMARK` accepts a **bare name** as a shortcut: `make run BENCHMARK=dev-load` is the same
 as `BENCHMARK=benchmarks/dev-load/scenario.yaml`. `MODEL` defaults to `qwen3-coder`; `HARDWARE`
 defaults to `l40s`; `GPUS` defaults to `1`; `KEEP=1` leaves the pod running for debugging.
+`QUANT=<quant>` forces the model variant instead of the hardware's preference order — the
+knob that makes same-hardware quantization pairs measurable (e.g. `QUANT=awq` on an
+fp8-first GPU); an unservable combination refuses to launch.
 
 ## Configuration
 

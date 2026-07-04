@@ -32,6 +32,31 @@ The latest run for a config+benchmark is simply the lexically-max `<run_id>`
     wall time, gate outcomes, `gate_timeout` for environmental timeouts) nests under
     `agents`.
   - `tokens_per_dev` — median tokens one developer's task consumed.
+  - `p90_ttft` / `p90_tps` / `holds_slo_p90` — the SLO evaluated at the p90 tail (what the
+    median hides).
+  - `server_tokens` / `tokens_per_hour` / `cost_per_mtok` / `cost_per_mtok_output` — the
+    level's token throughput and effective $/MTok, blended and output-only (the
+    API-comparable figure).
+  - `tokens_source` — where those token counts come from: `server` (vLLM's own counters,
+    diffed per level) or `client` (the agents' reported usage — what the server processed —
+    over the slowest agent's wall time, used when server counters are unavailable). The
+    p90 fields exist only alongside server-side histograms.
+  - `utilization` / `underutilization_penalty` — U = Θachieved/Θmax and its inverse (the
+    headroom you pay for at low N); the report's `utilization_basis` says whether the
+    denominator is the probed `theta_max` or the best measured level. See
+    `docs/methodology.md` → "Effective $/MTok and utilization" (arXiv:2606.11690).
+  - `p99_ttft` / `p99_tps` / `e2e_p50` / `e2e_p99` — tail latency and end-to-end request
+    latency; `slo_percentile` records which percentile the SLO gate was judged at.
+  - `prefix_cache_hit_rate` / `computed_tokens_per_hour` — vLLM prefix-cache hit rate
+    during the level, and the level's throughput with cache-hit prompt tokens discounted.
+    Utilization is anchored on the computed figure (the Θmax probe never hits the cache,
+    so compute-vs-compute is the coherent comparison); the $/MTok economics stay on
+    served tokens — what the deployment delivers.
+- **`theta_max`** — the raw-saturation probe's result (total and output tokens/hour, the
+  probe shape and concurrency): the no-SLO ceiling utilization is measured against.
+- **`truncated`** — present when the watchdog aborted the run mid-sweep (`stall`,
+  `max_phase` or `max_run`): the completed levels are real measurements and are kept;
+  the missing ones simply aren't there. The run still exits non-zero.
 - **`timeline`** + **`pod_cost_usd`** — the billed pod time broken into steps
   (create→ready, rsync, vLLM startup, generation) and its total cost: measured
   wall-clock × the hardware's list price. Gate scoring runs with the pod already

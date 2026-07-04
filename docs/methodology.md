@@ -54,6 +54,11 @@ that N holds the SLO and the $/dev at that team size.
   `slo.max_ttft` (default ≤ 2 s) and `slo.min_tps` (default ≥ 20 tok/s).
 - **holds_slo**: `true` if the SLO is met at N; the dashboard shows which hardware holds at
   each team size, so you can pick the right hardware for your team.
+- **holds_slo_p90 / p90_ttft / p90_tps**: the same thresholds evaluated at the p90 tail
+  (from the same server-side histograms). Medians alone let a large minority of requests
+  violate the SLO unseen; tail-conditioning follows the concurrency-aware costing
+  methodology of [arXiv:2606.11690](https://arxiv.org/abs/2606.11690). `holds_slo` (median)
+  remains the headline gate; the p90 fields expose what it hides.
 
 Because the task and SLO are fixed, the `holds_slo` result is directly comparable across
 hardware configs. Each run's `report.json` records its config axes (family, quant, hardware,
@@ -76,6 +81,61 @@ running the benchmark itself.)
 so it gets **cheaper per developer as N grows** — until the SLO breaks. The dashboard shows the
 $/dev-month curve vs N and where each GPU stops holding the SLO, so you can pick the **cheapest
 hardware that still serves your team** at the SLO.
+
+### Effective $/MTok and utilization (concurrency-aware costing)
+
+Following [arXiv:2606.11690](https://arxiv.org/abs/2606.11690) ("Beyond Per-Token Pricing"),
+each N also reports the **measured** per-token economics of the level — utilization is an
+*output* of the measurement, never an assumed input:
+
+- **server_tokens / tokens_per_hour**: prompt + generation tokens the level actually served,
+  over the level's wall duration. Counts come from vLLM's own counters diffed per level
+  (`tokens_source: "server"`); when server counters are unavailable, the agents'
+  client-reported usage — what the server processed — stands in, over the slowest agent's
+  wall time (`tokens_source: "client"`).
+- **cost_per_mtok**: `cost_per_hour ÷ tokens_per_hour × 10⁶` — the effective $/MTok at that
+  N, blended over all served tokens.
+- **cost_per_mtok_output**: the same cost assigned entirely to generated tokens — the figure
+  to hand-compare against per-token API pricing (which bills output 5-6× input; agentic
+  coding traffic is heavily prompt-dominated, so the blended and output figures differ a lot).
+- **theta_max (raw saturation)**: after the last level, while the pod is still up, a
+  saturation probe (`saturation_probe:` in the scenario) drives vLLM with fresh
+  random-word prompts — no shareable prefixes, so the cache cannot inflate the ceiling —
+  at the workload's own prompt:output ratio, and measures Θmax from the server's counters.
+  This is the engine+hardware ceiling of arXiv:2606.11690 §3.2, distinct from *goodput*:
+  the harness's `holds_slo` sweep IS the goodput measurement (the largest N your SLO
+  permits), and Θmax is the no-SLO ceiling it is judged against.
+- **utilization / underutilization_penalty**: U = Θachieved/Θmax and its inverse — what
+  you pay at low N for headroom you are not using. Against the probed Θmax when the run
+  carried one (`utilization_basis: theta_max`); otherwise against the best measured level
+  (`best_level`, a lower bound, requiring ≥2 levels — a single level is trivially its own
+  best). This is the paper's core point transplanted to team sizing: the same GPU's
+  effective $/MTok can differ by an order of magnitude between N=1 and the largest N that
+  still holds SLO — which is why the `devs` grid starts at N=1, the idle edge where the
+  penalty peaks (the paper's headline is 17.5–36.3× there).
+- **The SLO's price** (paper Table 4): per combo, the largest measured N that holds the
+  SLO, the output-$/MTok at that shippable operating point, and its premium over the
+  saturation floor `Csat = cost_per_hour ÷ Θmax_output` — a floor that is unreachable
+  under any real latency commitment.
+- **Repeats and stability** (paper §5.8): re-measuring the same combo × N is a repeat —
+  the dashboard aggregates repeats as mean ± CV (the SLO verdict is conservative: every
+  repeat must hold). Run the same `make run` again to add a repeat.
+- **prefix_cache_hit_rate**: agentic traffic shares real prefixes (system prompts, tool
+  loops), so vLLM's prefix cache is live in these measurements; the per-level hit rate
+  bounds how they compare to cache-free protocols (the paper measures real hits cutting
+  saturation cost by 20–22%).
+- **slo.percentile**: the SLO gate is judged at the scenario's percentile (`p50`
+  default; `p90`/`p99` available — the paper's example SLA is at p99). Tail fields
+  (p90/p99 TTFT and tok/s, E2E p50/p99) are always reported.
+- **Quantization impact**: the dashboard compares quants only between runs of the same
+  family on identical hardware and GPU count, at common team sizes — any other pairing
+  confounds the quant with the GPU. (The paper finds the FP8 gain is
+  architecture-dependent: ~+31% dense vs +69-74% MoE.)
+
+Where the paper sweeps synthetic Poisson request rates (fixed 512:256 token shapes), this
+harness drives **real agentic coding sessions** and adds quality gates on the produced code —
+the two are complementary: their λ-sweep isolates the cost curve; our N-sweep prices the
+workload you actually run.
 
 ## Results
 
