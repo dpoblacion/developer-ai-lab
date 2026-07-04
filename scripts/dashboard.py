@@ -8,6 +8,7 @@ Run: make dashboard   (or: streamlit run scripts/dashboard.py)
 import json
 import pathlib
 import sys
+import urllib.parse
 
 # Streamlit Cloud (and a bare `streamlit run scripts/dashboard.py`) put scripts/ on
 # sys.path, not the repo root, so the `scripts.*` imports below would fail there.
@@ -60,17 +61,59 @@ def run_key(rep):
     return (rep.get("family"), rep.get("quant"), rep.get("hardware"), rep.get("gpu_count"))
 
 
+# Numeric per-N metrics that average across repeat runs (with a CV). Everything else in
+# an entry is taken from the latest run; boolean verdicts are conservative (all must hold).
+_AGG_MEAN_KEYS = ("cost_per_dev_month", "median_tps", "median_ttft", "p90_ttft", "p90_tps",
+                  "p99_ttft", "p99_tps", "e2e_p50", "e2e_p99", "cost_per_mtok",
+                  "cost_per_mtok_output", "tokens_per_hour", "computed_tokens_per_hour",
+                  "tokens_per_dev", "prefix_cache_hit_rate")
+_AGG_ALL_KEYS = ("holds_slo", "holds_slo_p90", "valid")
+
+
+def aggregate_entries(entries):
+    """Aggregate repeat measurements of the same (combo, N): numeric metrics average and
+    carry a sample-CV (the stability protocol of arXiv:2606.11690 §5.8 — the CV exposes
+    runs that disagree), boolean verdicts hold only if EVERY repeat holds, and anything
+    else comes from the latest run. Pure; entries are in run order (latest last)."""
+    import statistics
+    out = dict(entries[-1])
+    out["repeats"] = len(entries)
+    cv = {}
+    for k in _AGG_MEAN_KEYS:
+        vals = [e[k] for e in entries if e.get(k) is not None]
+        if not vals:
+            continue
+        mean = statistics.fmean(vals)
+        out[k] = mean
+        if len(vals) >= 2 and mean:
+            cv[k] = statistics.stdev(vals) / mean
+    for k in _AGG_ALL_KEYS:
+        vals = [e[k] for e in entries if e.get(k) is not None]
+        if vals:
+            out[k] = all(vals)
+    if cv:
+        out["cv"] = cv
+    return out
+
+
 def combo_rows(reports, benchmark, n):
-    """One row per model×hardware combo (latest run wins) that ran this benchmark and tested this N —
-    sorted by cost_per_dev_month asc (None last). reports are path-sorted, so last wins."""
-    by_key = {}
+    """One row per model×hardware combo that ran this benchmark and tested this N —
+    sorted by cost_per_dev_month asc (None last). Repeat measurements of the N aggregate
+    (mean + CV, conservative SLO); run-level metadata comes from the latest run."""
+    grouped = {}
     for r in reports:
         if r.get("benchmark") != benchmark:
             continue
-        entry = next((d for d in r.get("by_devs", []) if d["devs"] == n), None)
-        if entry is None:
+        found = next((d for d in r.get("by_devs", []) if d["devs"] == n), None)
+        if found is None:
             continue
-        by_key[run_key(r)] = {
+        cur = grouped.setdefault(run_key(r), {"rep": r, "entries": []})
+        cur["rep"] = r
+        cur["entries"].append(found)
+    by_key = {}
+    for key, cur in grouped.items():
+        entry, r = aggregate_entries(cur["entries"]), cur["rep"]
+        by_key[key] = {
             "family": r.get("family"), "quant": r.get("quant"),
             "hardware": r.get("hardware"), "gpus": r.get("gpu_count"),
             "holds_slo": entry["holds_slo"], "cost_per_dev_month": entry["cost_per_dev_month"],
@@ -82,6 +125,14 @@ def combo_rows(reports, benchmark, n):
             "max_ttft": (r.get("slo") or {}).get("max_ttft"),
             "cost_per_hour": r.get("cost_per_hour"),
             "price_usd_per_gpu_hour": r.get("price_usd_per_gpu_hour"),
+            # Concurrency-aware metrics (arXiv:2606.11690); None on pre-paper reports.
+            "cost_per_mtok": entry.get("cost_per_mtok"),
+            "cost_per_mtok_output": entry.get("cost_per_mtok_output"),
+            "utilization": entry.get("utilization"),
+            "underutilization_penalty": entry.get("underutilization_penalty"),
+            "holds_slo_p90": entry.get("holds_slo_p90"),
+            "p90_tps": entry.get("p90_tps"), "p90_ttft": entry.get("p90_ttft"),
+            "repeats": entry.get("repeats", 1), "cv": entry.get("cv"),
         }
     rows = list(by_key.values())
     rows.sort(key=lambda x: (x["cost_per_dev_month"] is None, x["cost_per_dev_month"] or 0))
@@ -92,7 +143,8 @@ def combo_series(reports, benchmark):
     """One entry per model×hardware combo with its points sorted by devs — for the cross-N
     charts. N measurements are independent, so points MERGE across a combo's runs keyed by
     (combo, N): a new run measuring only new team sizes extends the curve instead of
-    erasing the old Ns; the same N measured again takes the later run (path-sorted)."""
+    erasing the old Ns; the same N measured again is a repeat and aggregates (mean + CV,
+    see aggregate_entries)."""
     by_key = {}
     for r in reports:
         if r.get("benchmark") != benchmark:
@@ -100,18 +152,49 @@ def combo_series(reports, benchmark):
         cur = by_key.setdefault(run_key(r), {"rep": r, "by_n": {}})
         cur["rep"] = r   # latest run's metadata (price, ...) wins
         for d in r.get("by_devs", []):
-            cur["by_n"][d["devs"]] = d
+            cur["by_n"].setdefault(d["devs"], []).append(d)
     out = []
     for cur in by_key.values():
         r = cur["rep"]
+        agg = {n: aggregate_entries(entries) for n, entries in cur["by_n"].items()}
         pts = [{"devs": d["devs"], "cost_per_dev_month": d["cost_per_dev_month"],
                 "median_tps": d["median_tps"], "median_ttft": d.get("median_ttft"),
-                "holds_slo": d["holds_slo"]}
-               for _, d in sorted(cur["by_n"].items())]
+                "holds_slo": d["holds_slo"],
+                # Concurrency-aware metrics (arXiv:2606.11690); None on pre-paper reports.
+                "cost_per_mtok": d.get("cost_per_mtok"),
+                "cost_per_mtok_output": d.get("cost_per_mtok_output"),
+                "tokens_per_hour": d.get("tokens_per_hour"),
+                "computed_tokens_per_hour": d.get("computed_tokens_per_hour"),
+                "tokens_source": d.get("tokens_source"),
+                "utilization": None,
+                "repeats": d.get("repeats", 1), "cv": d.get("cv"),
+                "holds_slo_p90": d.get("holds_slo_p90")}
+               for _, d in sorted(agg.items())]
+        # U(N) over the combo's MERGED points, not per report: histories that measured
+        # each N in its own run would otherwise show a meaningless 100% at every point.
+        # A measured Θmax (saturation probe, latest run's) is the true denominator and
+        # works for any number of points; without one the best measured level stands in
+        # (a lower bound), which needs ≥2 points — one point is trivially its own best.
+        # Numerator: compute-real throughput (cache hits discounted) when captured.
+        def achieved(p):
+            return p.get("computed_tokens_per_hour") or p.get("tokens_per_hour")
+        theta = r.get("theta_max")
+        tphs = [achieved(p) for p in pts if achieved(p)]
+        basis = None
+        if theta and theta.get("tokens_per_hour"):
+            denominator, basis = theta["tokens_per_hour"], "theta_max"
+        elif len(tphs) >= 2:
+            denominator, basis = max(tphs), "best_level"
+        if basis:
+            for p in pts:
+                if achieved(p):
+                    p["utilization"] = achieved(p) / denominator
         x = {"family": r.get("family"), "quant": r.get("quant"),
              "hardware": r.get("hardware"), "gpus": r.get("gpu_count")}
         out.append({**x, "label": _combo_label(x), "points": pts,
-                    "price_usd_per_gpu_hour": r.get("price_usd_per_gpu_hour")})
+                    "price_usd_per_gpu_hour": r.get("price_usd_per_gpu_hour"),
+                    "theta_max": theta, "utilization_basis": basis,
+                    "model_meta": r.get("model_meta")})
     out.sort(key=lambda s: s["label"])
     return out
 
@@ -165,6 +248,16 @@ def best_combo(reports, benchmark):
     return best_combo_from_series(combo_series(reports, benchmark))
 
 
+def _scale_mtok(d, ratio):
+    """Rescale the price-derived $/MTok fields by the what-if price ratio. Utilization is
+    measured (throughput vs throughput), so it never changes with price."""
+    out = dict(d)
+    for k in ("cost_per_mtok", "cost_per_mtok_output"):
+        if out.get(k) is not None:
+            out[k] = out[k] * ratio
+    return out
+
+
 def reprice_series(series, price_overrides):
     """What-if pricing: recompute each point's $/dev-month from an overridden $/GPU-hour,
     keyed by hardware. SLO outcomes are measured and price-independent, so they never
@@ -175,7 +268,10 @@ def reprice_series(series, price_overrides):
             out.append(s)
             continue
         price = price_overrides[s["hardware"]]
-        pts = [{**p, "cost_per_dev_month": price * s["gpus"] * HOURS_PER_MONTH / p["devs"]}
+        old = s.get("price_usd_per_gpu_hour")
+        ratio = (price / old) if old else None
+        pts = [{**(_scale_mtok(p, ratio) if ratio else p),
+                "cost_per_dev_month": price * s["gpus"] * HOURS_PER_MONTH / p["devs"]}
                for p in s["points"]]
         out.append({**s, "price_usd_per_gpu_hour": price, "points": pts})
     return out
@@ -189,7 +285,9 @@ def reprice_rows(rows, price_overrides, n):
         if x["hardware"] in price_overrides and x.get("gpus") and n:
             price = price_overrides[x["hardware"]]
             cph = price * x["gpus"]
-            out.append({**x, "price_usd_per_gpu_hour": price, "cost_per_hour": cph,
+            old = x.get("price_usd_per_gpu_hour")
+            scaled = _scale_mtok(x, price / old) if old else dict(x)
+            out.append({**scaled, "price_usd_per_gpu_hour": price, "cost_per_hour": cph,
                         "cost_per_dev_month": cph * HOURS_PER_MONTH / n})
         else:
             out.append(dict(x))
@@ -259,8 +357,9 @@ def _style(fig, *, x_title, y_title):
 
 def _curve_fig(series, colors, value_key, y_title, hover_fmt):
     """One curve per combo across team sizes. 2px lines, ≥8px markers (x = point fails
-    SLO — identity never rides on color alone), direct labels when ≤4 series (text in ink
-    tokens; the line end carries the color)."""
+    SLO — identity never rides on color alone), direct labels when ≤4 series AND their
+    line ends don't collide (overlapping labels are worse than none — the legend always
+    carries identity)."""
     import plotly.graph_objects as go
     fig = go.Figure()
     for s in series:
@@ -273,19 +372,181 @@ def _curve_fig(series, colors, value_key, y_title, hover_fmt):
             marker=dict(size=9, symbol=symbols, color=colors[s["label"]],
                         line=dict(width=1, color=INK["surface"])),
             hovertemplate=f"%{{fullData.name}}<br>N=%{{x}} · {hover_fmt}<extra></extra>"))
-    if len(series) <= 4:
-        for s in series:
-            if s["points"]:
-                # short label: full combo names overflow the right edge on phones
-                fig.add_annotation(x=s["points"][-1]["devs"], y=s["points"][-1][value_key],
-                                   text=s.get("short", s["label"]), showarrow=False,
-                                   xanchor="left", xshift=10,
-                                   font=dict(size=11, color=INK["secondary"]))
+    ends = [(s["points"][-1][value_key], s) for s in series
+            if s["points"] and s["points"][-1].get(value_key) is not None]
+    all_vals = [p[value_key] for s in series for p in s["points"]
+                if p.get(value_key) is not None]
+    span = (max(all_vals) - min(all_vals)) if all_vals else 0.0
+    # Direct labels only for 1-2 series: with more, reference lines (SLO caps/floors)
+    # compress the pixel space and end labels collide — the legend carries identity.
+    if len(series) <= 2 and span > 0:
+        last_labeled = None
+        for y_end, s in sorted(ends, key=lambda t: t[0]):
+            # ≥6% of the chart's value span between labels, or they overprint.
+            if last_labeled is not None and (y_end - last_labeled) < 0.06 * span:
+                continue
+            last_labeled = y_end
+            # short label: full combo names overflow the right edge on phones
+            fig.add_annotation(x=s["points"][-1]["devs"], y=y_end,
+                               text=s.get("short", s["label"]), showarrow=False,
+                               xanchor="left", xshift=10,
+                               font=dict(size=11, color=INK["secondary"]))
     _style(fig, x_title="developers (N)", y_title=y_title)
     fig.update_layout(height=340)
     fig.update_xaxes(tickmode="array",
                      tickvals=sorted({p["devs"] for s in series for p in s["points"]}))
     return fig
+
+
+def _log_ticks(lo, hi):
+    """1-2-5 ticks covering [lo, hi] (money-friendly log scale)."""
+    import math
+    ticks, exp = [], math.floor(math.log10(lo))
+    while 10 ** exp <= hi:
+        for m in (1, 2, 5):
+            v = m * 10 ** exp
+            if lo <= v <= hi:
+                ticks.append(v)
+        exp += 1
+    return ticks or [lo, hi]
+
+
+def _loglog(fig, series, value_key, extra_values=()):
+    """Deterministic log-log axes: explicit ranges and 1-2-5 ticks. Plotly's autorange
+    on log axes inherits the linear rangemode and blows up to decades of empty space
+    (seen live 2026-07-04: a $0.01-$4 chart scaled to 10k). extra_values (e.g. API
+    reference lines) are kept inside the visible range."""
+    import math
+    xs = [p["devs"] for s in series for p in s["points"]]
+    ys = [p[value_key] for s in series for p in s["points"]
+          if p.get(value_key) is not None]
+    ys += [v for v in extra_values if v and v > 0]
+    if not xs or not ys or min(ys) <= 0:
+        return fig
+    x_lo, x_hi = min(xs), max(xs)
+    y_lo, y_hi = min(ys), max(ys)
+    fig.update_xaxes(type="log", tickmode="array",
+                     tickvals=sorted(set(xs)),
+                     range=[math.log10(x_lo) - 0.05, math.log10(x_hi) + 0.35])
+    fig.update_yaxes(type="log", rangemode="normal", tickmode="array",
+                     tickvals=_log_ticks(y_lo * 0.5, y_hi * 2.5),
+                     range=[math.log10(y_lo) - 0.25, math.log10(y_hi) + 0.35])
+    return fig
+
+
+def series_with_metric(series, key):
+    """Series restricted to points where `key` was measured (dropping empty series) — the
+    concurrency-aware charts only draw runs that carry the paper metrics. Pure."""
+    out = []
+    for s in series:
+        pts = [p for p in s["points"] if p.get(key) is not None]
+        if pts:
+            out.append({**s, "points": pts})
+    return out
+
+
+def mtok_spread(series):
+    """Per combo: the spread of the measured effective $/MTok across its team sizes —
+    the paper's headline result (17.5-36.3x on identical hardware, driven by load alone).
+    Combos with <2 measured points are skipped (no spread to speak of). Pure."""
+    out = []
+    for s in series:
+        vals = [(p["cost_per_mtok"], p["devs"]) for p in s["points"]
+                if p.get("cost_per_mtok") is not None]
+        if len(vals) < 2:
+            continue
+        (max_mtok, max_n), (min_mtok, min_n) = max(vals), min(vals)
+        out.append({"label": s["label"], "max_mtok": max_mtok, "max_devs": max_n,
+                    "min_mtok": min_mtok, "min_devs": min_n,
+                    "spread": max_mtok / min_mtok if min_mtok else None})
+    return out
+
+
+def quant_impact(series):
+    """Quantization impact: pairs of series that differ in NOTHING but the quant (same
+    family, hardware, and GPU count), compared at their common measured team sizes —
+    the only comparison that isolates quantization from the GPU (arXiv:2606.11690 finds
+    the FP8 gain is architecture-dependent: ~+31% dense vs +69-74% MoE). Series measured
+    on different hardware are never paired. Returns [] when no valid pair exists. Pure."""
+    import itertools
+    by_cfg = {}
+    for s in series:
+        by_cfg.setdefault((s["family"], s["hardware"], s["gpus"]), []).append(s)
+    out = []
+    for (family, hardware, gpus), group in sorted(by_cfg.items()):
+        for a, b in itertools.combinations(sorted(group, key=lambda s: s["quant"]), 2):
+            tph_a = {p["devs"]: p["tokens_per_hour"] for p in a["points"]
+                     if p.get("tokens_per_hour")}
+            tph_b = {p["devs"]: p["tokens_per_hour"] for p in b["points"]
+                     if p.get("tokens_per_hour")}
+            common = sorted(set(tph_a) & set(tph_b))
+            if not common:
+                continue
+            out.append({
+                "family": family, "hardware": hardware, "gpus": gpus,
+                "quant_a": a["quant"], "quant_b": b["quant"],
+                "points": [{"devs": n, "tph_a": tph_a[n], "tph_b": tph_b[n],
+                            "uplift": tph_b[n] / tph_a[n] - 1} for n in common]})
+    return out
+
+
+def penalty_matrix(series):
+    """The underutilization penalty as a combo × N grid (Figure 3 of arXiv:2606.11690):
+    each cell is that combo's measured $/MTok at N over its cheapest measured point, so
+    the grid shows where the cost cliff lives. None where a combo didn't measure an N.
+    Pure; returns {ns, labels, cells}."""
+    with_mtok = []
+    for s in series:
+        vals = {p["devs"]: p["cost_per_mtok"] for p in s["points"]
+                if p.get("cost_per_mtok") is not None}
+        if vals:
+            with_mtok.append((s["label"], vals))
+    ns = sorted({n for _, vals in with_mtok for n in vals})
+    cells = []
+    for _, vals in with_mtok:
+        floor = min(vals.values())
+        cells.append([(vals[n] / floor if n in vals and floor else None) for n in ns])
+    return {"ns": ns, "labels": [lab for lab, _ in with_mtok], "cells": cells}
+
+
+def sla_table(series):
+    """The SLO's price, per combo (arXiv:2606.11690 Table 4): the largest measured team
+    size that HOLDS the SLO, the output-$/MTok at that operating point, the saturation
+    floor Csat (list price over the probed Θmax output throughput — unreachable under any
+    real SLO), and the premium the SLO imposes over that floor. Pure."""
+    out = []
+    for s in series:
+        holding = [p for p in s["points"]
+                   if p["holds_slo"] and p.get("cost_per_mtok_output") is not None]
+        row = {"label": s["label"], "sla_devs": None, "mtok_at_sla": None,
+               "c_sat": None, "premium": None}
+        theta_out = (s.get("theta_max") or {}).get("output_tokens_per_hour")
+        price, gpus = s.get("price_usd_per_gpu_hour"), s.get("gpus")
+        if theta_out and price and gpus:
+            row["c_sat"] = price * gpus / theta_out * 1e6
+        if holding:
+            best = max(holding, key=lambda p: p["devs"])
+            row["sla_devs"] = best["devs"]
+            row["mtok_at_sla"] = best["cost_per_mtok_output"]
+            if row["c_sat"]:
+                row["premium"] = row["mtok_at_sla"] / row["c_sat"]
+        out.append(row)
+    return out
+
+
+def api_crossover(series, api_price):
+    """Per combo: the smallest measured N where the output-token $/MTok drops to or below
+    a reference API price (paper §4's crossover) — None if it never does. Pure."""
+    out = []
+    for s in series:
+        n = None
+        for p in sorted(s["points"], key=lambda p: p["devs"]):
+            v = p.get("cost_per_mtok_output")
+            if v is not None and v <= api_price:
+                n = p["devs"]
+                break
+        out.append({"label": s["label"], "crossover_devs": n})
+    return out
 
 
 def short_series_labels(series):
@@ -313,15 +574,49 @@ def render_detail(rep):
     c2.metric("GPU price", f"${rep.get('price_usd_per_gpu_hour', 0):.2f}/h × {rep.get('gpu_count', 1)}")
     c3.metric("Date", rep.get("date") or "—")
 
-    st.dataframe([{"devs": d["devs"], "SLO": "✓ holds" if d["holds_slo"] else "✗ fails",
-                   "$/dev-month": d.get("cost_per_dev_month"), "tok/s": d.get("median_tps"),
-                   "TTFT (s)": d.get("median_ttft"), "valid": d.get("valid"),
-                   "gates ok": f"{d.get('agents_ok')}/{d['devs']}"}
-                  for d in rep.get("by_devs", [])], hide_index=True, width="stretch",
+    has_paper = any(d.get("cost_per_mtok") is not None for d in rep.get("by_devs", []))
+    rows = []
+    for d in rep.get("by_devs", []):
+        row = {"devs": d["devs"], "SLO": "✓ holds" if d["holds_slo"] else "✗ fails",
+               "$/dev-month": d.get("cost_per_dev_month"), "tok/s": d.get("median_tps"),
+               "TTFT (s)": d.get("median_ttft"), "valid": d.get("valid"),
+               "gates ok": f"{d.get('agents_ok')}/{d['devs']}"}
+        if has_paper:
+            p90 = d.get("holds_slo_p90")
+            row["SLO p90"] = "—" if p90 is None else ("✓ holds" if p90 else "✗ fails")
+            row["p90 tok/s"] = d.get("p90_tps")
+            row["p99 TTFT (s)"] = d.get("p99_ttft")
+            row["$/Mtok"] = d.get("cost_per_mtok")
+            row["$/Mtok out"] = d.get("cost_per_mtok_output")
+            row["util %"] = (round(d["utilization"] * 100)
+                             if d.get("utilization") is not None else None)
+            row["penalty"] = d.get("underutilization_penalty")
+            row["cache hit %"] = (round(d["prefix_cache_hit_rate"] * 100)
+                                  if d.get("prefix_cache_hit_rate") is not None else None)
+        rows.append(row)
+    st.dataframe(rows, hide_index=True, width="stretch",
                  column_config={
                      "$/dev-month": st.column_config.NumberColumn(format="$%.0f"),
                      "tok/s": st.column_config.NumberColumn(format="%.1f"),
                      "TTFT (s)": st.column_config.NumberColumn(format="%.2f"),
+                     "SLO p90": st.column_config.TextColumn(
+                         help="the SLO at the p90 tail — what the median hides"),
+                     "p90 tok/s": st.column_config.NumberColumn(format="%.1f",
+                         help="decode tok/s at the p90-slowest token time"),
+                     "p99 TTFT (s)": st.column_config.NumberColumn(format="%.2f",
+                         help="tail time-to-first-token (the paper's SLA percentile)"),
+                     "$/Mtok": st.column_config.NumberColumn(format="$%.2f",
+                         help="measured effective $ per million served tokens (blended)"),
+                     "$/Mtok out": st.column_config.NumberColumn(format="$%.2f",
+                         help="all cost on generated tokens — the API-comparable figure"),
+                     "util %": st.column_config.NumberColumn(format="%d%%",
+                         help="token throughput vs Θmax (or the run's best level)"),
+                     "penalty": st.column_config.NumberColumn(format="%.1f×",
+                         help="1/U — how much a utilization-naive estimate understates "
+                              "cost at this N"),
+                     "cache hit %": st.column_config.NumberColumn(format="%d%%",
+                         help="vLLM prefix-cache hit rate during the level (agentic "
+                              "traffic shares real prefixes)"),
                  })
 
     timeline = rep.get("timeline")
@@ -353,23 +648,41 @@ def render_detail(rep):
         st.success("No gate failures in this run.")
 
 
+_REPO_URL = "https://github.com/dpoblacion/developer-ai-lab"
+
+
 def overview():
     import streamlit as st
-    st.title("Developer AI Lab — benchmarks")
+    st.title("Developer AI Lab")
+    st.markdown(
+        "**Which self-hosted GPU serves a team of N developers at SLO — and at what "
+        "\\$/developer.** Real agentic coding sessions (Claude Code against vLLM), "
+        "measured end to end: latency SLOs, code-quality gates, and concurrency-aware "
+        "per-token economics.")
     reports = _PAGES["reports"]
     bs = benchmarks(reports)
     if not bs:
-        st.info("No runs yet — run a benchmark first.")
+        st.info("No runs yet — run a benchmark first (`make run`).")
         return
-    rows = []
     for b in bs:
-        best = best_combo(reports, b)
-        rows.append({"benchmark": b,
-                     "team sizes measured": ", ".join(str(n) for n in devs_for(reports, b)),
-                     "best deal (holds SLO)": (f"{best['label']} — ${best['cost_per_dev_month']:.0f}/dev-mo "
-                                               f"@ {best['devs']} devs") if best else "—"})
-    st.dataframe(rows, hide_index=True)
-    st.caption("Pick a benchmark in the sidebar → choose a team size → compare model × hardware.")
+        series = combo_series(reports, b)
+        best = best_combo_from_series(series)
+        ns = devs_for(reports, b)
+        with st.container(border=True):
+            st.subheader(b)
+            c1, c2, c3 = st.columns(3)
+            c1.metric("best deal (holds SLO)",
+                      f"${best['cost_per_dev_month']:.0f}/dev-mo" if best else "—")
+            if best:
+                c1.caption(f"{best['label']} @ {best['devs']} devs")
+            c2.metric("model × hardware combos", len(series))
+            c3.metric("team sizes measured", ", ".join(str(n) for n in ns))
+            page = _PAGES["benchmarks"].get(b)
+            if page is not None:
+                st.page_link(page, label=f"Explore {b} →", icon=":material/monitoring:")
+    st.caption(f"Everything here is measured, never estimated — methodology in the "
+               f"[repository]({_REPO_URL}) (docs/methodology.md), per-token economics "
+               f"after [arXiv:2606.11690](https://arxiv.org/abs/2606.11690).")
 
 
 def benchmark_page(benchmark):
@@ -423,7 +736,7 @@ def benchmark_page(benchmark):
     tag = " — at your what-if prices" if overrides else ""
     if best:
         st.markdown(f"**Best deal measured:** {best['label']} at "
-                    f"**${best['cost_per_dev_month']:.0f}/dev-month** @ {best['devs']} devs "
+                    f"**\\${best['cost_per_dev_month']:.0f}/dev-month** @ {best['devs']} devs "
                     f"(holds the SLO{f': ≥ {floor:.0f} tok/s' if floor is not None else ''}){tag}.")
     else:
         st.markdown("**No measured combo holds the SLO yet.**")
@@ -456,6 +769,188 @@ def benchmark_page(benchmark):
                            annotation_font_color=INK["secondary"])
     col_ttft.plotly_chart(ttft_fig, width="stretch")
 
+    # 2b — per-token economics (arXiv:2606.11690): only drawn for runs that measured
+    # them (server-side token counters), so pre-paper reports keep the old page.
+    mtok_series = series_with_metric(series, "cost_per_mtok")
+    if mtok_series:
+        st.divider()
+        st.subheader("Per-token economics — concurrency-aware")
+        sources = {p["tokens_source"] for s in mtok_series for p in s["points"]
+                   if p.get("tokens_source")}
+        provenance = {
+            frozenset({"server"}): "Token counts come from vLLM's server-side counters.",
+            frozenset({"client"}): "Token counts come from client-reported usage "
+                                   "(what the server processed, as billed to each agent).",
+        }.get(frozenset(sources),
+              "Token counts come from vLLM's server-side counters where captured, "
+              "otherwise from client-reported usage (each level's tokens_source says which).")
+        st.caption("Methodology from [arXiv:2606.11690](https://arxiv.org/abs/2606.11690): "
+                   "utilization is an *output* of the measurement, never an assumed input. "
+                   + provenance)
+
+        # Cost spread across load (the paper's Figure 1 takeaway), as a table.
+        st.markdown("**Cost spread across team sizes** — same hardware; the spread is "
+                    "pure load")
+        st.dataframe(
+            [{"model × hardware": sp["label"],
+              "costliest": f"${sp['max_mtok']:.3f}/MTok @ N={sp['max_devs']}",
+              "cheapest": f"${sp['min_mtok']:.3f}/MTok @ N={sp['min_devs']}",
+              "spread": f"{sp['spread']:.1f}×"}
+             for sp in mtok_spread(mtok_series)], hide_index=True, width="stretch")
+
+        col_out, col_mtok, col_util = st.columns(3)
+        out_series = series_with_metric(series, "cost_per_mtok_output")
+        col_out.markdown("**$/MTok, output tokens — vs API prices** (the paper's "
+                         "canonical Ceff, Fig. 5; log-log)")
+        tiers_raw = col_out.text_input(
+            "Reference API prices ($/MTok output, comma-separated)", value="4",
+            key=f"api-{benchmark}",
+            help="Per-token APIs bill output 5-6× input; self-hosting is indifferent. "
+                 "One dashed line per price (the paper draws three vendor tiers).")
+        tiers = sorted({float(t) for t in tiers_raw.replace(";", ",").split(",")
+                        if t.strip().replace(".", "", 1).isdigit() and float(t) > 0})
+        out_fig = _curve_fig(out_series, colors, "cost_per_mtok_output",
+                             "measured $/MTok (output only)", "$%{y:.2f}/MTok out")
+        _loglog(out_fig, out_series, "cost_per_mtok_output", extra_values=tiers)
+        for tier in tiers:
+            out_fig.add_hline(y=tier, line_dash="dot", line_color=INK["secondary"],
+                              annotation_text=f"API ${tier:g}/MTok",
+                              annotation_font_color=INK["secondary"])
+        col_out.plotly_chart(out_fig, width="stretch")
+        crossings = api_crossover(out_series, min(tiers)) if tiers else []
+        crossed = [c for c in crossings if c["crossover_devs"] is not None]
+        never = [c["label"] for c in crossings if c["crossover_devs"] is None]
+        if crossed:
+            col_out.caption(f"Beats the lowest tier (${min(tiers):g}) from: " + "; ".join(
+                f"{c['label']} at **N≥{c['crossover_devs']}**" for c in crossed) + ".")
+        if never:
+            col_out.caption("Never beats it at the measured team sizes: "
+                            + ", ".join(never) + ".")
+
+        col_mtok.markdown("**Effective $/MTok (blended)** — all served tokens; the "
+                          "agentic mix is prompt-heavy (log-log)")
+        mtok_fig = _curve_fig(mtok_series, colors, "cost_per_mtok",
+                              "measured $/MTok (all served tokens)", "$%{y:.2f}/MTok")
+        _loglog(mtok_fig, mtok_series, "cost_per_mtok")
+        col_mtok.plotly_chart(mtok_fig, width="stretch")
+
+        util_series = series_with_metric(series, "utilization")
+        col_util.markdown("**Utilization** — U = Θachieved/Θmax; "
+                          "the gap is headroom you pay for (penalty = 1/U)")
+        util_fig = _curve_fig(util_series, colors, "utilization",
+                              "utilization", "%{y:.0%}")
+        util_fig.update_yaxes(tickformat=".0%", range=[0, 1.05])
+        col_util.plotly_chart(util_fig, width="stretch")
+        bases = {s.get("utilization_basis") for s in util_series}
+        if bases == {"theta_max"}:
+            col_util.caption("Against each combo's measured Θmax (raw-saturation probe).")
+        elif "theta_max" in bases:
+            col_util.caption("Against measured Θmax where probed; otherwise the combo's "
+                             "best measured level (a lower bound on true saturation).")
+        else:
+            col_util.caption("Against the combo's best measured level — a lower bound on "
+                             "true saturation, since the largest N may not saturate the "
+                             "server.")
+
+        # The underutilization penalty as a grid (paper Fig. 3): where the cliff lives.
+        pm = penalty_matrix(mtok_series)
+        if pm["labels"]:
+            st.markdown("**Underutilization penalty by team size** — each cell: measured "
+                        "\\$/MTok at N over that combo's cheapest point (paper Fig. 3)")
+            heat = go.Figure(go.Heatmap(
+                z=pm["cells"], x=[f"N={n}" for n in pm["ns"]], y=pm["labels"],
+                colorscale=[[0, "#f4f8fd"], [1, "#2a78d6"]],   # sequential, one hue
+                text=[[f"{v:.1f}×" if v is not None else "" for v in row]
+                      for row in pm["cells"]],
+                texttemplate="%{text}", textfont=dict(color=INK["secondary"], size=12),
+                hovertemplate="%{y} · %{x}: %{text}<extra></extra>",
+                showscale=False, xgap=2, ygap=2))
+            _style(heat, x_title="", y_title="")
+            heat.update_layout(height=80 + 42 * len(pm["labels"]),
+                               margin=dict(t=8, l=8), yaxis=dict(autorange="reversed"))
+            st.plotly_chart(heat, width="stretch")
+
+        # The SLO's price (paper Fig. 4 + Table 4): the operating point an SLO-bound
+        # operator can actually ship, vs the (unreachable) saturation floor.
+        sla_rows = [r for r in sla_table(mtok_series)
+                    if r["sla_devs"] is not None or r["c_sat"] is not None]
+        if sla_rows:
+            st.markdown("**The SLO's price** — the cheapest *shippable* operating point "
+                        "vs the saturation floor Csat (unreachable under any real SLO)")
+            paired = [r for r in sla_rows
+                      if r["mtok_at_sla"] is not None and r["c_sat"] is not None]
+            if paired:
+                bars = go.Figure()
+                bars.add_trace(go.Bar(
+                    name="at SLO (shippable)", x=[r["label"] for r in paired],
+                    y=[r["mtok_at_sla"] for r in paired],
+                    marker=dict(color=CATEGORICAL[0], cornerradius=4),
+                    text=[f"N={r['sla_devs']}" for r in paired], textposition="outside",
+                    textfont=dict(color=INK["secondary"]),
+                    hovertemplate="%{x}<br>at SLO: $%{y:.2f}/MTok<extra></extra>"))
+                bars.add_trace(go.Bar(
+                    name="Csat (no-SLO floor)", x=[r["label"] for r in paired],
+                    y=[r["c_sat"] for r in paired],
+                    marker=dict(color=INK["muted"], cornerradius=4,
+                                pattern=dict(shape="/")),
+                    hovertemplate="%{x}<br>Csat: $%{y:.2f}/MTok<extra></extra>"))
+                _style(bars, x_title="", y_title="$/MTok (output)")
+                bars.update_layout(barmode="group", bargroupgap=0.08, height=320,
+                                   margin=dict(t=32))
+                st.plotly_chart(bars, width="stretch")
+            st.dataframe(
+                [{"model × hardware": r["label"],
+                  "max N holding SLO": r["sla_devs"],
+                  "$/MTok out @ SLO": r["mtok_at_sla"],
+                  "Csat ($/MTok out)": r["c_sat"],
+                  "SLO premium": (f"{r['premium']:.2f}×" if r["premium"] else "—")}
+                 for r in sla_rows], hide_index=True, width="stretch",
+                column_config={
+                    "$/MTok out @ SLO": st.column_config.NumberColumn(format="$%.2f"),
+                    "Csat ($/MTok out)": st.column_config.NumberColumn(
+                        format="$%.2f", help="list price ÷ probed Θmax output throughput"),
+                    "SLO premium": st.column_config.TextColumn(
+                        help="$/MTok at the SLO-feasible point over the saturation floor "
+                             "— what honoring the SLO costs (paper Table 4: 1.13-1.91×)"),
+                })
+            st.caption("Csat comes from the shape-matched saturation probe. A premium "
+                       "below 1× means the operating point out-produced the probe's "
+                       "output rate — the probe's shape was more prompt-heavy than the "
+                       "workload's effective (cache-discounted) compute mix.")
+
+        # Quantization impact: only same-family × same-hardware × same-GPU-count pairs
+        # isolate the quant (comparing across GPUs would confound the two).
+        st.markdown("**Quantization impact** — same model, same hardware, different "
+                    "quant (paper Fig. 2)")
+        pairs = quant_impact(series)
+        if pairs:
+            for pr in pairs:
+                st.markdown(f"*{pr['family']} × {pr['hardware']}-{pr['gpus']}gpu*")
+                xs = [f"N={p['devs']}" for p in pr["points"]]
+                qbar = go.Figure()
+                qbar.add_trace(go.Bar(
+                    name=pr["quant_a"], x=xs, y=[p["tph_a"] for p in pr["points"]],
+                    marker=dict(color=CATEGORICAL[1], cornerradius=4),
+                    hovertemplate=f"{pr['quant_a']} · %{{x}}: %{{y:,.0f}} tok/h<extra></extra>"))
+                qbar.add_trace(go.Bar(
+                    name=pr["quant_b"], x=xs, y=[p["tph_b"] for p in pr["points"]],
+                    marker=dict(color=CATEGORICAL[2], cornerradius=4),
+                    text=[f"{p['uplift']:+.0%}" for p in pr["points"]],
+                    textposition="outside", textfont=dict(color=INK["secondary"]),
+                    hovertemplate=f"{pr['quant_b']} · %{{x}}: %{{y:,.0f}} tok/h<extra></extra>"))
+                _style(qbar, x_title="", y_title="tokens/hour served")
+                qbar.update_layout(barmode="group", bargroupgap=0.08, height=300,
+                                   margin=dict(t=32))
+                st.plotly_chart(qbar, width="stretch")
+            st.caption("Labels: the second quant's tokens/hour uplift at each common N. "
+                       "arXiv:2606.11690 finds the FP8 gain is architecture-dependent "
+                       "(~+31% dense vs +69-74% MoE) — these pairs are the harness's "
+                       "equivalent, on real agentic load.")
+        else:
+            st.caption("No comparable pair measured yet: isolating quantization requires "
+                       "the same model family in two quants on identical hardware and "
+                       "GPU count, at a common team size.")
+
     # 3 — drill into one team size: the selector sits WITH the ranking + table it controls
     st.divider()
     st.subheader("Drill into one team size")
@@ -467,7 +962,8 @@ def benchmark_page(benchmark):
     if overrides:
         rows = reprice_rows(rows, overrides, n)
     for line in compare_narrative(rows, n):
-        st.markdown(f"- {line}")
+        # Streamlit treats $…$ as LaTeX — escape dollars or the sentence renders mangled.
+        st.markdown("- " + line.replace("$", "\\$"))
 
     st.markdown(f"##### Ranking at {n} developers — cheapest that holds SLO wins")
     # Horizontal bars: long combo names read naturally and never collide on phones.
@@ -492,11 +988,16 @@ def benchmark_page(benchmark):
 
     # 4 — the full table; selecting a row opens that run's detail
     st.markdown(f"##### All numbers at {n} developers")
+    has_paper = any(x.get("cost_per_mtok") is not None for x in rows)
     table = []
     for x in rows:
         hr = slo_headroom(x["median_tps"], x["min_tps"], x["median_ttft"], x["max_ttft"])
-        mtok = self_host_usd_per_mtok(x["cost_per_hour"], x["median_tps"], n)
-        table.append({
+        # Prefer the measured effective $/MTok (server-side counters); older runs fall
+        # back to the estimate from median decode tok/s × N.
+        mtok = x.get("cost_per_mtok")
+        if mtok is None:
+            mtok = self_host_usd_per_mtok(x["cost_per_hour"], x["median_tps"], n)
+        row = {
             "model × hardware": _combo_label(x),
             "SLO": "✓ holds" if x["holds_slo"] else "✗ fails",
             "$/dev-month": round(x["cost_per_dev_month"]) if x["cost_per_dev_month"] is not None else None,
@@ -505,12 +1006,30 @@ def benchmark_page(benchmark):
             "headroom": f"{hr['tps_ratio']:.1f}×" if hr["tps_ratio"] is not None else "—",
             "$/Mtok": round(mtok, 2) if mtok is not None else None,
             "tok/dev": x["tokens_per_dev"],
-        })
-    tkey = f"combos-{benchmark}-{n}"
-    event = st.dataframe(
-        table, hide_index=True, width="stretch", key=tkey,
-        on_select="rerun", selection_mode="single-row",
+        }
+        if has_paper:
+            p90 = x.get("holds_slo_p90")
+            row["SLO p90"] = "—" if p90 is None else ("✓ holds" if p90 else "✗ fails")
+            row["$/Mtok out"] = (round(x["cost_per_mtok_output"], 2)
+                                 if x.get("cost_per_mtok_output") is not None else None)
+            row["util %"] = (round(x["utilization"] * 100)
+                             if x.get("utilization") is not None else None)
+        if any(r.get("repeats", 1) > 1 for r in rows):
+            cv = (x.get("cv") or {}).get("cost_per_mtok")
+            row["stability"] = (f"n={x.get('repeats', 1)}"
+                                + (f", ±{cv:.1%}" if cv is not None else ""))
+        # Per-row navigation: st.dataframe cannot embed buttons, but a LinkColumn can
+        # deep-link into the detail page via query params.
+        row["detail"] = "run-detail?" + urllib.parse.urlencode(
+            {"family": x["family"], "quant": x["quant"],
+             "hardware": x["hardware"], "gpus": x["gpus"]})
+        table.append(row)
+    st.dataframe(
+        table, hide_index=True, width="stretch",
         column_config={
+            "detail": st.column_config.LinkColumn(
+                "detail", display_text="open →",
+                help="Full run detail: timeline & cost, gate outcomes."),
             "$/dev-month": st.column_config.NumberColumn(format="$%d",
                 help="GPU list price amortized across the N developers"),
             "tok/s": st.column_config.NumberColumn(help="median per-stream decode throughput"),
@@ -518,29 +1037,40 @@ def benchmark_page(benchmark):
                 help="median time to first token (SLO caps it)"),
             "headroom": st.column_config.TextColumn(help="median tok/s ÷ SLO floor (>1× = margin)"),
             "$/Mtok": st.column_config.NumberColumn(format="$%.2f",
-                help="self-host cost per million decode tokens at this N"),
+                help="effective $ per million served tokens at this N — measured from vLLM's "
+                     "counters (older runs: estimated from median decode tok/s × N)"),
             "tok/dev": st.column_config.NumberColumn(help="median tokens one developer's task used"),
+            "SLO p90": st.column_config.TextColumn(
+                help="the same SLO evaluated at the p90 tail — what the median hides"),
+            "$/Mtok out": st.column_config.NumberColumn(format="$%.2f",
+                help="all cost assigned to generated tokens — compare against API output pricing"),
+            "util %": st.column_config.NumberColumn(format="%d%%",
+                help="token throughput vs Θmax (or the combo's best level); "
+                     "1/U = headroom you pay for"),
+            "stability": st.column_config.TextColumn(
+                help="repeat measurements aggregated (mean); ± is the run-to-run CV on "
+                     "$/MTok (arXiv:2606.11690 §5.8 reports ≤0.31%)"),
         })
-    st.caption("Select a row to open the full run detail (timeline & cost, gate outcomes).")
-    sel = event.selection.rows if event and event.selection else []
-    if sel:
-        x = rows[sel[0]]
-        st.session_state["selected_run"] = run_key({"family": x["family"], "quant": x["quant"],
-                                                    "hardware": x["hardware"], "gpu_count": x["gpus"]})
-        try:
-            del st.session_state[tkey]   # clear the selection so Back doesn't bounce here
-        except KeyError:
-            pass
-        st.switch_page(_PAGES["detail"])
+    st.caption("The *detail* column opens that combo's full run detail "
+               "(timeline & cost, gate outcomes).")
 
 
 def run_detail():
     import streamlit as st
     reports = _PAGES["reports"]
-    key = st.session_state.get("selected_run")
+    # Deep link from the ranking table's LinkColumn (query params) wins; the
+    # session-state path remains for programmatic navigation.
+    qp = st.query_params
+    if all(k in qp for k in ("family", "quant", "hardware", "gpus")):
+        try:
+            key = (qp["family"], qp["quant"], qp["hardware"], int(qp["gpus"]))
+        except ValueError:
+            key = None
+    else:
+        key = st.session_state.get("selected_run")
     rep = next((r for r in reversed(reports) if run_key(r) == key), None) if key else None
     if rep is None:
-        st.info("Pick a model × hardware row from a benchmark page to see its run detail.")
+        st.info("Open a *detail* link from a benchmark page to see a run's detail.")
         return
     benchmark = rep.get("benchmark")
     if st.button(f"← Back to {benchmark}"):
@@ -554,13 +1084,15 @@ def run_detail():
 
 def main():
     import streamlit as st
-    st.set_page_config(page_title="Developer AI Lab — benchmarks", layout="wide")
+    st.set_page_config(page_title="Developer AI Lab", page_icon=":material/speed:",
+                       layout="wide")
     reports = load_runs()
 
-    pages = [st.Page(overview, title="Overview", icon="📊", default=True)]
+    pages = [st.Page(overview, title="Overview", icon=":material/home:", default=True)]
     benchmark_pages = {}
     for b in benchmarks(reports):
-        pg = st.Page((lambda name=b: benchmark_page(name)), title=b, url_path=b)
+        pg = st.Page((lambda name=b: benchmark_page(name)), title=b, url_path=b,
+                     icon=":material/monitoring:")
         benchmark_pages[b] = pg
         pages.append(pg)
     detail = st.Page(run_detail, title="Run detail", url_path="run-detail", visibility="hidden")
@@ -568,7 +1100,8 @@ def main():
 
     _PAGES.clear()
     _PAGES.update(reports=reports, benchmarks=benchmark_pages, detail=detail)
-    st.navigation(pages).run()
+    nav = {"": pages[:1], "Benchmarks": list(benchmark_pages.values()) + [detail]}
+    st.navigation(nav).run()
 
 
 if __name__ == "__main__":
