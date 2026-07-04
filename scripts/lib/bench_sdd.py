@@ -9,14 +9,16 @@ import subprocess
 import sys
 import threading
 import time
+import urllib.request
 
 import yaml
 
+from scripts.lib import saturation
 from scripts.lib.compose import DEFAULT_SLO
-from scripts.lib.orchestrator import REMOTE_DIR, log, run_cmd
+from scripts.lib.orchestrator import REMOTE_DIR, log, pod_progress, run_cmd
 from scripts.lib.runpod_pod import ssh_run_cmd
 from scripts.lib.sdd_cmds import ssh_tunnel_cmd, docker_run_cmd
-from scripts.lib.vllm_metrics import level_latency
+from scripts.lib.vllm_metrics import level_metrics
 from scripts.lib import bench_report
 from scripts.lib import pod_guard
 from scripts.lib import report_terminal
@@ -277,10 +279,59 @@ _GEN = ("set -e; python3 -m scripts.destream_proxy > /tmp/destream.log 2>&1 & "
         "sleep 8; python3 -m scripts.run_sdd_scenario /repo/{scenario}")
 
 
+def _saturation_probe(ctx, scenario, generated):
+    """Measure raw saturation Θmax (pod still up, tunnel open) when the benchmark asks
+    for it (`saturation_probe:` in scenario.yaml). The probe mirrors the workload's own
+    prompt:output ratio and uses fresh random prompts so the prefix cache cannot inflate
+    the ceiling. Returns the theta_max dict for the report, or None."""
+    cfg = scenario.get("saturation_probe")
+    if not cfg:
+        return None
+    ctx.guard.raise_if_aborted()
+    ctx.guard.phase("generation")     # fresh stall budget; probe << STALL_GEN
+    ctx.timeline.mark("saturation-probe")
+    # Diagnostic artifact: one raw /metrics snapshot per run, so metric-name drift across
+    # vLLM versions (e.g. prefix-cache counters) can be diagnosed without a live pod.
+    snap = _metrics_snapshot()
+    if snap:
+        out = pathlib.Path(ctx.out_dir) / "artifacts"
+        out.mkdir(parents=True, exist_ok=True)
+        (out / "metrics-snapshot.prom").write_text(snap)
+    # Shape-match the probe to the workload's COMPUTE mix: cache-hit prompt tokens are
+    # nearly free, so they are discounted from the ratio — a served-token ratio would
+    # make the probe more prompt-heavy than the effective workload and understate the
+    # output ceiling (surfaced live 2026-07-04 as SLO premiums below 1x).
+    prompt = gen = 0
+    for _, lat, _ in generated:
+        if not lat.get("server_tokens"):
+            continue
+        hits = (lat.get("prefix_cache") or {}).get("hits", 0)
+        prompt += max(0, lat["server_tokens"]["prompt"] - hits)
+        gen += lat["server_tokens"]["generation"]
+    shape = saturation.probe_shape(prompt, gen, cfg.get("output_tokens", 256))
+    concurrency = cfg.get("concurrency", 64)
+    duration = cfg.get("duration_s", 120)
+    log(f"measuring raw saturation Θmax ({concurrency} streams × {duration}s, "
+        f"shape {shape['prompt_tokens']}:{shape['output_tokens']})")
+
+    def request():
+        body = json.dumps(saturation.completion_payload(ctx.served, shape)).encode()
+        req = urllib.request.Request("http://localhost:8000/v1/completions", data=body,
+                                     headers={"Content-Type": "application/json"})
+        urllib.request.urlopen(req, timeout=300).read()
+
+    theta = saturation.run_probe(request, _metrics_snapshot, time.time,
+                                 duration_s=duration, concurrency=concurrency, shape=shape)
+    log(f"  Θmax ≈ {theta['tokens_per_hour'] / 1e6:.2f}M tok/h total, "
+        f"{theta['output_tokens_per_hour'] / 1e6:.2f}M tok/h output")
+    return theta
+
+
 def _generate_level(ctx, image, mounts_for, n):
     """Run the task with n concurrent agents (pod up); return (latency_dict, agent_dirs).
     Gate scoring is deferred to _score_level so it never bills GPU."""
     before = _metrics_snapshot()
+    started = time.time()
     ctx.timeline.mark("generation")
     procs, dirs, names = [], [], []
     for i in range(n):
@@ -295,7 +346,7 @@ def _generate_level(ctx, image, mounts_for, n):
         procs.append(_spawn_prefixed(cmd, f"agent{i}"))
     _wait_procs(procs, ctx.guard, names=names)  # guard-aware: an abort kills the survivors
     after = _metrics_snapshot()
-    return level_latency(before, after), dirs
+    return level_metrics(before, after, duration_s=time.time() - started), dirs
 
 
 def _score_level(ctx, image, mounts_for, n, dirs):
@@ -381,21 +432,39 @@ def run(ctx):
             # and mounting the host socket would give an LLM-driven shell host-root.
             return [(repo, "/repo"), (str(agent_dir), "/out")]
 
-        guard.set_progress(ctx.pod_id, lambda: _gen_progress(str(ctx.out_dir)))
+        # Progress during generation = agent file writes + the pod's vllm.log bytes: a
+        # single long uninterrupted generation (N=1, up to 32k tokens ≈ 10 min at ~55
+        # tok/s) legitimately writes no files while the server streams tokens — file
+        # mtimes alone false-stalled that live (2026-07-04).
+        guard.set_progress(ctx.pod_id, lambda: (_gen_progress(str(ctx.out_dir))
+                                                + pod_progress(ctx.ip, ctx.port, ctx.key)))
         cost_per_hour = ctx.price_usd_per_gpu_hour * ctx.vllm_cfg.get("tensor_parallel_size", 1)
         generated = []
-        for n in sorted(devs):
-            guard.raise_if_aborted()
-            # Re-enter the generation phase per level with a stall budget scaled to N: on a
-            # slow GPU a queued straggler can go minutes without writing while the rest
-            # finish, which a fixed budget would false-abort.
-            guard.phase("generation", stall=pod_guard.stall_for_devs(n))
-            log(f"testing {n} concurrent developer(s)")
-            latency, dirs = _generate_level(ctx, image, mounts_for, n)
-            generated.append((n, latency, dirs))
+        theta_max = None
+        aborted = None
+        try:
+            for n in sorted(devs):
+                guard.raise_if_aborted()
+                # Re-enter the generation phase per level with a stall budget scaled to
+                # N: on a slow GPU a queued straggler can go minutes without writing
+                # while the rest finish, which a fixed budget would false-abort.
+                guard.phase("generation", stall=pod_guard.stall_for_devs(n))
+                log(f"testing {n} concurrent developer(s)")
+                latency, dirs = _generate_level(ctx, image, mounts_for, n)
+                generated.append((n, latency, dirs))
+            theta_max = _saturation_probe(ctx, scenario, generated)
+        except pod_guard.PodGuardAborted as e:
+            # The completed levels are real, paid measurements: keep them, mark the
+            # report truncated, and still exit non-zero below. Two runs died with ALL
+            # their levels before this existed (live 2026-07-04).
+            aborted = str(e)
+            log(f"watchdog abort ({aborted}) — keeping {len(generated)} completed "
+                f"level(s) in a truncated report")
     finally:
         if tunnel:
             tunnel.terminate()
+    if aborted and not generated:
+        raise pod_guard.PodGuardAborted(aborted)   # nothing measured — plain failure
 
     ctx.timeline.stop()
     ctx.stop_pod()  # capacity measured; gates are local CPU work and score with the pod down
@@ -404,13 +473,19 @@ def run(ctx):
         records = _score_level(ctx, image, mounts_for, n, dirs)
         rec = bench_report.dev_record(n, latency, records, slo, cost_per_hour)
         dev_records.append(rec)
-        log(f"  n={n}: holds_slo={rec['holds_slo']} ${rec['cost_per_dev_month']:.0f}/dev-mo "
+        mtok = f" ${rec['cost_per_mtok']:.2f}/MTok" if "cost_per_mtok" in rec else ""
+        log(f"  n={n}: holds_slo={rec['holds_slo']} ${rec['cost_per_dev_month']:.0f}/dev-mo{mtok} "
             f"tps={rec['median_tps']:.1f} valid={rec['valid']} gates_ok={rec['agents_ok']}/{n}")
     report = bench_report.build_report(
         ctx.family, ctx.quant, ctx.served, ctx.hardware,
         pathlib.Path(ctx.scenario_path).parent.name,
         ctx.vllm_cfg.get("tensor_parallel_size", 1), ctx.price_usd_per_gpu_hour,
-        ctx.run_id, dev_records, slo, timeline_segments=ctx.timeline.segments)
+        ctx.run_id, dev_records, slo, timeline_segments=ctx.timeline.segments,
+        model_meta=ctx.model_meta, theta_max=theta_max, truncated=aborted)
     (ctx.out_dir / "report.json").write_text(json.dumps(report, indent=2))
-    log(f"DONE. report -> {ctx.out_dir}/report.json")
+    log(f"DONE. report -> {ctx.out_dir}/report.json"
+        + (f"  (TRUNCATED: {aborted})" if aborted else ""))
     report_terminal.render(report)
+    if aborted:
+        raise SystemExit(f"run aborted by the watchdog ({aborted}); "
+                         f"partial report written with {len(dev_records)} level(s)")

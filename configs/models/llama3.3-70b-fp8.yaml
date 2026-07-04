@@ -33,3 +33,7 @@ env:
   # the tp=2 process-group init (observed: startup progress died at minute ~2, twice).
   NCCL_P2P_DISABLE: "1"
   NCCL_IB_DISABLE: "1"
+# Architecture metadata (HF model card: 70B, dense)
+architecture: dense
+total_params_b: 70
+active_params_b: 70

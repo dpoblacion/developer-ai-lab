@@ -15,3 +15,7 @@ tool_call_parser: llama3_json
 enable_auto_tool_choice: true
 env:
   VLLM_USE_FLASHINFER_SAMPLER: "0"
+# Architecture metadata (HF model card: 70B, dense)
+architecture: dense
+total_params_b: 70
+active_params_b: 70

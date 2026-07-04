@@ -3,7 +3,9 @@
 # dail-toolchain (Node 22) — no overlay.
 name: dev-load
 description: Canonical dev-load capacity task (build a small TS module under concurrent load).
-devs: [4, 8, 16, 32]
+# N=1 anchors the idle edge of the cost curve — that is where the underutilization
+# penalty is largest (arXiv:2606.11690 headline: 17.5-36.3x at the near-idle extremum).
+devs: [1, 2, 4, 8]
 # NOTE: measure bigger teams as separate [16] / [32] top-up runs — the dashboard merges
 # points per combo×N across runs, and chunking keeps each run inside the watchdog
 # ceiling (an aborted run writes no report, losing every level it completed; a 4-level
@@ -11,11 +13,20 @@ devs: [4, 8, 16, 32]
 slo:
   max_ttft: 2.0
   min_tps: 20.0
+# Raw-saturation probe (arXiv:2606.11690 §3.2): after the last level, saturate the server
+# with fresh random prompts at the workload's own prompt:output ratio to measure Θmax —
+# the denominator of true utilization U = Θachieved/Θmax. ~2 min of extra pod time.
+saturation_probe:
+  concurrency: 64
+  duration_s: 120
+  output_tokens: 256
 serving:
   # Must exceed the agent's per-request max_tokens (Claude Code sends 32000) + input, or
-  # vLLM 400s every request. 65536 leaves ~33k for input. max_num_seqs is derived from
-  # devs (max of the list).
+  # vLLM 400s every request. 65536 leaves ~33k for input.
   max_model_len: 65536
+  # Admit the saturation probe's full concurrency (and agent tool-call bursts): Θmax must
+  # be the engine+hardware ceiling, not a scheduler cap at max(devs).
+  max_num_seqs: 64
 task:
   phases:
     - id: 01-spec

@@ -14,3 +14,7 @@ tool_call_parser: qwen3_xml   # NOT qwen3_coder: known vLLM streaming-parse bug 
 enable_auto_tool_choice: true
 env:
   VLLM_USE_FLASHINFER_SAMPLER: "0"
+# Architecture metadata (HF model card: 30.5B total, 3.3B activated, 128 experts / 8 active)
+architecture: moe
+total_params_b: 30.5
+active_params_b: 3.3

@@ -24,3 +24,7 @@ extra_args:
   - "--enable-expert-parallel"  # mandatory for this MoE AWQ per the upstream serving guide
 env:
   VLLM_USE_FLASHINFER_SAMPLER: "0"
+# Architecture metadata (HF model card: 30.5B total, 3.3B activated, 128 experts / 8 active)
+architecture: moe
+total_params_b: 30.5
+active_params_b: 3.3

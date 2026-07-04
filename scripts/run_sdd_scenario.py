@@ -45,6 +45,11 @@ def run(scenario_path):
         transcript, wall_time = invoke_claude(
             prompt, allowed_tools, max_turns, cwd=str(workspace))
 
+        # The agent's Bash runs inside out_dir and a model can wipe it mid-run (seen
+        # live 2026-07-04): re-create before every write so the harness still records
+        # the transcript and the destruction surfaces as gate failures, not a crash.
+        phases_dir.mkdir(parents=True, exist_ok=True)
+        workspace.mkdir(parents=True, exist_ok=True)
         (phases_dir / f"{phase['id']}.jsonl").write_text(transcript)
         metrics = parse_metrics(transcript.splitlines())
         metrics.update({"phase": phase["id"], "wall_time": wall_time})
@@ -57,6 +62,7 @@ def run(scenario_path):
         "workspace": str(workspace),
         "phases": phase_metrics,
     }
+    out_dir.mkdir(parents=True, exist_ok=True)   # same hazard as above
     (out_dir / "generation.json").write_text(json.dumps(result, indent=2))
     print(f"Generation done. Workspace: {workspace}")
     return result

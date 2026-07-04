@@ -33,8 +33,26 @@ class DevLoadBenchmarkTest(unittest.TestCase):
             SCENARIO, "qwen3-coder", "l40s", gpu_count=1)
         self.assertEqual(variant["family"], "qwen3-coder")
         self.assertEqual(variant["quant"], "fp8")               # l40s supports fp8
-        self.assertEqual(vllm_cfg["max_num_seqs"], max(devs))   # admits the largest N
+        # Admits the largest N AND the saturation probe's concurrency: Θmax must measure
+        # the engine ceiling, not a scheduler cap at max(devs).
+        self.assertGreaterEqual(vllm_cfg["max_num_seqs"], max(devs))
+        d = yaml.safe_load(pathlib.Path(SCENARIO).read_text())
+        self.assertGreaterEqual(vllm_cfg["max_num_seqs"],
+                                d["saturation_probe"]["concurrency"])
         self.assertTrue(devs)                                   # values are a tunable knob
+
+    def test_devs_override_replaces_grid_and_sizes_the_server(self):
+        # DEVS= runs top-up levels (e.g. 16/32) as separate runs — the dashboard merges
+        # points per combo×N — while max_num_seqs still admits the largest N.
+        vllm_cfg, _pod, _variant, devs, _slo = load_run_config(
+            SCENARIO, "qwen3-coder", "l40s", gpu_count=1, devs=[16, 32])
+        self.assertEqual(devs, [16, 32])
+        self.assertGreaterEqual(vllm_cfg["max_num_seqs"], 32)
+
+    def test_devs_override_beyond_probe_concurrency_raises_the_cap(self):
+        vllm_cfg, _pod, _variant, devs, _slo = load_run_config(
+            SCENARIO, "qwen3-coder", "l40s", gpu_count=1, devs=[128])
+        self.assertGreaterEqual(vllm_cfg["max_num_seqs"], 128)
 
     def test_phase_prompt_files_exist(self):
         d = yaml.safe_load(pathlib.Path(SCENARIO).read_text())

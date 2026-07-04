@@ -120,6 +120,38 @@ class ResolveVariantTest(unittest.TestCase):
             resolve_variant("nope", {"supported_quants": ["fp8"]}, _variants())
         self.assertIn("nope", str(cm.exception))
 
+    def test_explicit_quant_overrides_hardware_preference(self):
+        # QUANT= exists so same-hardware quantization pairs can be measured (the only
+        # comparison that isolates the quant): awq on an fp8-first GPU.
+        hw = {"supported_quants": ["fp8", "awq", "bf16"]}
+        self.assertEqual(resolve_variant("qwen3-coder", hw, _variants(), quant="awq")["quant"],
+                         "awq")
+
+    def test_explicit_quant_must_be_supported_by_the_hardware(self):
+        hw = {"supported_quants": ["awq", "gptq", "bf16"]}     # no fp8 on this GPU
+        with self.assertRaises(SystemExit) as cm:
+            resolve_variant("qwen3-coder", hw, _variants(), quant="fp8")
+        self.assertIn("fp8", str(cm.exception))
+
+    def test_explicit_quant_must_exist_for_the_family(self):
+        hw = {"supported_quants": ["fp8", "awq", "gptq"]}
+        with self.assertRaises(SystemExit) as cm:
+            resolve_variant("qwen3-coder", hw, _variants(), quant="gptq")
+        self.assertIn("gptq", str(cm.exception))
+
+
+class ModelMetaTest(unittest.TestCase):
+    def test_extracts_architecture_fields_when_present(self):
+        from scripts.lib.compose import model_meta
+        v = {"family": "q", "quant": "fp8", "architecture": "moe",
+             "total_params_b": 30.5, "active_params_b": 3.3, "image": "x"}
+        self.assertEqual(model_meta(v), {"architecture": "moe",
+                                         "total_params_b": 30.5, "active_params_b": 3.3})
+
+    def test_empty_when_absent(self):
+        from scripts.lib.compose import model_meta
+        self.assertEqual(model_meta({"family": "q", "quant": "fp8"}), {})
+
 
 class LoadVariantsTest(unittest.TestCase):
     def test_loads_the_model_configs_with_family_and_quant(self):

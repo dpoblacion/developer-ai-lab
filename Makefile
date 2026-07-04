@@ -18,8 +18,8 @@ test:  ## Run the unit suite (offline, free)
 # Run a benchmark on a RunPod pod (PAID). The benchmark carries the task + `devs` (N); MODEL
 # and HARDWARE are the run axes. Each N is tested directly (holds SLO? + $/dev) → report.json.
 # Needs RUNPOD_API_KEY + SSH_KEY_PATH in .env (pip install -r requirements-orchestrator.txt).
-run:  ## Run a benchmark on a RunPod pod (PAID) — BENCHMARK= MODEL= HARDWARE= GPUS= KEEP=1
-	$(PYTHON) -m scripts.run_benchmark --benchmark $(BENCHMARK) --model $(MODEL) --hardware $(HARDWARE) --gpus $(GPUS) $(if $(KEEP),--keep,)
+run:  ## Run a benchmark on a RunPod pod (PAID) — BENCHMARK= MODEL= HARDWARE= GPUS= QUANT= DEVS= KEEP=1
+	$(PYTHON) -m scripts.run_benchmark --benchmark $(BENCHMARK) --model $(MODEL) --hardware $(HARDWARE) --gpus $(GPUS) $(if $(QUANT),--quant $(QUANT),) $(if $(DEVS),--devs $(DEVS),) $(if $(KEEP),--keep,)
 
 # Cheap pre-flight (PAID, but ~1 short agent): does the stack serve + an agent complete + gates run?
 validate:  ## Stack pre-flight via the smoke benchmark (PAID, ~$0.10)

@@ -31,3 +31,8 @@ extra_args:
   - "5"
 env:
   VLLM_USE_FLASHINFER_SAMPLER: "0"
+# Architecture metadata: 753B total (HF card badge); ~39B active per token per the vLLM
+# recipe (recipes.vllm.ai/zai-org/GLM-5.2 — the HF card does not state the active count).
+architecture: moe
+total_params_b: 753
+active_params_b: 39

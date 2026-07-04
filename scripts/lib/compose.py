@@ -62,18 +62,38 @@ def compose(model, hardware, benchmark, gpu_count=1):
     return vllm_cfg, pod_spec
 
 
-def resolve_variant(family, hardware, variants):
+def resolve_variant(family, hardware, variants, quant=None):
     """Pick the model variant for a hardware: the first of the hardware's preference-ordered
-    supported_quants that some variant of `family` provides. SystemExit if none match."""
+    supported_quants that some variant of `family` provides. An explicit `quant` (QUANT=)
+    overrides the preference order — it must still be supported by the hardware and exist
+    for the family, so a same-hardware quantization pair can be measured deliberately but
+    an unservable combination never launches a pod. SystemExit if none match."""
     by_quant = {v["quant"]: v for v in variants if v.get("family") == family}
     if not by_quant:
         raise SystemExit(f"no model variant for family '{family}' (have families: "
                          f"{sorted({v.get('family') for v in variants})})")
-    for quant in hardware.get("supported_quants", []):
-        if quant in by_quant:
-            return by_quant[quant]
+    supported = hardware.get("supported_quants", [])
+    if quant is not None:
+        if quant not in supported:
+            raise SystemExit(f"quant '{quant}' is not supported by this hardware "
+                             f"(supports {supported})")
+        if quant not in by_quant:
+            raise SystemExit(f"no '{family}' variant for quant '{quant}' "
+                             f"(family has {sorted(by_quant)})")
+        return by_quant[quant]
+    for q in supported:
+        if q in by_quant:
+            return by_quant[q]
     raise SystemExit(f"no '{family}' variant for this hardware (supports "
-                     f"{hardware.get('supported_quants', [])}; family has {sorted(by_quant)})")
+                     f"{supported}; family has {sorted(by_quant)})")
+
+
+def model_meta(variant):
+    """Architecture metadata a model config may declare (dense/MoE, total/active params)
+    — flows into report.json to enable active-parameters analyses (arXiv:2606.11690:
+    active parameter count, not total size, appears to drive saturation economics)."""
+    return {k: variant[k] for k in ("architecture", "total_params_b", "active_params_b")
+            if k in variant}
 
 
 def load_variants(models_dir="configs/models"):
@@ -87,13 +107,19 @@ def _load_yaml(path):
 
 
 def load_run_config(scenario_path, model_family, hardware_name, gpu_count=1,
-                    models_dir="configs/models", hardware_dir="configs/hardware"):
+                    models_dir="configs/models", hardware_dir="configs/hardware",
+                    quant=None, devs=None):
     """Resolve the model variant of `model_family` for the hardware and compose the benchmark
     (devs + slo + serving). `model_family` is the run's model choice (a --model flag, no longer
-    read from the scenario). Returns (vllm_cfg, pod_spec, variant, devs, slo)."""
+    read from the scenario); `quant` optionally forces the variant (--quant / QUANT=);
+    `devs` optionally replaces the scenario's team-size grid (--devs / DEVS=) — how top-up
+    levels (e.g. 16/32) run as separate runs the dashboard merges per combo×N.
+    Returns (vllm_cfg, pod_spec, variant, devs, slo)."""
     benchmark = _load_yaml(scenario_path)
+    if devs:
+        benchmark["devs"] = sorted(devs)   # before compose: max_num_seqs derives from it
     hardware = _load_yaml(pathlib.Path(hardware_dir) / f"{hardware_name}.yaml")
-    variant = resolve_variant(model_family, hardware, load_variants(models_dir))
+    variant = resolve_variant(model_family, hardware, load_variants(models_dir), quant=quant)
     vllm_cfg, pod_spec = compose(variant, hardware, benchmark, gpu_count=gpu_count)
     devs = benchmark.get("devs") or [1]
     slo = benchmark.get("slo") or DEFAULT_SLO

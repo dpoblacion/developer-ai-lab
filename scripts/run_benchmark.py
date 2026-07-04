@@ -17,7 +17,7 @@ import pathlib
 import time
 
 from scripts.lib import bench_sdd
-from scripts.lib.compose import load_run_config
+from scripts.lib.compose import load_run_config, model_meta
 from scripts.lib.dotenv import load_dotenv
 from scripts.lib.orchestrator import provision
 from scripts.lib.results_layout import run_out_dir
@@ -47,6 +47,12 @@ def main():
     ap.add_argument("--model", required=True, help="model family, e.g. qwen3-coder")
     ap.add_argument("--hardware", default="l40s")
     ap.add_argument("--gpus", type=int, default=1, help="number of GPUs (tensor-parallel size)")
+    ap.add_argument("--quant", default=None,
+                    help="force the model variant's quant (e.g. awq) instead of the "
+                         "hardware's preference order — for same-hardware quant pairs")
+    ap.add_argument("--devs", default=None,
+                    help="replace the scenario's team-size grid (comma-separated, e.g. "
+                         "16,32) — top-up levels run as separate runs")
     ap.add_argument("--key", default=os.environ.get("SSH_KEY_PATH"))
     ap.add_argument("--keep", action="store_true", help="do not terminate the pod at the end")
     args = ap.parse_args()
@@ -65,8 +71,18 @@ def main():
     import runpod
     runpod.api_key = api_key
 
+    devs_override = None
+    if args.devs:
+        try:
+            devs_override = sorted({int(x) for x in args.devs.split(",") if x.strip()})
+        except ValueError:
+            raise SystemExit(
+                f"--devs must be comma-separated integers, got: {args.devs!r}") from None
+        if not devs_override or min(devs_override) < 1:
+            raise SystemExit(f"--devs must be positive team sizes, got: {args.devs!r}")
     vllm_cfg, pod_spec, variant, devs, slo = load_run_config(
-        bench_path, args.model, args.hardware, gpu_count=args.gpus)
+        bench_path, args.model, args.hardware, gpu_count=args.gpus, quant=args.quant,
+        devs=devs_override)
     # Optional persistent weight cache (see README → GLM): a RunPod network volume, pinned
     # to a data center, mounted at /workspace so /workspace/huggingface survives across pods.
     if os.environ.get("DAIL_NETWORK_VOLUME_ID"):
@@ -92,7 +108,8 @@ def main():
                    scenario_path=bench_path, composed_path=composed_path, out_dir=out_dir,
                    keep=args.keep, hardware=args.hardware, price_usd_per_gpu_hour=price,
                    label=f"bench-{vllm_cfg['served_model_name']}",
-                   family=variant["family"], quant=variant["quant"], run_id=run_id) as ctx:
+                   family=variant["family"], quant=variant["quant"], run_id=run_id,
+                   model_meta=model_meta(variant)) as ctx:
         bench_sdd.run(ctx)
 
 
