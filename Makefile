@@ -7,7 +7,7 @@ MODEL ?= qwen3-coder
 GPUS ?= 1
 KEEP ?=
 
-.PHONY: help test run validate gates setup sdd reap report dashboard prune-artifacts
+.PHONY: help test run validate gates setup sdd reap prefetch report dashboard prune-artifacts
 
 help:  ## List available targets
 	@awk 'BEGIN {FS=":.*## "} /^[a-z-]+:.*## / {printf "  \033[1m%-16s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -43,6 +43,12 @@ sdd:
 # Panic button: terminate paid pods (all, or older than REAP_AGE seconds).
 reap:  ## Panic button: terminate ALL your RunPod pods
 	$(PYTHON) -m scripts.reap_pods
+
+# Download a model's weights to the network volume with a CHEAP single pod (no GPU used for
+# the download), so a later multi-GPU run finds them cached. Needs DAIL_NETWORK_VOLUME_ID +
+# DAIL_DATA_CENTER_ID in .env. Usage: make prefetch REPO=zai-org/GLM-5.2-FP8   (PAID, small)
+prefetch:  ## Cache a model's weights on the network volume via a cheap pod (PAID, small)
+	$(PYTHON) -m scripts.prefetch_to_volume $(REPO)
 
 dashboard:  ## Launch the Streamlit + Plotly result viewer (auto-installs requirements-report.txt)
 	$(PYTHON) -m pip install -q -r requirements-report.txt
