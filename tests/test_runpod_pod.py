@@ -81,6 +81,13 @@ class CommandBuilderTest(unittest.TestCase):
         self.assertEqual(cmd[cmd.index("PasswordAuthentication=no") - 1], "-o")
         self.assertEqual(cmd[-2:], ["root@1.2.3.4", "echo hi"])
 
+    def test_rsync_up_cmd_does_not_preserve_owner_or_group(self):
+        # /workspace on a network volume forbids chown; -a alone implies --owner --group,
+        # which made the receiver (root) chown every file and rsync exit 23 (live 2026-07-04).
+        cmd = rsync_up_cmd("1.2.3.4", 40022, "/k", "./", "/workspace/repo")
+        self.assertIn("--no-owner", cmd)
+        self.assertIn("--no-group", cmd)
+
     def test_rsync_up_cmd_has_excludes_and_endpoint(self):
         cmd = rsync_up_cmd("1.2.3.4", 40022, "/k", "./", "/workspace/repo",
                            excludes=[".git", "results"])

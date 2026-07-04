@@ -78,8 +78,11 @@ def rsync_up_cmd(ip, port, key_path, local_dir, remote_dir, excludes=()):
     must survive a re-push live outside it or are excluded: model weights cache in
     download_dir (/workspace/huggingface, outside) and results/ (in excludes). Keep it
     that way — moving download_dir inside remote_dir would wipe weights on every push.
+
+    --no-owner/--no-group: /workspace on a network volume forbids chown, and -a implies
+    --owner --group, which makes the root receiver chown every file → rsync exit 23.
     """
-    cmd = ["rsync", "-az", "--delete"]
+    cmd = ["rsync", "-az", "--no-owner", "--no-group", "--delete"]
     for exclude in excludes:
         cmd += ["--exclude", exclude]
     cmd += ["-e", "ssh " + " ".join(ssh_opts(port, key_path)),
