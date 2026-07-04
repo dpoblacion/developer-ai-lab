@@ -81,13 +81,18 @@ def wait_for_ssh(ip, port, key, retries=24, nap=5):  # 24 × 5s = 2 min ceiling
     raise SystemExit("SSH did not become available")
 
 
+# vllm.log is sampled in BYTES, not lines: the shard-loading tqdm bar redraws with \r
+# (no newlines), so a healthy multi-minute weight load looks line-static — with a warm
+# HF cache that read as a stall and the guard killed the pod (live 2026-07-04).
+PROGRESS_PROBE = ("wc -c < /workspace/vllm.log 2>/dev/null; "
+                  "du -sb /workspace/huggingface 2>/dev/null | cut -f1")
+
+
 def pod_progress(ip, port, key):
-    """Monotonic-ish token sampled over SSH: vllm.log line count + HF dir bytes (0 on
+    """Monotonic-ish token sampled over SSH: vllm.log byte count + HF dir bytes (0 on
     error/timeout). Feeds the PodGuard watchdog so a long in-pod run isn't false-aborted."""
     try:
-        out = subprocess.run(ssh_run_cmd(ip, port, key,
-            "wc -l < /workspace/vllm.log 2>/dev/null; "
-            "du -sb /workspace/huggingface 2>/dev/null | cut -f1"),
+        out = subprocess.run(ssh_run_cmd(ip, port, key, PROGRESS_PROBE),
             capture_output=True, text=True, timeout=15)
     except subprocess.TimeoutExpired:
         return 0

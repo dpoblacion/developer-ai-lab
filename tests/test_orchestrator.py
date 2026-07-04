@@ -41,6 +41,19 @@ class ExcludesTest(unittest.TestCase):
         self.assertIn(".env", EXCLUDES)
 
 
+class ProgressProbeTest(unittest.TestCase):
+    def test_probe_samples_log_bytes_not_lines(self):
+        # vLLM's shard-loading tqdm bar redraws with \r: vllm.log grows in BYTES, not
+        # lines. With the weights already on the network volume the HF dir size is static
+        # too, so line-count sampling read a healthy GLM-5.2 load as a stall and the guard
+        # killed the pod at STALL_STARTUP (live 2026-07-04). Sample bytes: they grow
+        # whenever lines do, plus on every \r redraw.
+        from scripts.lib.orchestrator import PROGRESS_PROBE
+        self.assertIn("wc -c", PROGRESS_PROBE)
+        self.assertNotIn("wc -l", PROGRESS_PROBE)
+        self.assertIn("du -sb /workspace/huggingface", PROGRESS_PROBE)
+
+
 class CreateAndTrackTest(unittest.TestCase):
     """create → track must be atomic w.r.t. SIGINT/SIGTERM: a signal landing right after
     create_pod returns must still terminate the (now tracked) pod instead of leaking it."""
