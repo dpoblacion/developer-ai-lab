@@ -14,7 +14,12 @@ model: zai-org/GLM-5.2-FP8
 served_model_name: glm-5.2-fp8
 vllm_version: "0.23.0"
 image: runpod/pytorch:1.0.7-cu1300-torch291-ubuntu2404   # CUDA 13 (matches vLLM's wheel)
-container_disk_gb: 800                       # ~744GB FP8 weights + KV/runtime overhead
+# GLM's ~744GB weights are cached on a persistent RunPod network volume mounted at
+# /workspace (download_dir = /workspace/huggingface) — set DAIL_NETWORK_VOLUME_ID +
+# DAIL_DATA_CENTER_ID in .env (see README → Persistent weight cache). The volume holds the
+# weights across pods; container disk only needs the venv + vLLM. (Without the volume, raise
+# this to ~800 — but a fresh 744GB download every run is slow and expensive.)
+container_disk_gb: 60
 kv_cache_dtype: fp8
 tool_call_parser: glm47
 reasoning_parser: glm45

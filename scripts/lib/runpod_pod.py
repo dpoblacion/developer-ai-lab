@@ -26,6 +26,12 @@ def build_create_kwargs(spec, gpu_type_id=None, public_key=None):
         "ports": spec.get("ports", "8000/http,22/tcp"),
         "support_public_ip": True,
         "start_ssh": True,
+        # Optional persistent weight cache: a RunPod network volume mounted at
+        # volume_mount_path (/workspace), so /workspace/huggingface survives across pods and
+        # a huge model (GLM's 744GB) is downloaded once. The volume is pinned to one data
+        # center, so the pod must be created there. Both are None unless configured.
+        "network_volume_id": spec.get("network_volume_id"),
+        "data_center_id": spec.get("data_center_id"),
         "env": env,
     }
 

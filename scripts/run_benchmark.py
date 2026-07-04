@@ -67,6 +67,11 @@ def main():
 
     vllm_cfg, pod_spec, variant, devs, slo = load_run_config(
         bench_path, args.model, args.hardware, gpu_count=args.gpus)
+    # Optional persistent weight cache (see README → GLM): a RunPod network volume, pinned
+    # to a data center, mounted at /workspace so /workspace/huggingface survives across pods.
+    if os.environ.get("DAIL_NETWORK_VOLUME_ID"):
+        pod_spec["network_volume_id"] = os.environ["DAIL_NETWORK_VOLUME_ID"]
+        pod_spec["data_center_id"] = os.environ.get("DAIL_DATA_CENTER_ID")
     composed_path = "configs/_composed.yaml"
     pathlib.Path(composed_path).write_text(yaml.safe_dump(vllm_cfg))
 

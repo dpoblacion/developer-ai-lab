@@ -287,6 +287,25 @@ We'll extend this table as we test more:
 |---|---|---|---|
 | Qwen3-Coder-30B-A3B-FP8 | 1× NVIDIA L40S | dev-load (N=4) | ~$0.40 |
 
+### Persistent weight cache (huge models)
+
+For very large models the weight download dominates the run — GLM-5.2's ~744GB takes tens
+of minutes on an 8×H200 pod at ~$29/h, and by default it re-downloads **every run**. A
+RunPod **Network Volume** caches the weights across pods so they download once:
+
+1. In the RunPod console, create a **Network Volume** (~1TB) in a **data center that has
+   your GPUs** — the volume pins every run to that DC, so pick one with 8×H200 capacity.
+2. Put its id and DC in `.env`:
+   ```bash
+   DAIL_NETWORK_VOLUME_ID=<volume id>
+   DAIL_DATA_CENTER_ID=<e.g. EU-RO-1>
+   ```
+
+The volume mounts at `/workspace`, so `/workspace/huggingface` (the HF cache) survives pod
+teardown. The first run downloads the weights (slow, paid once); later runs mount the same
+volume and load from it (~minutes). A network volume has a monthly storage cost (~$0.05–0.07/GB),
+so delete it when you're done iterating on that model.
+
 ## Layout
 
 - `configs/models/`, `configs/hardware/` — the model and hardware config axes (fields above).

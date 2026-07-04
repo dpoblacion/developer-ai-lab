@@ -40,6 +40,19 @@ class BuildCreateKwargsTest(unittest.TestCase):
         # not mutating the spec dict
         self.assertNotIn("PUBLIC_KEY", SPEC.get("env", {}))
 
+    def test_no_network_volume_by_default(self):
+        kw = build_create_kwargs(SPEC)
+        self.assertIsNone(kw.get("network_volume_id"))
+        self.assertIsNone(kw.get("data_center_id"))
+
+    def test_network_volume_and_dc_passed_when_present(self):
+        # Persistent 744GB weight cache: a network volume mounted at /workspace so
+        # /workspace/huggingface survives across pods. The volume is pinned to one DC.
+        spec = dict(SPEC, network_volume_id="vol-abc", data_center_id="EU-RO-1")
+        kw = build_create_kwargs(spec)
+        self.assertEqual(kw["network_volume_id"], "vol-abc")
+        self.assertEqual(kw["data_center_id"], "EU-RO-1")
+
 
 class ReadinessTest(unittest.TestCase):
     def test_is_ready(self):

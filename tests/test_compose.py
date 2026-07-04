@@ -212,7 +212,9 @@ class GlmComposesTest(unittest.TestCase):
         # Must be an SSH-capable base image, NOT vllm/vllm-openai (no sshd — the harness
         # needs SSH for rsync + scripts; that combo failed live on 2026-07-03).
         self.assertNotIn("vllm/vllm-openai", pod_spec["image"])
-        self.assertGreaterEqual(pod_spec["container_disk_gb"], 800)  # 744GB weights + overhead
+        # Weights live on a persistent network volume, not the ephemeral container disk;
+        # the disk only needs the venv + vLLM.
+        self.assertGreaterEqual(pod_spec["container_disk_gb"], 40)
         self.assertEqual(variant["quant"], "fp8")
         self.assertEqual(pod_spec["gpu_count"], 8)
         # vLLM 0.23's wheel is CUDA 13; the base image must match (cu130), not cu129.
