@@ -10,3 +10,7 @@ gpu_memory_utilization: 0.92
 # Ampere: prefer native low-bit quants (also leaves KV room for the 65k window on 24GB);
 # fp8 last (Marlin dequant).
 supported_quants: [awq, gptq, bf16, fp8]
+# 24GB: a 30B-class model's weights leave ~5.4GiB of KV cache — a 65536-token sequence
+# needs 6.0GiB, so vLLM refuses to boot (live 2026-07-05). 49152 fits with margin and
+# still leaves ~17k input tokens above the agent's 32k max_tokens.
+max_model_len_cap: 49152
