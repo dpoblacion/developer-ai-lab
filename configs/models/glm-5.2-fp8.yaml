@@ -36,3 +36,6 @@ env:
 architecture: moe
 total_params_b: 753
 active_params_b: 39
+# The ~744GB weights live on the persistent network volume (make prefetch): mount it and
+# pin to its data center. Models without this flag never pin.
+weights_cached: true

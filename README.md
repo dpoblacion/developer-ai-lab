@@ -297,17 +297,20 @@ of minutes on an 8×H200 pod at ~$29/h, and by default it re-downloads **every r
 RunPod **Network Volume** caches the weights across pods so they download once:
 
 1. In the RunPod console, create a **Network Volume** (~1TB) in a **data center that has
-   your GPUs** — the volume pins every run to that DC, so pick one with 8×H200 capacity.
+   your GPUs** — the volume pins its runs to that DC, so pick one with 8×H200 capacity.
 2. Put its id and DC in `.env`:
    ```bash
    DAIL_NETWORK_VOLUME_ID=<volume id>
    DAIL_DATA_CENTER_ID=<e.g. EU-RO-1>
    ```
+3. Declare `weights_cached: true` in the model's `configs/models/<family>-<quant>.yaml`.
+   **Only models with this flag mount the volume** — everything else runs unpinned, free
+   to land on whichever data center has the GPU.
 
 The volume mounts at `/workspace`, so `/workspace/huggingface` (the HF cache) survives pod
-teardown. The first run downloads the weights (slow, paid once); later runs mount the same
-volume and load from it (~minutes). A network volume has a monthly storage cost (~$0.05–0.07/GB),
-so delete it when you're done iterating on that model.
+teardown. Prime it cheaply with `make prefetch REPO=<hf-repo>` (a no-GPU-work pod downloads
+once); later runs mount the same volume and load from it (~minutes). A network volume has a
+monthly storage cost (~$0.05–0.07/GB), so delete it when you're done iterating on that model.
 
 ## Layout
 

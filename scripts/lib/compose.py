@@ -88,6 +88,18 @@ def resolve_variant(family, hardware, variants, quant=None):
                      f"{supported}; family has {sorted(by_quant)})")
 
 
+def attach_weight_cache(pod_spec, variant, env):
+    """Mount the persistent weight-cache volume ONLY for models that declare their
+    weights live on it (`weights_cached: true` in the model config) and only when the
+    env provides one. The volume pins the pod to its data center, so attaching it
+    globally starved unrelated runs of GPUs (live 2026-07-04). Pure: returns a new dict."""
+    spec = dict(pod_spec)
+    if variant.get("weights_cached") and env.get("DAIL_NETWORK_VOLUME_ID"):
+        spec["network_volume_id"] = env["DAIL_NETWORK_VOLUME_ID"]
+        spec["data_center_id"] = env.get("DAIL_DATA_CENTER_ID")
+    return spec
+
+
 def model_meta(variant):
     """Architecture metadata a model config may declare (dense/MoE, total/active params)
     — flows into report.json to enable active-parameters analyses (arXiv:2606.11690:

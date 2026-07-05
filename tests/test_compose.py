@@ -140,6 +140,32 @@ class ResolveVariantTest(unittest.TestCase):
         self.assertIn("gptq", str(cm.exception))
 
 
+class WeightCacheTest(unittest.TestCase):
+    """The network volume is a MODEL property (weights_cached: true), not a global: only
+    models whose weights live on the volume should pin their pods to its data center —
+    pinning every run made unrelated GPUs 'unavailable' (live 2026-07-04)."""
+
+    def test_attaches_volume_when_the_model_asks_and_env_provides(self):
+        from scripts.lib.compose import attach_weight_cache
+        spec = attach_weight_cache({}, {"weights_cached": True},
+                                   {"DAIL_NETWORK_VOLUME_ID": "vol1",
+                                    "DAIL_DATA_CENTER_ID": "US-GA-2"})
+        self.assertEqual(spec["network_volume_id"], "vol1")
+        self.assertEqual(spec["data_center_id"], "US-GA-2")
+
+    def test_no_pinning_for_models_without_cached_weights(self):
+        from scripts.lib.compose import attach_weight_cache
+        spec = attach_weight_cache({}, {"family": "qwen3-coder"},
+                                   {"DAIL_NETWORK_VOLUME_ID": "vol1"})
+        self.assertNotIn("network_volume_id", spec)
+        self.assertNotIn("data_center_id", spec)
+
+    def test_model_wants_cache_but_env_lacks_it_stays_unpinned(self):
+        from scripts.lib.compose import attach_weight_cache
+        spec = attach_weight_cache({}, {"weights_cached": True}, {})
+        self.assertNotIn("network_volume_id", spec)
+
+
 class ModelMetaTest(unittest.TestCase):
     def test_extracts_architecture_fields_when_present(self):
         from scripts.lib.compose import model_meta

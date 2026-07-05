@@ -17,7 +17,7 @@ import pathlib
 import time
 
 from scripts.lib import bench_sdd
-from scripts.lib.compose import load_run_config, model_meta
+from scripts.lib.compose import attach_weight_cache, load_run_config, model_meta
 from scripts.lib.dotenv import load_dotenv
 from scripts.lib.orchestrator import provision
 from scripts.lib.results_layout import run_out_dir
@@ -83,11 +83,10 @@ def main():
     vllm_cfg, pod_spec, variant, devs, slo = load_run_config(
         bench_path, args.model, args.hardware, gpu_count=args.gpus, quant=args.quant,
         devs=devs_override)
-    # Optional persistent weight cache (see README → GLM): a RunPod network volume, pinned
-    # to a data center, mounted at /workspace so /workspace/huggingface survives across pods.
-    if os.environ.get("DAIL_NETWORK_VOLUME_ID"):
-        pod_spec["network_volume_id"] = os.environ["DAIL_NETWORK_VOLUME_ID"]
-        pod_spec["data_center_id"] = os.environ.get("DAIL_DATA_CENTER_ID")
+    # Persistent weight cache (see README → GLM): mounted only for models that declare
+    # weights_cached — the volume pins the pod to one data center, so it must never
+    # constrain runs that don't need it.
+    pod_spec = attach_weight_cache(pod_spec, variant, os.environ)
     composed_path = "configs/_composed.yaml"
     pathlib.Path(composed_path).write_text(yaml.safe_dump(vllm_cfg))
 
