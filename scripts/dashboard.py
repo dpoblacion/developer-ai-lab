@@ -734,13 +734,20 @@ def benchmark_page(benchmark):
         with st.expander("What-if: use your own GPU prices ($/GPU-hour)"):
             st.caption("Every $ figure on this page recomputes live. SLO results are "
                        "measured and do not change with price.")
-            cols = st.columns(min(len(hw_prices), 3))
-            for i, (hw, price) in enumerate(sorted(hw_prices.items())):
-                val = cols[i % len(cols)].number_input(
-                    hw, min_value=0.0, value=float(price), step=0.05, format="%.2f",
-                    key=f"price-{benchmark}-{hw}")
-                if abs(val - float(price)) > 1e-9:
-                    overrides[hw] = val
+            # Narrow inputs sized to their short values, up to 8 per row (a fixed column
+            # count keeps widths equal when the last row is partial); Streamlit columns
+            # compress on narrow viewports on their own.
+            items = sorted(hw_prices.items())
+            per_row = 8
+            for start in range(0, len(items), per_row):
+                cols = st.columns(per_row, gap="small")
+                for col, (hw, price) in zip(cols, items[start:start + per_row],
+                                            strict=False):   # last row may be partial
+                    val = col.number_input(
+                        hw, min_value=0.0, value=float(price), step=0.05, format="%.2f",
+                        key=f"price-{benchmark}-{hw}")
+                    if abs(val - float(price)) > 1e-9:
+                        overrides[hw] = val
     if overrides:
         series = reprice_series(series, overrides)
 
