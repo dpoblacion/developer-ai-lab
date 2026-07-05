@@ -1,0 +1,543 @@
+{
+  "run_id": "20260705-115233",
+  "date": "2026-07-05",
+  "benchmark": "dev-load",
+  "family": "qwen3-coder",
+  "quant": "awq",
+  "model": "qwen3-coder-30b-awq",
+  "hardware": "l4",
+  "gpu_count": 1,
+  "price_usd_per_gpu_hour": 0.39,
+  "cost_per_hour": 0.39,
+  "slo": {
+    "max_ttft": 2.0,
+    "min_tps": 20.0
+  },
+  "by_devs": [
+    {
+      "devs": 1,
+      "holds_slo": true,
+      "slo_percentile": "p50",
+      "median_ttft": 0.093,
+      "median_tps": 57.12700198850061,
+      "cost_per_dev_hour": 0.39,
+      "cost_per_dev_month": 284.7,
+      "valid": true,
+      "agents_ok": 1,
+      "tokens_per_dev": 137689,
+      "agents": [
+        {
+          "agent": 0,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 126064,
+            "completion": 11625,
+            "total": 137689
+          },
+          "wall_time": 177.65758657455444
+        }
+      ],
+      "p90_ttft": 0.5583333333333336,
+      "p90_tps": 42.537366539873325,
+      "holds_slo_p90": true,
+      "p99_ttft": 2.102499999999999,
+      "p99_tps": 40.225881458039495,
+      "e2e_p50": 0.9285714285714286,
+      "e2e_p99": 34.69999999999999,
+      "server_tokens": {
+        "prompt": 284307,
+        "generation": 9324
+      },
+      "tokens_source": "server",
+      "tokens_per_hour": 5671924.2818136765,
+      "cost_per_mtok": 0.06875973313862577,
+      "cost_per_mtok_output": 2.165378507210191,
+      "prefix_cache_hit_rate": 0.9019545772703451,
+      "computed_tokens_per_hour": 718554.6190939886,
+      "utilization": 0.09623961681847552,
+      "underutilization_penalty": 10.390731312720956
+    },
+    {
+      "devs": 2,
+      "holds_slo": true,
+      "slo_percentile": "p50",
+      "median_ttft": 0.1328125,
+      "median_tps": 56.91639741518578,
+      "cost_per_dev_hour": 0.195,
+      "cost_per_dev_month": 142.35,
+      "valid": true,
+      "agents_ok": 1,
+      "tokens_per_dev": 120780,
+      "agents": [
+        {
+          "agent": 0,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": false,
+              "exit_code": 2,
+              "output": "src/board.ts(132,8): error TS2304: Cannot find name 'global'.\nsrc/board.ts(133,6): error TS2304: Cannot find name 'global'.\nsrc/board.ts(135,4): error TS2304: Cannot find name 'global'.\nsrc/board.ts(136,19): error TS2304: Cannot find name 'global'.\n"
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": " }\n    \u001b[90m 63|\u001b[39m\n\u001b[90m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m33:5\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[2/4]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mlistTasks sorts by priority then createdAt ascending\n\u001b[31m\u001b[1mAssertionError\u001b[22m: expected [] to deeply equal [ 'task-7', 'task-8', 'task-6', \u2026(1) ]\u001b[39m\n\n\u001b[32m- Expected\u001b[39m\n\u001b[31m+ Received\u001b[39m\n\n\u001b[32m- [\u001b[39m\n\u001b[32m-   \"task-7\",\u001b[39m\n\u001b[32m-   \"task-8\",\u001b[39m\n\u001b[32m-   \"task-6\",\u001b[39m\n\u001b[32m-   \"task-9\",\u001b[39m\n\u001b[32m- ]\u001b[39m\n\u001b[31m+ []\u001b[39m\n\n\u001b[36m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m44:43\u001b[22m\u001b[39m\n    \u001b[90m 42|\u001b[39m     \u001b[35mconst\u001b[39m h2 \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"h2\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"high\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m 43|\u001b[39m     \u001b[35mconst\u001b[39m l \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"l\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"low\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m 44|\u001b[39m     \u001b[34mexpect\u001b[39m(\u001b[34mlistTasks\u001b[39m(b)\u001b[33m.\u001b[39m\u001b[34mmap\u001b[39m((t) \u001b[33m=>\u001b[39m t\u001b[33m.\u001b[39mid))\u001b[33m.\u001b[39m\u001b[34mtoEqual\u001b[39m([h1\u001b[33m,\u001b[39m h2\u001b[33m,\u001b[39m m\u001b[33m,\u001b[39m l])\u001b[33m;\u001b[39m\n    \u001b[90m   |\u001b[39m                                           \u001b[31m^\u001b[39m\n    \u001b[90m 45|\u001b[39m   })\u001b[33m;\u001b[39m\n    \u001b[90m 46|\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[3/4]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mstats counts total, done, pending\n\u001b[31m\u001b[1mError\u001b[22m: Task with ID 'task-10' not found\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m completeTask src/board.ts:\u001b[2m61:11\u001b[22m\u001b[39m\n    \u001b[90m 59|\u001b[39m\n    \u001b[90m 60|\u001b[39m   \u001b[35mif\u001b[39m (taskIndex \u001b[33m===\u001b[39m \u001b[33m-\u001b[39m\u001b[34m1\u001b[39m) {\n    \u001b[90m 61|\u001b[39m     \u001b[35mthrow\u001b[39m \u001b[35mnew\u001b[39m \u001b[33mError\u001b[39m(\u001b[32m`Task with ID '\u001b[39m\u001b[36m${\u001b[39mid\u001b[36m}\u001b[39m\u001b[32m' not found`\u001b[39m)\u001b[33m;\u001b[39m\n    \u001b[90m   |\u001b[39m           \u001b[31m^\u001b[39m\n    \u001b[90m 62|\u001b[39m   }\n    \u001b[90m 63|\u001b[39m\n\u001b[90m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m51:5\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[4/4]\u23af\u001b[22m\u001b[39m\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 89793,
+            "completion": 11402,
+            "total": 101195
+          },
+          "wall_time": 208.69871377944946
+        },
+        {
+          "agent": 1,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 130022,
+            "completion": 10344,
+            "total": 140366
+          },
+          "wall_time": 205.59388828277588
+        }
+      ],
+      "p90_ttft": 0.3916666666666667,
+      "p90_tps": 42.32744638673634,
+      "holds_slo_p90": true,
+      "p99_ttft": 0.5300000000000011,
+      "p99_tps": 40.01942400995054,
+      "e2e_p50": 1.2884615384615383,
+      "e2e_p99": 35.60000000000002,
+      "server_tokens": {
+        "prompt": 478825,
+        "generation": 17156
+      },
+      "tokens_source": "server",
+      "tokens_per_hour": 8212287.669959536,
+      "cost_per_mtok": 0.047489812300002106,
+      "cost_per_mtok_output": 1.372933352434562,
+      "prefix_cache_hit_rate": 0.9422064428549053,
+      "computed_tokens_per_hour": 742263.6027521539,
+      "utilization": 0.09941507967374788,
+      "underutilization_penalty": 10.058836177385933
+    },
+    {
+      "devs": 4,
+      "holds_slo": true,
+      "slo_percentile": "p50",
+      "median_ttft": 0.16415662650602408,
+      "median_tps": 28.07899978402246,
+      "cost_per_dev_hour": 0.0975,
+      "cost_per_dev_month": 71.175,
+      "valid": true,
+      "agents_ok": 4,
+      "tokens_per_dev": 116467,
+      "agents": [
+        {
+          "agent": 0,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 131623,
+            "completion": 10918,
+            "total": 142541
+          },
+          "wall_time": 306.0697138309479
+        },
+        {
+          "agent": 1,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 97729,
+            "completion": 12026,
+            "total": 109755
+          },
+          "wall_time": 316.68455266952515
+        },
+        {
+          "agent": 2,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 113686,
+            "completion": 9493,
+            "total": 123179
+          },
+          "wall_time": 272.09143114089966
+        },
+        {
+          "agent": 3,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 82026,
+            "completion": 11033,
+            "total": 93059
+          },
+          "wall_time": 302.168790102005
+        }
+      ],
+      "p90_ttft": 0.4344594594594595,
+      "p90_tps": 21.08654986357755,
+      "holds_slo_p90": true,
+      "p99_ttft": 0.8441666666666663,
+      "p99_tps": 12.67037819159144,
+      "e2e_p50": 1.5833333333333333,
+      "e2e_p99": 63.899999999999864,
+      "server_tokens": {
+        "prompt": 979368,
+        "generation": 34733
+      },
+      "tokens_source": "server",
+      "tokens_per_hour": 11215950.331957478,
+      "cost_per_mtok": 0.03477190861738907,
+      "cost_per_mtok_output": 1.015237016693141,
+      "prefix_cache_hit_rate": 0.9312454562534206,
+      "computed_tokens_per_hour": 1128882.462824283,
+      "utilization": 0.15119687880135269,
+      "underutilization_penalty": 6.6138931433487596
+    },
+    {
+      "devs": 8,
+      "holds_slo": true,
+      "slo_percentile": "p50",
+      "median_ttft": 0.20342465753424657,
+      "median_tps": 26.8768444540416,
+      "cost_per_dev_hour": 0.04875,
+      "cost_per_dev_month": 35.5875,
+      "valid": true,
+      "agents_ok": 6,
+      "tokens_per_dev": 112082,
+      "agents": [
+        {
+          "agent": 0,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": false,
+              "exit_code": 2,
+              "output": "error TS18003: No inputs were found in config file '/out/workspace/tsconfig.json'. Specified 'include' paths were '[\"*.js\"]' and 'exclude' paths were '[]'.\n"
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "\n\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv4.1.9 \u001b[39m\u001b[90m/out/workspace\u001b[39m\n\n \u001b[31m\u276f\u001b[39m acceptance.test.ts \u001b[2m(\u001b[22m\u001b[2m0 test\u001b[22m\u001b[2m)\u001b[22m\n\n\u001b[2m Test Files \u001b[22m \u001b[1m\u001b[31m1 failed\u001b[39m\u001b[22m\u001b[90m (1)\u001b[39m\n\u001b[2m      Tests \u001b[22m \u001b[2mno tests\u001b[22m\n\u001b[2m   Start at \u001b[22m 10:20:17\n\u001b[2m   Duration \u001b[22m 226ms\u001b[2m (transform 33ms, setup 0ms, import 0ms, tests 0ms, environment 0ms)\u001b[22m\n\n\n\u001b[31m\u23af\u23af\u23af\u23af\u23af\u23af\u001b[39m\u001b[1m\u001b[41m Failed Suites 1 \u001b[49m\u001b[22m\u001b[31m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m [ acceptance.test.ts ]\u001b[22m\n\u001b[31m\u001b[1mError\u001b[22m: Cannot find module './src/board' imported from /out/workspace/acceptance.test.ts\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m4:1\u001b[22m\u001b[39m\n    \u001b[90m  2|\u001b[39m // agent's vitest. Imports the agent's module at ./src/board. The agen\u2026\n    \u001b[90m  3|\u001b[39m \u001b[35mimport\u001b[39m { describe\u001b[33m,\u001b[39m it\u001b[33m,\u001b[39m expect } \u001b[35mfrom\u001b[39m \u001b[32m\"vitest\"\u001b[39m\u001b[33m;\u001b[39m\n    \u001b[90m  4|\u001b[39m import { createBoard, addTask, completeTask, listTasks, stats } from \"\u2026\n    \u001b[90m   |\u001b[39m \u001b[31m^\u001b[39m\n    \u001b[90m  5|\u001b[39m\n    \u001b[90m  6|\u001b[39m \u001b[34mdescribe\u001b[39m(\u001b[32m\"TaskBoard acceptance\"\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[1/1]\u23af\u001b[22m\u001b[39m\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 103964,
+            "completion": 9919,
+            "total": 113883
+          },
+          "wall_time": 387.3821885585785
+        },
+        {
+          "agent": 1,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "   \u001b[34mcompleteTask\u001b[39m(b\u001b[33m,\u001b[39m hi)\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[3/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mlistTasks sorts by priority then createdAt ascending\n\u001b[31m\u001b[1mTypeError\u001b[22m: addTask is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m40:15\u001b[22m\u001b[39m\n    \u001b[90m 38|\u001b[39m   \u001b[34mit\u001b[39m(\u001b[32m\"listTasks sorts by priority then createdAt ascending\"\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n    \u001b[90m 39|\u001b[39m     \u001b[35mconst\u001b[39m b \u001b[33m=\u001b[39m \u001b[34mcreateBoard\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m 40|\u001b[39m     \u001b[35mconst\u001b[39m m \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"m\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"medium\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m   |\u001b[39m               \u001b[31m^\u001b[39m\n    \u001b[90m 41|\u001b[39m     \u001b[35mconst\u001b[39m h1 \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"h1\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"high\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m 42|\u001b[39m     \u001b[35mconst\u001b[39m h2 \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"h2\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"high\"\u001b[39m })\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[4/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mstats counts total, done, pending\n\u001b[31m\u001b[1mTypeError\u001b[22m: addTask is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m49:15\u001b[22m\u001b[39m\n    \u001b[90m 47|\u001b[39m   \u001b[34mit\u001b[39m(\u001b[32m\"stats counts total, done, pending\"\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n    \u001b[90m 48|\u001b[39m     \u001b[35mconst\u001b[39m b \u001b[33m=\u001b[39m \u001b[34mcreateBoard\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m 49|\u001b[39m     \u001b[35mconst\u001b[39m a \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"a\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m   |\u001b[39m               \u001b[31m^\u001b[39m\n    \u001b[90m 50|\u001b[39m     \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"b\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m 51|\u001b[39m     \u001b[34mcompleteTask\u001b[39m(b\u001b[33m,\u001b[39m a)\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[5/5]\u23af\u001b[22m\u001b[39m\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 111013,
+            "completion": 10755,
+            "total": 121768
+          },
+          "wall_time": 395.2188665866852
+        },
+        {
+          "agent": 2,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 99855,
+            "completion": 8155,
+            "total": 108010
+          },
+          "wall_time": 333.652889251709
+        },
+        {
+          "agent": 3,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 100020,
+            "completion": 8567,
+            "total": 108587
+          },
+          "wall_time": 352.11665534973145
+        },
+        {
+          "agent": 4,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 124631,
+            "completion": 9290,
+            "total": 133921
+          },
+          "wall_time": 386.1274902820587
+        },
+        {
+          "agent": 5,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 107407,
+            "completion": 12016,
+            "total": 119423
+          },
+          "wall_time": 429.09607458114624
+        },
+        {
+          "agent": 6,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 98960,
+            "completion": 11321,
+            "total": 110281
+          },
+          "wall_time": 419.888258934021
+        },
+        {
+          "agent": 7,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 101492,
+            "completion": 8515,
+            "total": 110007
+          },
+          "wall_time": 351.6914575099945
+        }
+      ],
+      "p90_ttft": 0.5328124999999999,
+      "p90_tps": 20.682015397965397,
+      "holds_slo_p90": true,
+      "p99_ttft": 0.9399999999999997,
+      "p99_tps": 5.142302716688215,
+      "e2e_p50": 2.729591836734694,
+      "e2e_p99": 64.7999999999999,
+      "server_tokens": {
+        "prompt": 1935760,
+        "generation": 62788
+      },
+      "tokens_source": "server",
+      "tokens_per_hour": 16421923.390737137,
+      "cost_per_mtok": 0.023748740675527773,
+      "cost_per_mtok_output": 0.7559246699941816,
+      "prefix_cache_hit_rate": 0.9009668431635364,
+      "computed_tokens_per_hour": 515924.4240606698,
+      "utilization": 0.06910034054404554,
+      "underutilization_penalty": 14.471708708332425
+    }
+  ],
+  "tokens": {
+    "prompt": 1618285,
+    "completion": 155379,
+    "total": 1773664
+  },
+  "model_meta": {
+    "architecture": "moe",
+    "total_params_b": 30.5,
+    "active_params_b": 3.3
+  },
+  "theta_max": {
+    "tokens_per_hour": 7466307.980520186,
+    "output_tokens_per_hour": 3261582.728993293,
+    "server_tokens": {
+      "prompt": 147852,
+      "generation": 114688
+    },
+    "duration_s": 126.58786678314209,
+    "shape": {
+      "prompt_tokens": 254,
+      "output_tokens": 256
+    },
+    "concurrency": 64
+  },
+  "utilization_basis": "theta_max",
+  "timeline": [
+    {
+      "label": "create\u2192ready",
+      "seconds": 35.056633949279785,
+      "cost_usd": 0.0037978020111719764,
+      "pct": 0.021312957586005127
+    },
+    {
+      "label": "rsync",
+      "seconds": 2.0515449047088623,
+      "cost_usd": 0.00022225069801012676,
+      "pct": 0.0012472529337273467
+    },
+    {
+      "label": "vLLM startup",
+      "seconds": 312.6854040622711,
+      "cost_usd": 0.033874252106746036,
+      "pct": 0.19009956187419336
+    },
+    {
+      "label": "generation",
+      "seconds": 1168.0543949604034,
+      "cost_usd": 0.1265392261207104,
+      "pct": 0.710127898016558
+    },
+    {
+      "label": "saturation-probe",
+      "seconds": 127.00275707244873,
+      "cost_usd": 0.013758632016181948,
+      "pct": 0.07721232958951617
+    }
+  ],
+  "pod_cost_usd": 0.17819216295282048
+}
