@@ -355,23 +355,29 @@ def _style(fig, *, x_title, y_title):
     return fig
 
 
+_QUANT_DASH = {"fp8": "solid", "awq": "dash", "gptq": "dot", "bf16": "dashdot"}
+
+
 def _curve_fig(series, colors, value_key, y_title, hover_fmt):
-    """One curve per combo across team sizes. 2px lines, ≥8px markers (x = point fails
-    SLO — identity never rides on color alone), direct labels when ≤4 series AND their
-    line ends don't collide (overlapping labels are worse than none — the legend always
-    carries identity)."""
+    """One curve per combo across team sizes: hue = hardware, dash = quant (composite
+    encoding — many combos never wrap the palette). 2px lines, ≥8px markers (x = point
+    fails SLO — identity never rides on color alone), compact legend names (full combo in
+    the hover), direct labels when ≤4 series AND their line ends don't collide."""
     import plotly.graph_objects as go
     fig = go.Figure()
     for s in series:
         xs = [p["devs"] for p in s["points"]]
         ys = [p[value_key] for p in s["points"]]
         symbols = ["circle" if p["holds_slo"] else "x" for p in s["points"]]
+        hue = colors[f"{s['hardware']}-{s['gpus']}gpu"]
         fig.add_trace(go.Scatter(
-            x=xs, y=ys, mode="lines+markers", name=s["label"],
-            line=dict(color=colors[s["label"]], width=2),
-            marker=dict(size=9, symbol=symbols, color=colors[s["label"]],
+            x=xs, y=ys, mode="lines+markers",
+            name=s.get("short", s["label"]),
+            line=dict(color=hue, width=2,
+                      dash=_QUANT_DASH.get(s.get("quant"), "solid")),
+            marker=dict(size=9, symbol=symbols, color=hue,
                         line=dict(width=1, color=INK["surface"])),
-            hovertemplate=f"%{{fullData.name}}<br>N=%{{x}} · {hover_fmt}<extra></extra>"))
+            hovertemplate=f"{s['label']}<br>N=%{{x}} · {hover_fmt}<extra></extra>"))
     ends = [(s["points"][-1][value_key], s) for s in series
             if s["points"] and s["points"][-1].get(value_key) is not None]
     all_vals = [p[value_key] for s in series for p in s["points"]
@@ -392,7 +398,11 @@ def _curve_fig(series, colors, value_key, y_title, hover_fmt):
                                xanchor="left", xshift=10,
                                font=dict(size=11, color=INK["secondary"]))
     _style(fig, x_title="developers (N)", y_title=y_title)
-    fig.update_layout(height=340)
+    # The legend sits above the plot: grow the FIGURE with its rows instead of letting
+    # it squeeze the plot area (nine combos once compressed the plot to a sliver).
+    legend_rows = -(-len(series) // 3)          # ~3 compact names per row
+    fig.update_layout(height=340 + 22 * legend_rows,
+                      margin=dict(t=40 + 22 * legend_rows, r=88, b=48, l=56))
     fig.update_xaxes(tickmode="array",
                      tickvals=sorted({p["devs"] for s in series for p in s["points"]}))
     return fig
@@ -700,7 +710,10 @@ def benchmark_page(benchmark):
 
     # Colors are assigned over the FULL combo set so a combo keeps its hue when the family
     # filter hides others (color follows the entity, never its rank).
-    colors = assign_series_colors([s["label"] for s in all_series])
+    # Composite encoding: color follows the HARDWARE (≤8 GPUs — the validated palette's
+    # capacity), quant rides on the line dash. One combo = hue + dash, so nine combos
+    # never wrap the palette into duplicate hues (dataviz rule: no 9th generated color).
+    colors = assign_series_colors([f"{s['hardware']}-{s['gpus']}gpu" for s in all_series])
 
     # Family filter: governs every figure and table on the page. Only shown when there's
     # more than one family to choose between.
