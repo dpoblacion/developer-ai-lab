@@ -93,7 +93,11 @@ def _env_int(name, default):
         return default
 
 
-STALL_STARTUP = _env_int("STALL_STARTUP", 300)
+# 600 not 300: a slow community host can spend >5 silent minutes downloading the vLLM
+# wheel (pip writes nothing to the log mid-download — false-stalled live 2026-07-05).
+# Real startup deaths are caught fast by the log fail-scan + the vllm.exit sentinel;
+# MAX_STARTUP still bounds the phase.
+STALL_STARTUP = _env_int("STALL_STARTUP", 600)
 MAX_STARTUP = _env_int("MAX_STARTUP", 720)
 STALL_GEN = _env_int("STALL_GEN", 480)
 MAX_RUN = _env_int("MAX_RUN", 3600)
