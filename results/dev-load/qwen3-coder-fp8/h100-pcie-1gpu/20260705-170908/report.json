@@ -1,0 +1,1232 @@
+{
+  "run_id": "20260705-170908",
+  "date": "2026-07-05",
+  "benchmark": "dev-load",
+  "family": "qwen3-coder",
+  "quant": "fp8",
+  "model": "qwen3-coder-30b-fp8",
+  "hardware": "h100-pcie",
+  "gpu_count": 1,
+  "price_usd_per_gpu_hour": 1.99,
+  "cost_per_hour": 1.99,
+  "slo": {
+    "max_ttft": 10.0,
+    "min_tps": 20.0
+  },
+  "by_devs": [
+    {
+      "devs": 16,
+      "holds_slo": true,
+      "slo_percentile": "p50",
+      "median_ttft": 0.07361809045226131,
+      "median_tps": 56.13348734647608,
+      "cost_per_dev_hour": 0.124375,
+      "cost_per_dev_month": 90.79375,
+      "valid": true,
+      "agents_ok": 8,
+      "tokens_per_dev": 306420,
+      "agents": [
+        {
+          "agent": 0,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 291600,
+            "completion": 16276,
+            "total": 307876
+          },
+          "wall_time": 416.1819717884064
+        },
+        {
+          "agent": 1,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": false,
+              "exit_code": 2,
+              "output": "src/board.ts(24,5): error TS2322: Type '(title: string, priority?: Priority) => string' is not assignable to type '(title: string, priority?: Priority | undefined) => Task'.\n  Type 'string' is not assignable to type 'Task'.\ntest/board.test.ts(16,17): error TS2339: Property 'completed' does not exist on type 'Task'.\ntest/board.test.ts(50,17): error TS2339: Property 'completed' does not exist on type 'Task'.\ntest/board.test.ts(54,17): error TS2339: Property 'completed' does not exist on type 'Task'.\ntest/board.test.ts(108,17): error TS2339: Property 'completed' does not exist on type '{ total: number; done: number; pending: number; }'.\ntest/board.test.ts(115,18): error TS2339: Property 'completed' does not exist on type '{ total: number; done: number; pending: number; }'.\n"
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "[35mnew\u001b[39m \u001b[33mError\u001b[39m(\u001b[32m'Task title cannot be empty'\u001b[39m)\u001b[33m;\u001b[39m\n    \u001b[90m 28|\u001b[39m       }\n\u001b[90m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m31:16\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[3/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mlistTasks sorts by priority then createdAt ascending\n\u001b[31m\u001b[1mTypeError\u001b[22m: title.trim is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m addTask src/board.ts:\u001b[2m26:27\u001b[22m\u001b[39m\n    \u001b[90m 24|\u001b[39m     \u001b[34maddTask\u001b[39m(title\u001b[33m:\u001b[39m string\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[33mPriority\u001b[39m \u001b[33m=\u001b[39m \u001b[32m'medium'\u001b[39m)\u001b[33m:\u001b[39m string {\n    \u001b[90m 25|\u001b[39m       \u001b[90m// Validate title\u001b[39m\n    \u001b[90m 26|\u001b[39m       \u001b[35mif\u001b[39m (\u001b[33m!\u001b[39mtitle \u001b[33m||\u001b[39m title\u001b[33m.\u001b[39m\u001b[34mtrim\u001b[39m() \u001b[33m===\u001b[39m \u001b[32m''\u001b[39m) {\n    \u001b[90m   |\u001b[39m                           \u001b[31m^\u001b[39m\n    \u001b[90m 27|\u001b[39m         \u001b[35mthrow\u001b[39m \u001b[35mnew\u001b[39m \u001b[33mError\u001b[39m(\u001b[32m'Task title cannot be empty'\u001b[39m)\u001b[33m;\u001b[39m\n    \u001b[90m 28|\u001b[39m       }\n\u001b[90m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m40:15\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[4/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mstats counts total, done, pending\n\u001b[31m\u001b[1mTypeError\u001b[22m: title.trim is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m addTask src/board.ts:\u001b[2m26:27\u001b[22m\u001b[39m\n    \u001b[90m 24|\u001b[39m     \u001b[34maddTask\u001b[39m(title\u001b[33m:\u001b[39m string\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[33mPriority\u001b[39m \u001b[33m=\u001b[39m \u001b[32m'medium'\u001b[39m)\u001b[33m:\u001b[39m string {\n    \u001b[90m 25|\u001b[39m       \u001b[90m// Validate title\u001b[39m\n    \u001b[90m 26|\u001b[39m       \u001b[35mif\u001b[39m (\u001b[33m!\u001b[39mtitle \u001b[33m||\u001b[39m title\u001b[33m.\u001b[39m\u001b[34mtrim\u001b[39m() \u001b[33m===\u001b[39m \u001b[32m''\u001b[39m) {\n    \u001b[90m   |\u001b[39m                           \u001b[31m^\u001b[39m\n    \u001b[90m 27|\u001b[39m         \u001b[35mthrow\u001b[39m \u001b[35mnew\u001b[39m \u001b[33mError\u001b[39m(\u001b[32m'Task title cannot be empty'\u001b[39m)\u001b[33m;\u001b[39m\n    \u001b[90m 28|\u001b[39m       }\n\u001b[90m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m49:15\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[5/5]\u23af\u001b[22m\u001b[39m\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 322889,
+            "completion": 18685,
+            "total": 341574
+          },
+          "wall_time": 435.4990613460541
+        },
+        {
+          "agent": 2,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 219973,
+            "completion": 15443,
+            "total": 235416
+          },
+          "wall_time": 379.1933135986328
+        },
+        {
+          "agent": 3,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "\n\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv4.1.9 \u001b[39m\u001b[90m/out/workspace\u001b[39m\n\n\u001b[31mNo test files found, exiting with code 1\n\u001b[39m\n\u001b[2mfilter: \u001b[22m\u001b[33macceptance.test.ts\u001b[39m\n\u001b[2minclude: \u001b[22m\u001b[33mtests/**/*.test.ts\u001b[39m\n\u001b[2mexclude:  \u001b[22m\u001b[33m**/node_modules/**\u001b[2m, \u001b[22m**/.git/**\u001b[39m\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 448346,
+            "completion": 28096,
+            "total": 476442
+          },
+          "wall_time": 553.110910654068
+        },
+        {
+          "agent": 4,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 219640,
+            "completion": 13296,
+            "total": 232936
+          },
+          "wall_time": 409.07216691970825
+        },
+        {
+          "agent": 5,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "   \u001b[34mcompleteTask\u001b[39m(b\u001b[33m,\u001b[39m hi)\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[3/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mlistTasks sorts by priority then createdAt ascending\n\u001b[31m\u001b[1mTypeError\u001b[22m: addTask is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m40:15\u001b[22m\u001b[39m\n    \u001b[90m 38|\u001b[39m   \u001b[34mit\u001b[39m(\u001b[32m\"listTasks sorts by priority then createdAt ascending\"\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n    \u001b[90m 39|\u001b[39m     \u001b[35mconst\u001b[39m b \u001b[33m=\u001b[39m \u001b[34mcreateBoard\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m 40|\u001b[39m     \u001b[35mconst\u001b[39m m \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"m\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"medium\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m   |\u001b[39m               \u001b[31m^\u001b[39m\n    \u001b[90m 41|\u001b[39m     \u001b[35mconst\u001b[39m h1 \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"h1\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"high\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m 42|\u001b[39m     \u001b[35mconst\u001b[39m h2 \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"h2\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"high\"\u001b[39m })\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[4/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mstats counts total, done, pending\n\u001b[31m\u001b[1mTypeError\u001b[22m: addTask is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m49:15\u001b[22m\u001b[39m\n    \u001b[90m 47|\u001b[39m   \u001b[34mit\u001b[39m(\u001b[32m\"stats counts total, done, pending\"\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n    \u001b[90m 48|\u001b[39m     \u001b[35mconst\u001b[39m b \u001b[33m=\u001b[39m \u001b[34mcreateBoard\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m 49|\u001b[39m     \u001b[35mconst\u001b[39m a \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"a\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m   |\u001b[39m               \u001b[31m^\u001b[39m\n    \u001b[90m 50|\u001b[39m     \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"b\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m 51|\u001b[39m     \u001b[34mcompleteTask\u001b[39m(b\u001b[33m,\u001b[39m a)\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[5/5]\u23af\u001b[22m\u001b[39m\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 249464,
+            "completion": 16766,
+            "total": 266230
+          },
+          "wall_time": 399.0874025821686
+        },
+        {
+          "agent": 6,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 370058,
+            "completion": 22745,
+            "total": 392803
+          },
+          "wall_time": 505.4766728878021
+        },
+        {
+          "agent": 7,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 419801,
+            "completion": 19816,
+            "total": 439617
+          },
+          "wall_time": 486.98814868927
+        },
+        {
+          "agent": 8,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": false,
+              "exit_code": 2,
+              "output": "test/board.test.ts(44,17): error TS2339: Property 'completed' does not exist on type 'Task'.\ntest/board.test.ts(46,17): error TS2339: Property 'completed' does not exist on type 'Task'.\n"
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "   \u001b[34mcompleteTask\u001b[39m(b\u001b[33m,\u001b[39m hi)\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[3/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mlistTasks sorts by priority then createdAt ascending\n\u001b[31m\u001b[1mTypeError\u001b[22m: addTask is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m40:15\u001b[22m\u001b[39m\n    \u001b[90m 38|\u001b[39m   \u001b[34mit\u001b[39m(\u001b[32m\"listTasks sorts by priority then createdAt ascending\"\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n    \u001b[90m 39|\u001b[39m     \u001b[35mconst\u001b[39m b \u001b[33m=\u001b[39m \u001b[34mcreateBoard\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m 40|\u001b[39m     \u001b[35mconst\u001b[39m m \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"m\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"medium\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m   |\u001b[39m               \u001b[31m^\u001b[39m\n    \u001b[90m 41|\u001b[39m     \u001b[35mconst\u001b[39m h1 \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"h1\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"high\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m 42|\u001b[39m     \u001b[35mconst\u001b[39m h2 \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"h2\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"high\"\u001b[39m })\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[4/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mstats counts total, done, pending\n\u001b[31m\u001b[1mTypeError\u001b[22m: addTask is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m49:15\u001b[22m\u001b[39m\n    \u001b[90m 47|\u001b[39m   \u001b[34mit\u001b[39m(\u001b[32m\"stats counts total, done, pending\"\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n    \u001b[90m 48|\u001b[39m     \u001b[35mconst\u001b[39m b \u001b[33m=\u001b[39m \u001b[34mcreateBoard\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m 49|\u001b[39m     \u001b[35mconst\u001b[39m a \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"a\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m   |\u001b[39m               \u001b[31m^\u001b[39m\n    \u001b[90m 50|\u001b[39m     \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"b\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m 51|\u001b[39m     \u001b[34mcompleteTask\u001b[39m(b\u001b[33m,\u001b[39m a)\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[5/5]\u23af\u001b[22m\u001b[39m\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 328731,
+            "completion": 18881,
+            "total": 347612
+          },
+          "wall_time": 461.4187021255493
+        },
+        {
+          "agent": 9,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": false,
+              "exit_code": 2,
+              "output": "error TS18003: No inputs were found in config file '/out/workspace/tsconfig.json'. Specified 'include' paths were '[\"src/**/*\",\"test/**/*\"]' and 'exclude' paths were '[]'.\n"
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "\n RUN  v1.6.1 /out/workspace\n\n \u276f acceptance.test.ts  (0 test)\n\n Test Files  1 failed (1)\n      Tests  no tests\n   Start at  15:46:11\n   Duration  513ms (transform 44ms, setup 0ms, collect 0ms, tests 0ms, environment 0ms, prepare 128ms)\n\n\u23af\u23af\u23af\u23af\u23af\u23af Failed Suites 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af\n\n FAIL  acceptance.test.ts [ acceptance.test.ts ]\nError: Failed to load url ./src/board (resolved id: ./src/board) in /out/workspace/acceptance.test.ts. Does the file exist?\n \u276f loadAndTransform node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51969:17\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[1/1]\u23af\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 284044,
+            "completion": 17772,
+            "total": 301816
+          },
+          "wall_time": 521.5428974628448
+        },
+        {
+          "agent": 10,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "   \u001b[34mcompleteTask\u001b[39m(b\u001b[33m,\u001b[39m hi)\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[3/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mlistTasks sorts by priority then createdAt ascending\n\u001b[31m\u001b[1mTypeError\u001b[22m: addTask is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m40:15\u001b[22m\u001b[39m\n    \u001b[90m 38|\u001b[39m   \u001b[34mit\u001b[39m(\u001b[32m\"listTasks sorts by priority then createdAt ascending\"\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n    \u001b[90m 39|\u001b[39m     \u001b[35mconst\u001b[39m b \u001b[33m=\u001b[39m \u001b[34mcreateBoard\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m 40|\u001b[39m     \u001b[35mconst\u001b[39m m \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"m\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"medium\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m   |\u001b[39m               \u001b[31m^\u001b[39m\n    \u001b[90m 41|\u001b[39m     \u001b[35mconst\u001b[39m h1 \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"h1\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"high\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m 42|\u001b[39m     \u001b[35mconst\u001b[39m h2 \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"h2\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"high\"\u001b[39m })\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[4/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mstats counts total, done, pending\n\u001b[31m\u001b[1mTypeError\u001b[22m: addTask is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m49:15\u001b[22m\u001b[39m\n    \u001b[90m 47|\u001b[39m   \u001b[34mit\u001b[39m(\u001b[32m\"stats counts total, done, pending\"\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n    \u001b[90m 48|\u001b[39m     \u001b[35mconst\u001b[39m b \u001b[33m=\u001b[39m \u001b[34mcreateBoard\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m 49|\u001b[39m     \u001b[35mconst\u001b[39m a \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"a\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m   |\u001b[39m               \u001b[31m^\u001b[39m\n    \u001b[90m 50|\u001b[39m     \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"b\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m 51|\u001b[39m     \u001b[34mcompleteTask\u001b[39m(b\u001b[33m,\u001b[39m a)\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[5/5]\u23af\u001b[22m\u001b[39m\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 243991,
+            "completion": 19174,
+            "total": 263165
+          },
+          "wall_time": 439.2449553012848
+        },
+        {
+          "agent": 11,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 396440,
+            "completion": 22642,
+            "total": 419082
+          },
+          "wall_time": 504.78439021110535
+        },
+        {
+          "agent": 12,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 219893,
+            "completion": 13511,
+            "total": 233404
+          },
+          "wall_time": 347.6939435005188
+        },
+        {
+          "agent": 13,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": false,
+              "exit_code": 2,
+              "output": " has an 'any' type.\ntest/TaskBoard.test.ts(69,20): error TS7005: Variable 'taskBoard' implicitly has an 'any' type.\ntest/TaskBoard.test.ts(71,35): error TS7005: Variable 'taskBoard' implicitly has an 'any' type.\ntest/TaskBoard.test.ts(72,38): error TS7005: Variable 'taskBoard' implicitly has an 'any' type.\ntest/TaskBoard.test.ts(82,15): error TS7005: Variable 'taskBoard' implicitly has an 'any' type.\ntest/TaskBoard.test.ts(83,15): error TS7005: Variable 'taskBoard' implicitly has an 'any' type.\ntest/TaskBoard.test.ts(84,15): error TS7005: Variable 'taskBoard' implicitly has an 'any' type.\ntest/TaskBoard.test.ts(86,35): error TS7005: Variable 'taskBoard' implicitly has an 'any' type.\ntest/TaskBoard.test.ts(87,37): error TS7005: Variable 'taskBoard' implicitly has an 'any' type.\ntest/TaskBoard.test.ts(88,34): error TS7005: Variable 'taskBoard' implicitly has an 'any' type.\ntest/TaskBoard.test.ts(100,15): error TS7005: Variable 'taskBoard' implicitly has an 'any' type.\ntest/TaskBoard.test.ts(101,15): error TS7005: Variable 'taskBoard' implicitly has an 'any' type.\ntest/TaskBoard.test.ts(102,15): error TS7005: Variable 'taskBoard' implicitly has an 'any' type.\ntest/TaskBoard.test.ts(103,15): error TS7005: Variable 'taskBoard' implicitly has an 'any' type.\ntest/TaskBoard.test.ts(104,15): error TS7005: Variable 'taskBoard' implicitly has an 'any' type.\ntest/TaskBoard.test.ts(105,15): error TS7005: Variable 'taskBoard' implicitly has an 'any' type.\ntest/TaskBoard.test.ts(107,31): error TS7005: Variable 'taskBoard' implicitly has an 'any' type.\ntest/TaskBoard.test.ts(121,15): error TS7005: Variable 'taskBoard' implicitly has an 'any' type.\ntest/TaskBoard.test.ts(122,15): error TS7005: Variable 'taskBoard' implicitly has an 'any' type.\ntest/TaskBoard.test.ts(123,15): error TS7005: Variable 'taskBoard' implicitly has an 'any' type.\ntest/TaskBoard.test.ts(126,20): error TS7005: Variable 'taskBoard' implicitly has an 'any' type.\ntest/TaskBoard.test.ts(128,33): error TS7005: Variable 'taskBoard' implicitly has an 'any' type.\n"
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "\n RUN  v1.6.1 /out/workspace\n\n \u276f acceptance.test.ts  (0 test)\n\n Test Files  1 failed (1)\n      Tests  no tests\n   Start at  15:46:23\n   Duration  479ms (transform 53ms, setup 0ms, collect 0ms, tests 0ms, environment 0ms, prepare 120ms)\n\n\u23af\u23af\u23af\u23af\u23af\u23af Failed Suites 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af\n\n FAIL  acceptance.test.ts [ acceptance.test.ts ]\nError: Failed to load url ./src/board (resolved id: ./src/board) in /out/workspace/acceptance.test.ts. Does the file exist?\n \u276f loadAndTransform node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51969:17\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[1/1]\u23af\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 289599,
+            "completion": 15366,
+            "total": 304965
+          },
+          "wall_time": 538.9181571006775
+        },
+        {
+          "agent": 14,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": false,
+              "exit_code": 2,
+              "output": "test/board.test.ts(24,17): error TS2339: Property 'completed' does not exist on type 'Task'.\ntest/board.test.ts(26,17): error TS2339: Property 'completed' does not exist on type 'Task'.\ntest/board.test.ts(54,23): error TS2339: Property 'completed' does not exist on type '{ total: number; done: number; pending: number; }'.\ntest/board.test.ts(59,24): error TS2339: Property 'completed' does not exist on type '{ total: number; done: number; pending: number; }'.\ntest/comprehensive.test.ts(50,19): error TS2339: Property 'completed' does not exist on type 'Task'.\ntest/comprehensive.test.ts(52,19): error TS2339: Property 'completed' does not exist on type 'Task'.\ntest/comprehensive.test.ts(144,28): error TS2339: Property 'completed' does not exist on type '{ total: number; done: number; pending: number; }'.\ntest/comprehensive.test.ts(149,28): error TS2339: Property 'completed' does not exist on type '{ total: number; done: number; pending: number; }'.\ntest/comprehensive.test.ts(152,28): error TS2339: Property 'completed' does not exist on type '{ total: number; done: number; pending: number; }'.\ntest/comprehensive.test.ts(155,28): error TS2339: Property 'completed' does not exist on type '{ total: number; done: number; pending: number; }'.\ntest/comprehensive.test.ts(185,27): error TS2339: Property 'completed' does not exist on type '{ total: number; done: number; pending: number; }'.\ntest/comprehensive.test.ts(193,27): error TS2339: Property 'completed' does not exist on type '{ total: number; done: number; pending: number; }'.\n"
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "3mError\u001b[39m(\u001b[32m'Task title cannot be empty'\u001b[39m)\u001b[33m;\u001b[39m\n    \u001b[90m 38|\u001b[39m       }\n\u001b[90m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m31:16\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[3/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mlistTasks sorts by priority then createdAt ascending\n\u001b[31m\u001b[1mTypeError\u001b[22m: title.trim is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m addTask src/board.ts:\u001b[2m36:27\u001b[22m\u001b[39m\n    \u001b[90m 34|\u001b[39m     \u001b[34maddTask\u001b[39m(title\u001b[33m:\u001b[39m string\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[33mPriority\u001b[39m \u001b[33m=\u001b[39m \u001b[32m'medium'\u001b[39m)\u001b[33m:\u001b[39m \u001b[33mTask\u001b[39m {\n    \u001b[90m 35|\u001b[39m       \u001b[90m// Validate title\u001b[39m\n    \u001b[90m 36|\u001b[39m       \u001b[35mif\u001b[39m (\u001b[33m!\u001b[39mtitle \u001b[33m||\u001b[39m title\u001b[33m.\u001b[39m\u001b[34mtrim\u001b[39m() \u001b[33m===\u001b[39m \u001b[32m''\u001b[39m) {\n    \u001b[90m   |\u001b[39m                           \u001b[31m^\u001b[39m\n    \u001b[90m 37|\u001b[39m         \u001b[35mthrow\u001b[39m \u001b[35mnew\u001b[39m \u001b[33mError\u001b[39m(\u001b[32m'Task title cannot be empty'\u001b[39m)\u001b[33m;\u001b[39m\n    \u001b[90m 38|\u001b[39m       }\n\u001b[90m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m40:15\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[4/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mstats counts total, done, pending\n\u001b[31m\u001b[1mTypeError\u001b[22m: title.trim is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m addTask src/board.ts:\u001b[2m36:27\u001b[22m\u001b[39m\n    \u001b[90m 34|\u001b[39m     \u001b[34maddTask\u001b[39m(title\u001b[33m:\u001b[39m string\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[33mPriority\u001b[39m \u001b[33m=\u001b[39m \u001b[32m'medium'\u001b[39m)\u001b[33m:\u001b[39m \u001b[33mTask\u001b[39m {\n    \u001b[90m 35|\u001b[39m       \u001b[90m// Validate title\u001b[39m\n    \u001b[90m 36|\u001b[39m       \u001b[35mif\u001b[39m (\u001b[33m!\u001b[39mtitle \u001b[33m||\u001b[39m title\u001b[33m.\u001b[39m\u001b[34mtrim\u001b[39m() \u001b[33m===\u001b[39m \u001b[32m''\u001b[39m) {\n    \u001b[90m   |\u001b[39m                           \u001b[31m^\u001b[39m\n    \u001b[90m 37|\u001b[39m         \u001b[35mthrow\u001b[39m \u001b[35mnew\u001b[39m \u001b[33mError\u001b[39m(\u001b[32m'Task title cannot be empty'\u001b[39m)\u001b[33m;\u001b[39m\n    \u001b[90m 38|\u001b[39m       }\n\u001b[90m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m49:15\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[5/5]\u23af\u001b[22m\u001b[39m\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 361240,
+            "completion": 19588,
+            "total": 380828
+          },
+          "wall_time": 486.74950337409973
+        },
+        {
+          "agent": 15,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 239175,
+            "completion": 17131,
+            "total": 256306
+          },
+          "wall_time": 431.8795771598816
+        }
+      ],
+      "p90_ttft": 0.16614093959731546,
+      "p90_tps": 41.2192710984893,
+      "holds_slo_p90": true,
+      "p99_ttft": 0.9681250000000006,
+      "p99_tps": 14.56588955208989,
+      "e2e_p50": 1.4991883116883118,
+      "e2e_p99": 38.98000000000002,
+      "server_tokens": {
+        "prompt": 8584718,
+        "generation": 246396
+      },
+      "tokens_source": "server",
+      "tokens_per_hour": 56525979.45438537,
+      "cost_per_mtok": 0.03520505118546182,
+      "cost_per_mtok_output": 1.2617892351931381,
+      "prefix_cache_hit_rate": 0.9615039189406105,
+      "computed_tokens_per_hour": 3692441.0523710945,
+      "utilization": 0.12243000854957996,
+      "underutilization_penalty": 8.167932125848331
+    },
+    {
+      "devs": 32,
+      "holds_slo": true,
+      "slo_percentile": "p50",
+      "median_ttft": 0.13181293302540414,
+      "median_tps": 22.185725884769074,
+      "cost_per_dev_hour": 0.0621875,
+      "cost_per_dev_month": 45.396875,
+      "valid": true,
+      "agents_ok": 17,
+      "tokens_per_dev": 305945,
+      "agents": [
+        {
+          "agent": 0,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 146868,
+            "completion": 11392,
+            "total": 158260
+          },
+          "wall_time": 691.3477811813354
+        },
+        {
+          "agent": 1,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": false,
+              "exit_code": 2,
+              "output": "node_modules/@vitest/runner/dist/tasks.d-DEYaIMIu.d.ts(1292,19): error TS2304: Cannot find name 'AbortSignal'.\nnode_modules/@vitest/utils/dist/timers.d.ts(8,21): error TS2304: Cannot find name 'setTimeout'.\nnode_modules/@vitest/utils/dist/timers.d.ts(9,22): error TS2304: Cannot find name 'setInterval'.\nnode_modules/@vitest/utils/dist/timers.d.ts(10,24): error TS2304: Cannot find name 'clearInterval'.\nnode_modules/@vitest/utils/dist/timers.d.ts(11,23): error TS2304: Cannot find name 'clearTimeout'.\nnode_modules/@vitest/utils/dist/timers.d.ts(12,25): error TS2304: Cannot find name 'queueMicrotask'.\nnode_modules/@vitest/utils/dist/timers.d.ts(30,60): error TS2552: Cannot find name 'setTimeout'. Did you mean 'timeout'?\nnode_modules/tinybench/dist/index.d.ts(6,28): error TS2304: Cannot find name 'EventTarget'.\nnode_modules/tinybench/dist/index.d.ts(157,30): error TS2304: Cannot find name 'Event'.\nnode_modules/tinybench/dist/index.d.ts(201,14): error TS2304: Cannot find name 'AbortSignal'.\nnode_modules/tinybench/dist/index.d.ts(223,19): error TS2304: Cannot find name 'Event'.\nnode_modules/tinybench/dist/index.d.ts(226,61): error TS2304: Cannot find name 'EventTarget'.\nnode_modules/tinybench/dist/index.d.ts(227,58): error TS2304: Cannot find name 'EventTarget'.\nnode_modules/tinybench/dist/index.d.ts(233,29): error TS2304: Cannot find name 'EventTarget'.\nnode_modules/tinybench/dist/index.d.ts(248,14): error TS2304: Cannot find name 'AbortSignal'.\nnode_modules/vite/dist/node/chunks/moduleRunnerTransport.d.ts(92,27): error TS2304: Cannot find name 'WebSocket'.\nnode_modules/vite/types/customEvent.d.ts(36,14): error TS2304: Cannot find name 'WebSocket'.\nnode_modules/vitest/dist/chunks/worker.d.ZpHpO4yb.d.ts(188,45): error TS7017: Element implicitly has an 'any' type because type 'typeof globalThis' has no index signature.\n"
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 478683,
+            "completion": 19930,
+            "total": 498613
+          },
+          "wall_time": 1038.1065232753754
+        },
+        {
+          "agent": 2,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "   \"id\": \"5\",\u001b[39m\n\u001b[32m-     \"priority\": \"medium\",\u001b[39m\n\u001b[32m-     \"title\": \"m\",\u001b[39m\n\u001b[32m-   },\u001b[39m\n\u001b[32m-   {\u001b[39m\n\u001b[32m-     \"createdAt\": 9,\u001b[39m\n\u001b[32m-     \"done\": false,\u001b[39m\n\u001b[32m-     \"id\": \"8\",\u001b[39m\n\u001b[32m-     \"priority\": \"low\",\u001b[39m\n\u001b[32m-     \"title\": \"l\",\u001b[39m\n\u001b[32m-   },\u001b[39m\n\u001b[31m+   \"6\",\u001b[39m\n\u001b[31m+   \"7\",\u001b[39m\n\u001b[31m+   \"5\",\u001b[39m\n\u001b[31m+   \"8\",\u001b[39m\n\u001b[2m  ]\u001b[22m\n\n\u001b[36m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m44:43\u001b[22m\u001b[39m\n    \u001b[90m 42|\u001b[39m     \u001b[35mconst\u001b[39m h2 \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"h2\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"high\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m 43|\u001b[39m     \u001b[35mconst\u001b[39m l \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"l\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"low\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m 44|\u001b[39m     \u001b[34mexpect\u001b[39m(\u001b[34mlistTasks\u001b[39m(b)\u001b[33m.\u001b[39m\u001b[34mmap\u001b[39m((t) \u001b[33m=>\u001b[39m t\u001b[33m.\u001b[39mid))\u001b[33m.\u001b[39m\u001b[34mtoEqual\u001b[39m([h1\u001b[33m,\u001b[39m h2\u001b[33m,\u001b[39m m\u001b[33m,\u001b[39m l])\u001b[33m;\u001b[39m\n    \u001b[90m   |\u001b[39m                                           \u001b[31m^\u001b[39m\n    \u001b[90m 45|\u001b[39m   })\u001b[33m;\u001b[39m\n    \u001b[90m 46|\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[3/4]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mstats counts total, done, pending\n\u001b[31m\u001b[1mError\u001b[22m: Task with id [object Object] not found\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m completeTask src/board.ts:\u001b[2m58:11\u001b[22m\u001b[39m\n    \u001b[90m 56|\u001b[39m   \u001b[35mconst\u001b[39m task \u001b[33m=\u001b[39m board\u001b[33m.\u001b[39mtasks\u001b[33m.\u001b[39m\u001b[34mfind\u001b[39m(t \u001b[33m=>\u001b[39m t\u001b[33m.\u001b[39mid \u001b[33m===\u001b[39m id)\u001b[33m;\u001b[39m\n    \u001b[90m 57|\u001b[39m   \u001b[35mif\u001b[39m (\u001b[33m!\u001b[39mtask) {\n    \u001b[90m 58|\u001b[39m     \u001b[35mthrow\u001b[39m \u001b[35mnew\u001b[39m \u001b[33mError\u001b[39m(\u001b[32m`Task with id \u001b[39m\u001b[36m${\u001b[39mid\u001b[36m}\u001b[39m\u001b[32m not found`\u001b[39m)\u001b[33m;\u001b[39m\n    \u001b[90m   |\u001b[39m           \u001b[31m^\u001b[39m\n    \u001b[90m 59|\u001b[39m   }\n    \u001b[90m 60|\u001b[39m   task\u001b[33m.\u001b[39mdone \u001b[33m=\u001b[39m \u001b[35mtrue\u001b[39m\u001b[33m;\u001b[39m\n\u001b[90m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m51:5\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[4/4]\u23af\u001b[22m\u001b[39m\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 146167,
+            "completion": 13686,
+            "total": 159853
+          },
+          "wall_time": 810.8739130496979
+        },
+        {
+          "agent": 3,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 348216,
+            "completion": 17533,
+            "total": 365749
+          },
+          "wall_time": 916.3999481201172
+        },
+        {
+          "agent": 4,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 230701,
+            "completion": 14152,
+            "total": 244853
+          },
+          "wall_time": 871.8585703372955
+        },
+        {
+          "agent": 5,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 193049,
+            "completion": 14017,
+            "total": 207066
+          },
+          "wall_time": 870.9299614429474
+        },
+        {
+          "agent": 6,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 481869,
+            "completion": 26645,
+            "total": 508514
+          },
+          "wall_time": 1106.2225272655487
+        },
+        {
+          "agent": 7,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": false,
+              "exit_code": 2,
+              "output": "tests/board.test.ts(2,10): error TS2459: Module '\"../src/board\"' declares 'createBoard' locally, but it is not exported.\n"
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"hi\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"high\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m 32|\u001b[39m     \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"lo\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"low\"\u001b[39m })\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[4/6]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mlistTasks sorts by priority then createdAt ascending\n\u001b[31m\u001b[1mTypeError\u001b[22m: createBoard is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m39:15\u001b[22m\u001b[39m\n    \u001b[90m 37|\u001b[39m\n    \u001b[90m 38|\u001b[39m   \u001b[34mit\u001b[39m(\u001b[32m\"listTasks sorts by priority then createdAt ascending\"\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n    \u001b[90m 39|\u001b[39m     \u001b[35mconst\u001b[39m b \u001b[33m=\u001b[39m \u001b[34mcreateBoard\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m   |\u001b[39m               \u001b[31m^\u001b[39m\n    \u001b[90m 40|\u001b[39m     \u001b[35mconst\u001b[39m m \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"m\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"medium\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m 41|\u001b[39m     \u001b[35mconst\u001b[39m h1 \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"h1\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"high\"\u001b[39m })\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[5/6]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mstats counts total, done, pending\n\u001b[31m\u001b[1mTypeError\u001b[22m: createBoard is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m48:15\u001b[22m\u001b[39m\n    \u001b[90m 46|\u001b[39m\n    \u001b[90m 47|\u001b[39m   \u001b[34mit\u001b[39m(\u001b[32m\"stats counts total, done, pending\"\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n    \u001b[90m 48|\u001b[39m     \u001b[35mconst\u001b[39m b \u001b[33m=\u001b[39m \u001b[34mcreateBoard\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m   |\u001b[39m               \u001b[31m^\u001b[39m\n    \u001b[90m 49|\u001b[39m     \u001b[35mconst\u001b[39m a \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"a\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m 50|\u001b[39m     \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"b\"\u001b[39m })\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[6/6]\u23af\u001b[22m\u001b[39m\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 590148,
+            "completion": 21639,
+            "total": 611787
+          },
+          "wall_time": 1061.961849451065
+        },
+        {
+          "agent": 8,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 391632,
+            "completion": 25026,
+            "total": 416658
+          },
+          "wall_time": 1104.3452780246735
+        },
+        {
+          "agent": 9,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 303296,
+            "completion": 19034,
+            "total": 322330
+          },
+          "wall_time": 987.099517583847
+        },
+        {
+          "agent": 10,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": false,
+              "exit_code": 2,
+              "output": "on type 'string'.\ntests/board.test.ts(20,18): error TS2339: Property 'id' does not exist on type 'string'.\ntests/board.test.ts(21,18): error TS2339: Property 'id' does not exist on type 'string'.\ntests/board.test.ts(26,33): error TS2345: Argument of type 'string' is not assignable to parameter of type '{ title: string; priority?: Priority | undefined; }'.\ntests/board.test.ts(28,17): error TS2339: Property 'priority' does not exist on type 'string'.\ntests/board.test.ts(34,33): error TS2345: Argument of type 'string' is not assignable to parameter of type '{ title: string; priority?: Priority | undefined; }'.\ntests/board.test.ts(35,33): error TS2345: Argument of type 'string' is not assignable to parameter of type '{ title: string; priority?: Priority | undefined; }'.\ntests/board.test.ts(40,33): error TS2345: Argument of type 'string' is not assignable to parameter of type '{ title: string; priority?: Priority | undefined; }'.\ntests/board.test.ts(42,17): error TS2339: Property 'completed' does not exist on type 'string'.\ntests/board.test.ts(44,30): error TS2339: Property 'id' does not exist on type 'string'.\ntests/board.test.ts(46,17): error TS2339: Property 'completed' does not exist on type 'string'.\ntests/board.test.ts(56,51): error TS2554: Expected 2 arguments, but got 3.\ntests/board.test.ts(59,53): error TS2554: Expected 2 arguments, but got 3.\ntests/board.test.ts(62,52): error TS2554: Expected 2 arguments, but got 3.\ntests/board.test.ts(63,52): error TS2554: Expected 2 arguments, but got 3.\ntests/board.test.ts(83,30): error TS2554: Expected 2 arguments, but got 3.\ntests/board.test.ts(84,30): error TS2554: Expected 2 arguments, but got 3.\ntests/board.test.ts(85,30): error TS2554: Expected 2 arguments, but got 3.\ntests/board.test.ts(87,43): error TS2554: Expected 2 arguments, but got 3.\ntests/board.test.ts(88,30): error TS2339: Property 'id' does not exist on type 'string'.\ntests/board.test.ts(93,23): error TS2339: Property 'completed' does not exist on type '{ total: number; done: number; pending: number; }'.\n"
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "9 \u001b[39m\u001b[90m/out/workspace\u001b[39m\n\n \u001b[31m\u276f\u001b[39m acceptance.test.ts \u001b[2m(\u001b[22m\u001b[2m6 tests\u001b[22m\u001b[2m | \u001b[22m\u001b[31m1 failed\u001b[39m\u001b[2m)\u001b[22m\u001b[32m 7\u001b[2mms\u001b[22m\u001b[39m\n     \u001b[32m\u2713\u001b[39m addTask returns unique ids and defaults priority to medium\u001b[32m 2\u001b[2mms\u001b[22m\u001b[39m\n     \u001b[32m\u2713\u001b[39m addTask rejects empty/blank titles\u001b[32m 1\u001b[2mms\u001b[22m\u001b[39m\n     \u001b[32m\u2713\u001b[39m completeTask marks done and throws on unknown id\u001b[32m 0\u001b[2mms\u001b[22m\u001b[39m\n\u001b[31m     \u001b[31m\u00d7\u001b[31m listTasks filters by done and by priority\u001b[39m\u001b[32m 4\u001b[2mms\u001b[22m\u001b[39m\n     \u001b[32m\u2713\u001b[39m listTasks sorts by priority then createdAt ascending\u001b[32m 0\u001b[2mms\u001b[22m\u001b[39m\n     \u001b[32m\u2713\u001b[39m stats counts total, done, pending\u001b[32m 0\u001b[2mms\u001b[22m\u001b[39m\n\n\u001b[2m Test Files \u001b[22m \u001b[1m\u001b[31m1 failed\u001b[39m\u001b[22m\u001b[90m (1)\u001b[39m\n\u001b[2m      Tests \u001b[22m \u001b[1m\u001b[31m1 failed\u001b[39m\u001b[22m\u001b[2m | \u001b[22m\u001b[1m\u001b[32m5 passed\u001b[39m\u001b[22m\u001b[90m (6)\u001b[39m\n\u001b[2m   Start at \u001b[22m 15:47:02\n\u001b[2m   Duration \u001b[22m 194ms\u001b[2m (transform 31ms, setup 0ms, import 44ms, tests 7ms, environment 0ms)\u001b[22m\n\n\n\u001b[31m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u001b[39m\u001b[1m\u001b[41m Failed Tests 1 \u001b[49m\u001b[22m\u001b[31m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mlistTasks filters by done and by priority\n\u001b[31m\u001b[1mAssertionError\u001b[22m: expected 2 to be 1 // Object.is equality\u001b[39m\n\n\u001b[32m- Expected\u001b[39m\n\u001b[31m+ Received\u001b[39m\n\n\u001b[32m- 1\u001b[39m\n\u001b[31m+ 2\u001b[39m\n\n\u001b[36m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m34:50\u001b[22m\u001b[39m\n    \u001b[90m 32|\u001b[39m     \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"lo\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"low\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m 33|\u001b[39m     \u001b[34mcompleteTask\u001b[39m(b\u001b[33m,\u001b[39m hi)\u001b[33m;\u001b[39m\n    \u001b[90m 34|\u001b[39m     \u001b[34mexpect\u001b[39m(\u001b[34mlistTasks\u001b[39m(b\u001b[33m,\u001b[39m { done\u001b[33m:\u001b[39m \u001b[35mfalse\u001b[39m })\u001b[33m.\u001b[39mlength)\u001b[33m.\u001b[39m\u001b[34mtoBe\u001b[39m(\u001b[34m1\u001b[39m)\u001b[33m;\u001b[39m\n    \u001b[90m   |\u001b[39m                                                  \u001b[31m^\u001b[39m\n    \u001b[90m 35|\u001b[39m     expect(listTasks(b, { priority: \"high\" }).map((t) => t.id)).toEqua\u2026\n    \u001b[90m 36|\u001b[39m   })\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[1/1]\u23af\u001b[22m\u001b[39m\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 225964,
+            "completion": 17370,
+            "total": 243334
+          },
+          "wall_time": 939.9783477783203
+        },
+        {
+          "agent": 11,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "   \u001b[34mcompleteTask\u001b[39m(b\u001b[33m,\u001b[39m hi)\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[3/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mlistTasks sorts by priority then createdAt ascending\n\u001b[31m\u001b[1mTypeError\u001b[22m: addTask is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m40:15\u001b[22m\u001b[39m\n    \u001b[90m 38|\u001b[39m   \u001b[34mit\u001b[39m(\u001b[32m\"listTasks sorts by priority then createdAt ascending\"\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n    \u001b[90m 39|\u001b[39m     \u001b[35mconst\u001b[39m b \u001b[33m=\u001b[39m \u001b[34mcreateBoard\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m 40|\u001b[39m     \u001b[35mconst\u001b[39m m \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"m\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"medium\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m   |\u001b[39m               \u001b[31m^\u001b[39m\n    \u001b[90m 41|\u001b[39m     \u001b[35mconst\u001b[39m h1 \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"h1\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"high\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m 42|\u001b[39m     \u001b[35mconst\u001b[39m h2 \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"h2\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"high\"\u001b[39m })\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[4/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mstats counts total, done, pending\n\u001b[31m\u001b[1mTypeError\u001b[22m: addTask is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m49:15\u001b[22m\u001b[39m\n    \u001b[90m 47|\u001b[39m   \u001b[34mit\u001b[39m(\u001b[32m\"stats counts total, done, pending\"\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n    \u001b[90m 48|\u001b[39m     \u001b[35mconst\u001b[39m b \u001b[33m=\u001b[39m \u001b[34mcreateBoard\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m 49|\u001b[39m     \u001b[35mconst\u001b[39m a \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"a\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m   |\u001b[39m               \u001b[31m^\u001b[39m\n    \u001b[90m 50|\u001b[39m     \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"b\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m 51|\u001b[39m     \u001b[34mcompleteTask\u001b[39m(b\u001b[33m,\u001b[39m a)\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[5/5]\u23af\u001b[22m\u001b[39m\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 254985,
+            "completion": 17144,
+            "total": 272129
+          },
+          "wall_time": 956.2488129138947
+        },
+        {
+          "agent": 12,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": false,
+              "exit_code": 2,
+              "output": "error TS18003: No inputs were found in config file '/out/workspace/tsconfig.json'. Specified 'include' paths were '[\"src/**/*\",\"test/**/*\"]' and 'exclude' paths were '[]'.\n"
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "\n RUN  v1.6.1 /out/workspace\n\n \u276f acceptance.test.ts  (0 test)\n\n Test Files  1 failed (1)\n      Tests  no tests\n   Start at  15:47:06\n   Duration  561ms (transform 43ms, setup 0ms, collect 0ms, tests 0ms, environment 0ms, prepare 114ms)\n\n\u23af\u23af\u23af\u23af\u23af\u23af Failed Suites 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af\n\n FAIL  acceptance.test.ts [ acceptance.test.ts ]\nError: Failed to load url ./src/board (resolved id: ./src/board) in /out/workspace/acceptance.test.ts. Does the file exist?\n \u276f loadAndTransform node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51969:17\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[1/1]\u23af\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 353076,
+            "completion": 17217,
+            "total": 370293
+          },
+          "wall_time": 999.6119256019592
+        },
+        {
+          "agent": 13,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": false,
+              "exit_code": 2,
+              "output": "ring'.\ntest/board.test.ts(28,16): error TS2339: Property 'id' does not exist on type 'string'.\ntest/board.test.ts(28,35): error TS2339: Property 'id' does not exist on type 'string'.\ntest/board.test.ts(36,15): error TS2339: Property 'priority' does not exist on type 'string'.\ntest/board.test.ts(59,15): error TS2339: Property 'completed' does not exist on type 'string'.\ntest/board.test.ts(60,28): error TS2339: Property 'id' does not exist on type 'string'.\ntest/board.test.ts(61,15): error TS2339: Property 'completed' does not exist on type 'string'.\ntest/board.test.ts(79,29): error TS2339: Property 'id' does not exist on type 'string'.\ntest/board.test.ts(80,29): error TS2339: Property 'id' does not exist on type 'string'.\ntest/board.test.ts(93,37): error TS2339: Property 'id' does not exist on type 'string'.\ntest/board.test.ts(94,37): error TS2339: Property 'id' does not exist on type 'string'.\ntest/board.test.ts(95,37): error TS2339: Property 'id' does not exist on type 'string'.\ntest/board.test.ts(96,37): error TS2339: Property 'id' does not exist on type 'string'.\ntest/board.test.ts(97,37): error TS2339: Property 'id' does not exist on type 'string'.\ntest/board.test.ts(109,21): error TS2339: Property 'completed' does not exist on type '{ total: number; done: number; pending: number; }'.\ntest/board.test.ts(114,22): error TS2339: Property 'completed' does not exist on type '{ total: number; done: number; pending: number; }'.\ntest/board.test.ts(119,22): error TS2339: Property 'completed' does not exist on type '{ total: number; done: number; pending: number; }'.\ntest/board.test.ts(141,22): error TS2339: Property 'completed' does not exist on type 'Task'.\ntest/board.test.ts(142,22): error TS2339: Property 'completed' does not exist on type 'Task'.\ntest/board.test.ts(143,22): error TS2339: Property 'completed' does not exist on type 'Task'.\ntest/board.test.ts(157,34): error TS2339: Property 'id' does not exist on type 'string'.\ntest/board.test.ts(158,34): error TS2339: Property 'id' does not exist on type 'string'.\n"
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "9m\n\u001b[90m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m31:16\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[3/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mlistTasks sorts by priority then createdAt ascending\n\u001b[31m\u001b[1mTypeError\u001b[22m: title.trim is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m Object.addTask src/board.ts:\u001b[2m25:27\u001b[22m\u001b[39m\n    \u001b[90m 23|\u001b[39m   \u001b[35mreturn\u001b[39m {\n    \u001b[90m 24|\u001b[39m     \u001b[34maddTask\u001b[39m(title\u001b[33m:\u001b[39m string\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[33mPriority\u001b[39m \u001b[33m=\u001b[39m \u001b[32m'medium'\u001b[39m)\u001b[33m:\u001b[39m string {\n    \u001b[90m 25|\u001b[39m       \u001b[35mif\u001b[39m (\u001b[33m!\u001b[39mtitle \u001b[33m||\u001b[39m title\u001b[33m.\u001b[39m\u001b[34mtrim\u001b[39m() \u001b[33m===\u001b[39m \u001b[32m''\u001b[39m) {\n    \u001b[90m   |\u001b[39m                           \u001b[31m^\u001b[39m\n    \u001b[90m 26|\u001b[39m         \u001b[35mthrow\u001b[39m \u001b[35mnew\u001b[39m \u001b[33mError\u001b[39m(\u001b[32m'Task title cannot be empty'\u001b[39m)\u001b[33m;\u001b[39m\n    \u001b[90m 27|\u001b[39m       }\n\u001b[90m \u001b[2m\u276f\u001b[22m addTask src/board.ts:\u001b[2m89:16\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m40:15\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[4/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mstats counts total, done, pending\n\u001b[31m\u001b[1mTypeError\u001b[22m: title.trim is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m Object.addTask src/board.ts:\u001b[2m25:27\u001b[22m\u001b[39m\n    \u001b[90m 23|\u001b[39m   \u001b[35mreturn\u001b[39m {\n    \u001b[90m 24|\u001b[39m     \u001b[34maddTask\u001b[39m(title\u001b[33m:\u001b[39m string\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[33mPriority\u001b[39m \u001b[33m=\u001b[39m \u001b[32m'medium'\u001b[39m)\u001b[33m:\u001b[39m string {\n    \u001b[90m 25|\u001b[39m       \u001b[35mif\u001b[39m (\u001b[33m!\u001b[39mtitle \u001b[33m||\u001b[39m title\u001b[33m.\u001b[39m\u001b[34mtrim\u001b[39m() \u001b[33m===\u001b[39m \u001b[32m''\u001b[39m) {\n    \u001b[90m   |\u001b[39m                           \u001b[31m^\u001b[39m\n    \u001b[90m 26|\u001b[39m         \u001b[35mthrow\u001b[39m \u001b[35mnew\u001b[39m \u001b[33mError\u001b[39m(\u001b[32m'Task title cannot be empty'\u001b[39m)\u001b[33m;\u001b[39m\n    \u001b[90m 27|\u001b[39m       }\n\u001b[90m \u001b[2m\u276f\u001b[22m addTask src/board.ts:\u001b[2m89:16\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m49:15\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[5/5]\u23af\u001b[22m\u001b[39m\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 412040,
+            "completion": 24792,
+            "total": 436832
+          },
+          "wall_time": 1084.5068728923798
+        },
+        {
+          "agent": 14,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 546277,
+            "completion": 26218,
+            "total": 572495
+          },
+          "wall_time": 1119.137125492096
+        },
+        {
+          "agent": 15,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": false,
+              "exit_code": 2,
+              "output": "test/board.test.ts(15,17): error TS2339: Property 'title' does not exist on type 'string'.\ntest/board.test.ts(16,17): error TS2339: Property 'priority' does not exist on type 'string'.\ntest/board.test.ts(17,17): error TS2339: Property 'completed' does not exist on type 'string'.\ntest/board.test.ts(18,17): error TS2339: Property 'id' does not exist on type 'string'.\ntest/board.test.ts(19,17): error TS2339: Property 'createdAt' does not exist on type 'string'.\ntest/board.test.ts(26,17): error TS2339: Property 'priority' does not exist on type 'string'.\ntest/board.test.ts(41,18): error TS2339: Property 'id' does not exist on type 'string'.\ntest/board.test.ts(41,37): error TS2339: Property 'id' does not exist on type 'string'.\ntest/board.test.ts(42,18): error TS2339: Property 'createdAt' does not exist on type 'string'.\ntest/board.test.ts(42,51): error TS2339: Property 'createdAt' does not exist on type 'string'.\ntest/board.test.ts(49,17): error TS2339: Property 'completed' does not exist on type 'string'.\ntest/board.test.ts(50,30): error TS2339: Property 'id' does not exist on type 'string'.\ntest/board.test.ts(51,17): error TS2339: Property 'completed' does not exist on type 'string'.\ntest/board.test.ts(86,30): error TS2339: Property 'id' does not exist on type 'string'.\ntest/board.test.ts(88,20): error TS2339: Property 'completed' does not exist on type '{ total: number; done: number; pending: number; }'.\n"
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "m31:16\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[3/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mlistTasks sorts by priority then createdAt ascending\n\u001b[31m\u001b[1mTypeError\u001b[22m: title.trim is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m Object.addTask src/board.ts:\u001b[2m26:27\u001b[22m\u001b[39m\n    \u001b[90m 24|\u001b[39m     \u001b[34maddTask\u001b[39m(title\u001b[33m:\u001b[39m string\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[33mPriority\u001b[39m \u001b[33m=\u001b[39m \u001b[32m'medium'\u001b[39m)\u001b[33m:\u001b[39m \u001b[33mTask\u001b[39m {\n    \u001b[90m 25|\u001b[39m       \u001b[90m// Validate title\u001b[39m\n    \u001b[90m 26|\u001b[39m       \u001b[35mif\u001b[39m (\u001b[33m!\u001b[39mtitle \u001b[33m||\u001b[39m title\u001b[33m.\u001b[39m\u001b[34mtrim\u001b[39m() \u001b[33m===\u001b[39m \u001b[32m''\u001b[39m) {\n    \u001b[90m   |\u001b[39m                           \u001b[31m^\u001b[39m\n    \u001b[90m 27|\u001b[39m         \u001b[35mthrow\u001b[39m \u001b[35mnew\u001b[39m \u001b[33mError\u001b[39m(\u001b[32m'Task title cannot be empty'\u001b[39m)\u001b[33m;\u001b[39m\n    \u001b[90m 28|\u001b[39m       }\n\u001b[90m \u001b[2m\u276f\u001b[22m addTask src/board.ts:\u001b[2m97:22\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m40:15\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[4/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mstats counts total, done, pending\n\u001b[31m\u001b[1mTypeError\u001b[22m: title.trim is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m Object.addTask src/board.ts:\u001b[2m26:27\u001b[22m\u001b[39m\n    \u001b[90m 24|\u001b[39m     \u001b[34maddTask\u001b[39m(title\u001b[33m:\u001b[39m string\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[33mPriority\u001b[39m \u001b[33m=\u001b[39m \u001b[32m'medium'\u001b[39m)\u001b[33m:\u001b[39m \u001b[33mTask\u001b[39m {\n    \u001b[90m 25|\u001b[39m       \u001b[90m// Validate title\u001b[39m\n    \u001b[90m 26|\u001b[39m       \u001b[35mif\u001b[39m (\u001b[33m!\u001b[39mtitle \u001b[33m||\u001b[39m title\u001b[33m.\u001b[39m\u001b[34mtrim\u001b[39m() \u001b[33m===\u001b[39m \u001b[32m''\u001b[39m) {\n    \u001b[90m   |\u001b[39m                           \u001b[31m^\u001b[39m\n    \u001b[90m 27|\u001b[39m         \u001b[35mthrow\u001b[39m \u001b[35mnew\u001b[39m \u001b[33mError\u001b[39m(\u001b[32m'Task title cannot be empty'\u001b[39m)\u001b[33m;\u001b[39m\n    \u001b[90m 28|\u001b[39m       }\n\u001b[90m \u001b[2m\u276f\u001b[22m addTask src/board.ts:\u001b[2m97:22\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m49:15\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[5/5]\u23af\u001b[22m\u001b[39m\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 157925,
+            "completion": 9977,
+            "total": 167902
+          },
+          "wall_time": 600.9908299446106
+        },
+        {
+          "agent": 16,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 310740,
+            "completion": 18804,
+            "total": 329544
+          },
+          "wall_time": 984.1079134941101
+        },
+        {
+          "agent": 17,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 286575,
+            "completion": 18133,
+            "total": 304708
+          },
+          "wall_time": 984.5480859279633
+        },
+        {
+          "agent": 18,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 165520,
+            "completion": 14496,
+            "total": 180016
+          },
+          "wall_time": 854.2030265331268
+        },
+        {
+          "agent": 19,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": false,
+              "exit_code": 2,
+              "output": "ll type definitions for node? Try `npm i --save-dev @types/node`.\nnode_modules/vite/dist/node/index.d.ts(1389,20): error TS2580: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nnode_modules/vite/dist/node/index.d.ts(2401,63): error TS2580: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nnode_modules/vite/dist/node/index.d.ts(3561,84): error TS2580: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(11,26): error TS2307: Cannot find module 'node:stream' or its corresponding type declarations.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(15,29): error TS2307: Cannot find module 'node:worker_threads' or its corresponding type declarations.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(16,23): error TS2307: Cannot find module 'node:fs' or its corresponding type declarations.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(528,10): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(622,19): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(623,18): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(628,45): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(628,90): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(947,13): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(948,14): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(949,14): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(1776,21): error TS2580: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\n"
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 288178,
+            "completion": 12995,
+            "total": 301173
+          },
+          "wall_time": 722.4201805591583
+        },
+        {
+          "agent": 20,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": false,
+              "exit_code": 2,
+              "output": "test/board.test.ts(42,15): error TS2339: Property 'completed' does not exist on type 'Task'.\ntest/board.test.ts(46,15): error TS2339: Property 'completed' does not exist on type 'Task'.\n"
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "26|\u001b[39m   \u001b[35mif\u001b[39m (\u001b[33m!\u001b[39mtitle \u001b[33m||\u001b[39m title\u001b[33m.\u001b[39m\u001b[34mtrim\u001b[39m() \u001b[33m===\u001b[39m \u001b[32m''\u001b[39m) {\n    \u001b[90m   |\u001b[39m                       \u001b[31m^\u001b[39m\n    \u001b[90m 27|\u001b[39m     \u001b[35mthrow\u001b[39m \u001b[35mnew\u001b[39m \u001b[33mError\u001b[39m(\u001b[32m'Title cannot be empty'\u001b[39m)\u001b[33m;\u001b[39m\n    \u001b[90m 28|\u001b[39m   }\n\u001b[90m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m31:16\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[3/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mlistTasks sorts by priority then createdAt ascending\n\u001b[31m\u001b[1mTypeError\u001b[22m: title.trim is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m addTask src/board.ts:\u001b[2m26:23\u001b[22m\u001b[39m\n    \u001b[90m 24|\u001b[39m export function addTask(board: Board, title: string, priority: Priorit\u2026\n    \u001b[90m 25|\u001b[39m   \u001b[90m// Validate title\u001b[39m\n    \u001b[90m 26|\u001b[39m   \u001b[35mif\u001b[39m (\u001b[33m!\u001b[39mtitle \u001b[33m||\u001b[39m title\u001b[33m.\u001b[39m\u001b[34mtrim\u001b[39m() \u001b[33m===\u001b[39m \u001b[32m''\u001b[39m) {\n    \u001b[90m   |\u001b[39m                       \u001b[31m^\u001b[39m\n    \u001b[90m 27|\u001b[39m     \u001b[35mthrow\u001b[39m \u001b[35mnew\u001b[39m \u001b[33mError\u001b[39m(\u001b[32m'Title cannot be empty'\u001b[39m)\u001b[33m;\u001b[39m\n    \u001b[90m 28|\u001b[39m   }\n\u001b[90m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m40:15\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[4/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mstats counts total, done, pending\n\u001b[31m\u001b[1mTypeError\u001b[22m: title.trim is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m addTask src/board.ts:\u001b[2m26:23\u001b[22m\u001b[39m\n    \u001b[90m 24|\u001b[39m export function addTask(board: Board, title: string, priority: Priorit\u2026\n    \u001b[90m 25|\u001b[39m   \u001b[90m// Validate title\u001b[39m\n    \u001b[90m 26|\u001b[39m   \u001b[35mif\u001b[39m (\u001b[33m!\u001b[39mtitle \u001b[33m||\u001b[39m title\u001b[33m.\u001b[39m\u001b[34mtrim\u001b[39m() \u001b[33m===\u001b[39m \u001b[32m''\u001b[39m) {\n    \u001b[90m   |\u001b[39m                       \u001b[31m^\u001b[39m\n    \u001b[90m 27|\u001b[39m     \u001b[35mthrow\u001b[39m \u001b[35mnew\u001b[39m \u001b[33mError\u001b[39m(\u001b[32m'Title cannot be empty'\u001b[39m)\u001b[33m;\u001b[39m\n    \u001b[90m 28|\u001b[39m   }\n\u001b[90m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m49:15\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[5/5]\u23af\u001b[22m\u001b[39m\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 333020,
+            "completion": 15269,
+            "total": 348289
+          },
+          "wall_time": 915.3548495769501
+        },
+        {
+          "agent": 21,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": false,
+              "exit_code": 2,
+              "output": "| undefined; }'.\ntest/taskboard.test.ts(32,33): error TS2345: Argument of type 'string' is not assignable to parameter of type '{ title: string; priority?: Priority | undefined; }'.\ntest/taskboard.test.ts(33,33): error TS2345: Argument of type 'string' is not assignable to parameter of type '{ title: string; priority?: Priority | undefined; }'.\ntest/taskboard.test.ts(39,33): error TS2345: Argument of type 'string' is not assignable to parameter of type '{ title: string; priority?: Priority | undefined; }'.\ntest/taskboard.test.ts(41,17): error TS2339: Property 'completed' does not exist on type 'string'.\ntest/taskboard.test.ts(43,30): error TS2339: Property 'id' does not exist on type 'string'.\ntest/taskboard.test.ts(45,17): error TS2339: Property 'completed' does not exist on type 'string'.\ntest/taskboard.test.ts(55,55): error TS2554: Expected 2 arguments, but got 3.\ntest/taskboard.test.ts(56,56): error TS2554: Expected 2 arguments, but got 3.\ntest/taskboard.test.ts(57,58): error TS2554: Expected 2 arguments, but got 3.\ntest/taskboard.test.ts(58,63): error TS2554: Expected 2 arguments, but got 3.\ntest/taskboard.test.ts(61,31): error TS2339: Property 'id' does not exist on type 'string'.\ntest/taskboard.test.ts(79,20): error TS2345: Argument of type 'string' is not assignable to parameter of type '{ title: string; priority?: Priority | undefined; }'.\ntest/taskboard.test.ts(80,30): error TS2554: Expected 2 arguments, but got 3.\ntest/taskboard.test.ts(81,30): error TS2554: Expected 2 arguments, but got 3.\ntest/taskboard.test.ts(86,19): error TS2339: Property 'completed' does not exist on type '{ total: number; done: number; pending: number; }'.\ntest/taskboard.test.ts(96,19): error TS2339: Property 'completed' does not exist on type '{ total: number; done: number; pending: number; }'.\ntest/taskboard.test.ts(104,44): error TS2554: Expected 2 arguments, but got 3.\ntest/taskboard.test.ts(106,44): error TS2554: Expected 2 arguments, but got 3.\ntest/taskboard.test.ts(115,44): error TS2554: Expected 2 arguments, but got 3.\n"
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 215456,
+            "completion": 19438,
+            "total": 234894
+          },
+          "wall_time": 965.2503342628479
+        },
+        {
+          "agent": 22,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 292636,
+            "completion": 14547,
+            "total": 307183
+          },
+          "wall_time": 876.2116522789001
+        },
+        {
+          "agent": 23,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 461348,
+            "completion": 27578,
+            "total": 488926
+          },
+          "wall_time": 1113.7281470298767
+        },
+        {
+          "agent": 24,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 250654,
+            "completion": 13813,
+            "total": 264467
+          },
+          "wall_time": 866.0547752380371
+        },
+        {
+          "agent": 25,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "22m acceptance.test.ts:\u001b[2m31:16\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[3/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mlistTasks sorts by priority then createdAt ascending\n\u001b[31m\u001b[1mTypeError\u001b[22m: title.trim is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m Object.addTask src/board.ts:\u001b[2m25:27\u001b[22m\u001b[39m\n    \u001b[90m 23|\u001b[39m   \u001b[35mreturn\u001b[39m {\n    \u001b[90m 24|\u001b[39m     \u001b[34maddTask\u001b[39m(title\u001b[33m:\u001b[39m string\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[33mPriority\u001b[39m \u001b[33m=\u001b[39m \u001b[32m'medium'\u001b[39m)\u001b[33m:\u001b[39m \u001b[33mTask\u001b[39m {\n    \u001b[90m 25|\u001b[39m       \u001b[35mif\u001b[39m (\u001b[33m!\u001b[39mtitle \u001b[33m||\u001b[39m title\u001b[33m.\u001b[39m\u001b[34mtrim\u001b[39m() \u001b[33m===\u001b[39m \u001b[32m''\u001b[39m) {\n    \u001b[90m   |\u001b[39m                           \u001b[31m^\u001b[39m\n    \u001b[90m 26|\u001b[39m         \u001b[35mthrow\u001b[39m \u001b[35mnew\u001b[39m \u001b[33mError\u001b[39m(\u001b[32m'Task title cannot be empty'\u001b[39m)\u001b[33m;\u001b[39m\n    \u001b[90m 27|\u001b[39m       }\n\u001b[90m \u001b[2m\u276f\u001b[22m addTask src/board.ts:\u001b[2m94:16\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m40:15\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[4/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mstats counts total, done, pending\n\u001b[31m\u001b[1mTypeError\u001b[22m: title.trim is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m Object.addTask src/board.ts:\u001b[2m25:27\u001b[22m\u001b[39m\n    \u001b[90m 23|\u001b[39m   \u001b[35mreturn\u001b[39m {\n    \u001b[90m 24|\u001b[39m     \u001b[34maddTask\u001b[39m(title\u001b[33m:\u001b[39m string\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[33mPriority\u001b[39m \u001b[33m=\u001b[39m \u001b[32m'medium'\u001b[39m)\u001b[33m:\u001b[39m \u001b[33mTask\u001b[39m {\n    \u001b[90m 25|\u001b[39m       \u001b[35mif\u001b[39m (\u001b[33m!\u001b[39mtitle \u001b[33m||\u001b[39m title\u001b[33m.\u001b[39m\u001b[34mtrim\u001b[39m() \u001b[33m===\u001b[39m \u001b[32m''\u001b[39m) {\n    \u001b[90m   |\u001b[39m                           \u001b[31m^\u001b[39m\n    \u001b[90m 26|\u001b[39m         \u001b[35mthrow\u001b[39m \u001b[35mnew\u001b[39m \u001b[33mError\u001b[39m(\u001b[32m'Task title cannot be empty'\u001b[39m)\u001b[33m;\u001b[39m\n    \u001b[90m 27|\u001b[39m       }\n\u001b[90m \u001b[2m\u276f\u001b[22m addTask src/board.ts:\u001b[2m94:16\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m49:15\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[5/5]\u23af\u001b[22m\u001b[39m\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 415040,
+            "completion": 20824,
+            "total": 435864
+          },
+          "wall_time": 1035.3002498149872
+        },
+        {
+          "agent": 26,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 189345,
+            "completion": 12201,
+            "total": 201546
+          },
+          "wall_time": 711.8887450695038
+        },
+        {
+          "agent": 27,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": false,
+              "exit_code": 2,
+              "output": "test/board.test.ts(1,38): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.\n"
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 213367,
+            "completion": 16313,
+            "total": 229680
+          },
+          "wall_time": 889.3453488349915
+        },
+        {
+          "agent": 28,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[1/4]\u23af\n\n FAIL  acceptance.test.ts > TaskBoard acceptance > listTasks filters by done and by priority\nError: Task with id [object Object] not found\n \u276f Module.completeTask src/board.ts:52:11\n     50|   const task = board.tasks.find(t => t.id === taskId);\n     51|   if (!task) {\n     52|     throw new Error(`Task with id ${taskId} not found`);\n       |           ^\n     53|   }\n     54|   task.done = true;\n \u276f acceptance.test.ts:33:5\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[2/4]\u23af\n\n FAIL  acceptance.test.ts > TaskBoard acceptance > listTasks sorts by priority then createdAt ascending\nAssertionError: expected [ '6', '7', '5', '8' ] to deeply equal [ Array(4) ]\n\n- Expected\n+ Received\n\n  Array [\n-   Object {\n-     \"createdAt\": 7,\n-     \"done\": false,\n-     \"id\": \"6\",\n-     \"priority\": \"high\",\n-     \"title\": \"h1\",\n-   },\n-   Object {\n-     \"createdAt\": 8,\n-     \"done\": false,\n-     \"id\": \"7\",\n-     \"priority\": \"high\",\n-     \"title\": \"h2\",\n-   },\n-   Object {\n-     \"createdAt\": 6,\n-     \"done\": false,\n-     \"id\": \"5\",\n-     \"priority\": \"medium\",\n-     \"title\": \"m\",\n-   },\n-   Object {\n-     \"createdAt\": 9,\n-     \"done\": false,\n-     \"id\": \"8\",\n-     \"priority\": \"low\",\n-     \"title\": \"l\",\n-   },\n+   \"6\",\n+   \"7\",\n+   \"5\",\n+   \"8\",\n  ]\n\n \u276f acceptance.test.ts:44:43\n     42|     const h2 = addTask(b, { title: \"h2\", priority: \"high\" });\n     43|     const l = addTask(b, { title: \"l\", priority: \"low\" });\n     44|     expect(listTasks(b).map((t) => t.id)).toEqual([h1, h2, m, l]);\n       |                                           ^\n     45|   });\n     46| \n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[3/4]\u23af\n\n FAIL  acceptance.test.ts > TaskBoard acceptance > stats counts total, done, pending\nError: Task with id [object Object] not found\n \u276f Module.completeTask src/board.ts:52:11\n     50|   const task = board.tasks.find(t => t.id === taskId);\n     51|   if (!task) {\n     52|     throw new Error(`Task with id ${taskId} not found`);\n       |           ^\n     53|   }\n     54|   task.done = true;\n \u276f acceptance.test.ts:51:5\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[4/4]\u23af\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 151407,
+            "completion": 12813,
+            "total": 164220
+          },
+          "wall_time": 739.9018242359161
+        },
+        {
+          "agent": 29,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 251915,
+            "completion": 14447,
+            "total": 266362
+          },
+          "wall_time": 883.2329320907593
+        },
+        {
+          "agent": 30,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "22m addTask src/board.ts:\u001b[2m88:16\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m31:16\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[3/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mlistTasks sorts by priority then createdAt ascending\n\u001b[31m\u001b[1mTypeError\u001b[22m: title.trim is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m Object.addTask src/board.ts:\u001b[2m29:27\u001b[22m\u001b[39m\n    \u001b[90m 27|\u001b[39m\n    \u001b[90m 28|\u001b[39m     \u001b[34maddTask\u001b[39m(title\u001b[33m:\u001b[39m string\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[33mPriority\u001b[39m \u001b[33m=\u001b[39m \u001b[32m'medium'\u001b[39m)\u001b[33m:\u001b[39m string {\n    \u001b[90m 29|\u001b[39m       \u001b[35mif\u001b[39m (\u001b[33m!\u001b[39mtitle \u001b[33m||\u001b[39m title\u001b[33m.\u001b[39m\u001b[34mtrim\u001b[39m() \u001b[33m===\u001b[39m \u001b[32m''\u001b[39m) {\n    \u001b[90m   |\u001b[39m                           \u001b[31m^\u001b[39m\n    \u001b[90m 30|\u001b[39m         \u001b[35mthrow\u001b[39m \u001b[35mnew\u001b[39m \u001b[33mError\u001b[39m(\u001b[32m'Task title cannot be empty'\u001b[39m)\u001b[33m;\u001b[39m\n    \u001b[90m 31|\u001b[39m       }\n\u001b[90m \u001b[2m\u276f\u001b[22m addTask src/board.ts:\u001b[2m88:16\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m40:15\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[4/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mstats counts total, done, pending\n\u001b[31m\u001b[1mTypeError\u001b[22m: title.trim is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m Object.addTask src/board.ts:\u001b[2m29:27\u001b[22m\u001b[39m\n    \u001b[90m 27|\u001b[39m\n    \u001b[90m 28|\u001b[39m     \u001b[34maddTask\u001b[39m(title\u001b[33m:\u001b[39m string\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[33mPriority\u001b[39m \u001b[33m=\u001b[39m \u001b[32m'medium'\u001b[39m)\u001b[33m:\u001b[39m string {\n    \u001b[90m 29|\u001b[39m       \u001b[35mif\u001b[39m (\u001b[33m!\u001b[39mtitle \u001b[33m||\u001b[39m title\u001b[33m.\u001b[39m\u001b[34mtrim\u001b[39m() \u001b[33m===\u001b[39m \u001b[32m''\u001b[39m) {\n    \u001b[90m   |\u001b[39m                           \u001b[31m^\u001b[39m\n    \u001b[90m 30|\u001b[39m         \u001b[35mthrow\u001b[39m \u001b[35mnew\u001b[39m \u001b[33mError\u001b[39m(\u001b[32m'Task title cannot be empty'\u001b[39m)\u001b[33m;\u001b[39m\n    \u001b[90m 31|\u001b[39m       }\n\u001b[90m \u001b[2m\u276f\u001b[22m addTask src/board.ts:\u001b[2m88:16\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m49:15\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[5/5]\u23af\u001b[22m\u001b[39m\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 316356,
+            "completion": 17433,
+            "total": 333789
+          },
+          "wall_time": 939.7298591136932
+        },
+        {
+          "agent": 31,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 435541,
+            "completion": 20917,
+            "total": 456458
+          },
+          "wall_time": 1047.474855184555
+        }
+      ],
+      "p90_ttft": 0.2365242494226328,
+      "p90_tps": 8.554234259092482,
+      "holds_slo_p90": false,
+      "p99_ttft": 0.46404411764705866,
+      "p99_tps": 6.722485259552641,
+      "e2e_p50": 3.9621001390820583,
+      "e2e_p99": 112.57741935483864,
+      "server_tokens": {
+        "prompt": 17155302,
+        "generation": 476273
+      },
+      "tokens_source": "server",
+      "tokens_per_hour": 56166517.06713574,
+      "cost_per_mtok": 0.035430361430838886,
+      "cost_per_mtok_output": 1.3116281520156363,
+      "prefix_cache_hit_rate": 0.9626402379859008,
+      "computed_tokens_per_hour": 3558883.84155984,
+      "utilization": 0.11800166149418691,
+      "underutilization_penalty": 8.474456946941064
+    }
+  ],
+  "tokens": {
+    "prompt": 14742878,
+    "completion": 860981,
+    "total": 15603859
+  },
+  "model_meta": {
+    "architecture": "moe",
+    "total_params_b": 30.5,
+    "active_params_b": 3.3
+  },
+  "theta_max": {
+    "tokens_per_hour": 30159607.894463085,
+    "output_tokens_per_hour": 10988284.134269798,
+    "server_tokens": {
+      "prompt": 657461,
+      "generation": 376832
+    },
+    "duration_s": 123.45832920074463,
+    "shape": {
+      "prompt_tokens": 344,
+      "output_tokens": 256
+    },
+    "concurrency": 64
+  },
+  "utilization_basis": "theta_max",
+  "timeline": [
+    {
+      "label": "create\u2192ready",
+      "seconds": 33.34579682350159,
+      "cost_usd": 0.018432815466324488,
+      "pct": 0.015198966714013466
+    },
+    {
+      "label": "rsync",
+      "seconds": 4.2020790576934814,
+      "cost_usd": 0.002322815923558341,
+      "pct": 0.0019153016515269974
+    },
+    {
+      "label": "vLLM startup",
+      "seconds": 339.03887009620667,
+      "cost_usd": 0.1874131531920698,
+      "pct": 0.15453343426231156
+    },
+    {
+      "label": "generation",
+      "seconds": 1693.0054008960724,
+      "cost_usd": 0.9358557632731067,
+      "pct": 0.7716694512073848
+    },
+    {
+      "label": "saturation-probe",
+      "seconds": 124.35941910743713,
+      "cost_usd": 0.06874312333994441,
+      "pct": 0.05668284616476312
+    }
+  ],
+  "pod_cost_usd": 1.2127676711950037
+}
