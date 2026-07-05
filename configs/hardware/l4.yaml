@@ -8,7 +8,10 @@ instance: "NVIDIA L4"
 gpu_memory_utilization: 0.92
 # Ada has native FP8, but on 24GB the deciding factor is KV-cache room for the 65k
 # window: prefer 4-bit AWQ (~9GB weights for a 14B) over fp8 (~15GB, marginal KV).
-supported_quants: [awq, gptq, fp8, bf16]
+# gptq removed: the gs32 GPTQ's extra metadata leaves 2.63GiB of KV on the L4 — vLLM
+# caps the context at ~28.7k, BELOW the agent's 32k max_tokens, so no benchmark request
+# fits (live 2026-07-05). A slimmer gs128 GPTQ repo could restore the pair.
+supported_quants: [awq, fp8, bf16]
 # 24GB on paper, but the L4 reserves more for itself than the A5000: a 30B W4 leaves
 # 3.95GiB of KV (vs 5.42 on the A5000) and 49152 needs 4.5 (live 2026-07-05; vLLM
 # estimated 43168 max). 40960 fits with margin.
