@@ -358,9 +358,11 @@ def _saturation_probe(ctx, scenario, generated):
     return theta
 
 
-def _generate_level(ctx, image, mounts_for, n):
+def _generate_level(ctx, image, mounts_for, n, ensure_tunnel=None):
     """Run the task with n concurrent agents (pod up); return (latency_dict, agent_dirs).
-    Gate scoring is deferred to _score_level so it never bills GPU."""
+    Gate scoring is deferred to _score_level so it never bills GPU. ensure_tunnel (when
+    given) revives the ssh forward before the closing metrics snapshot — a heavy level
+    can kill it, silently zeroing the level's metrics."""
     before = _metrics_snapshot()
     started = time.time()
     ctx.timeline.mark("generation")
@@ -376,6 +378,8 @@ def _generate_level(ctx, image, mounts_for, n):
                              workdir="/repo", name=name)
         procs.append(_spawn_prefixed(cmd, f"agent{i}"))
     _wait_procs(procs, ctx.guard, names=names)  # guard-aware: an abort kills the survivors
+    if ensure_tunnel:
+        ensure_tunnel()
     after = _metrics_snapshot()
     return level_metrics(before, after, duration_s=time.time() - started), dirs
 
@@ -480,16 +484,31 @@ def run(ctx):
         generated = []
         theta_max = None
         aborted = None
+        tunnel_box = {"proc": tunnel}
+
+        def ensure_tunnel():
+            # The single ssh forward can die under a heavy level's load (it did at N=16
+            # live 2026-07-05, silently zeroing every later metric and the probe): check
+            # and reopen before anything that depends on localhost:8000.
+            if tunnel_box["proc"].poll() is not None:
+                log("  ssh tunnel died — reopening")
+                tunnel_box["proc"] = subprocess.Popen(
+                    ssh_tunnel_cmd(ctx.ip, ctx.port, ctx.key), stderr=subprocess.DEVNULL)
+                time.sleep(2)
+
         try:
             for n in sorted(devs):
                 guard.raise_if_aborted()
+                ensure_tunnel()
                 # Re-enter the generation phase per level with a stall budget scaled to
                 # N: on a slow GPU a queued straggler can go minutes without writing
                 # while the rest finish, which a fixed budget would false-abort.
                 guard.phase("generation", stall=pod_guard.stall_for_devs(n))
                 log(f"testing {n} concurrent developer(s)")
-                latency, dirs = _generate_level(ctx, image, mounts_for, n)
+                latency, dirs = _generate_level(ctx, image, mounts_for, n,
+                                                ensure_tunnel=ensure_tunnel)
                 generated.append((n, latency, dirs))
+            ensure_tunnel()
             theta_max = _saturation_probe(ctx, scenario, generated)
         except pod_guard.PodGuardAborted as e:
             # The completed levels are real, paid measurements: keep them, mark the
@@ -499,8 +518,9 @@ def run(ctx):
             log(f"watchdog abort ({aborted}) — keeping {len(generated)} completed "
                 f"level(s) in a truncated report")
     finally:
-        if tunnel:
-            tunnel.terminate()
+        live = locals().get("tunnel_box", {}).get("proc") or tunnel
+        if live:
+            live.terminate()
     if aborted and not generated:
         raise pod_guard.PodGuardAborted(aborted)   # nothing measured — plain failure
 
