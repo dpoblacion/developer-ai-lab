@@ -9,5 +9,7 @@ gpu_memory_utilization: 0.92
 # Ada has native FP8, but on 24GB the deciding factor is KV-cache room for the 65k
 # window: prefer 4-bit AWQ (~9GB weights for a 14B) over fp8 (~15GB, marginal KV).
 supported_quants: [awq, gptq, fp8, bf16]
-# 24GB — same KV-cache ceiling as rtx-a5000 (see that config's note).
-max_model_len_cap: 49152
+# 24GB on paper, but the L4 reserves more for itself than the A5000: a 30B W4 leaves
+# 3.95GiB of KV (vs 5.42 on the A5000) and 49152 needs 4.5 (live 2026-07-05; vLLM
+# estimated 43168 max). 40960 fits with margin.
+max_model_len_cap: 40960
