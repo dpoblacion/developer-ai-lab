@@ -1,0 +1,538 @@
+{
+  "run_id": "20260705-123731",
+  "date": "2026-07-05",
+  "benchmark": "dev-load",
+  "family": "qwen3-coder",
+  "quant": "awq",
+  "model": "qwen3-coder-30b-awq",
+  "hardware": "rtx-4090",
+  "gpu_count": 1,
+  "price_usd_per_gpu_hour": 0.34,
+  "cost_per_hour": 0.34,
+  "slo": {
+    "max_ttft": 2.0,
+    "min_tps": 20.0
+  },
+  "by_devs": [
+    {
+      "devs": 1,
+      "holds_slo": true,
+      "slo_percentile": "p50",
+      "median_ttft": 0.055999999999999994,
+      "median_tps": 199.8777972962652,
+      "cost_per_dev_hour": 0.34,
+      "cost_per_dev_month": 248.20000000000002,
+      "valid": true,
+      "agents_ok": 1,
+      "tokens_per_dev": 375026,
+      "agents": [
+        {
+          "agent": 0,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 359512,
+            "completion": 15514,
+            "total": 375026
+          },
+          "wall_time": 207.83838534355164
+        }
+      ],
+      "p90_ttft": 0.18625000000000017,
+      "p90_tps": 111.04322072014732,
+      "holds_slo_p90": true,
+      "p99_ttft": 1.9450000000000038,
+      "p99_tps": 100.9483824728612,
+      "e2e_p50": 0.4714285714285714,
+      "e2e_p99": 11.300000000000026,
+      "server_tokens": {
+        "prompt": 602955,
+        "generation": 13167
+      },
+      "tokens_source": "server",
+      "tokens_per_hour": 10204843.32997352,
+      "cost_per_mtok": 0.033317512969685374,
+      "cost_per_mtok_output": 1.5590227634167608,
+      "prefix_cache_hit_rate": 0.94269058221592,
+      "computed_tokens_per_hour": 790420.620255398,
+      "utilization": 0.046608885941514966,
+      "underutilization_penalty": 21.45513628570321
+    },
+    {
+      "devs": 2,
+      "holds_slo": true,
+      "slo_percentile": "p50",
+      "median_ttft": 0.05355555555555555,
+      "median_tps": 176.9078540507112,
+      "cost_per_dev_hour": 0.17,
+      "cost_per_dev_month": 124.10000000000001,
+      "valid": true,
+      "agents_ok": 2,
+      "tokens_per_dev": 357271,
+      "agents": [
+        {
+          "agent": 0,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 291453,
+            "completion": 16703,
+            "total": 308156
+          },
+          "wall_time": 221.395441532135
+        },
+        {
+          "agent": 1,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 384802,
+            "completion": 21584,
+            "total": 406386
+          },
+          "wall_time": 269.72598814964294
+        }
+      ],
+      "p90_ttft": 0.1375,
+      "p90_tps": 83.02783435166326,
+      "holds_slo_p90": true,
+      "p99_ttft": 0.2462500000000001,
+      "p99_tps": 41.764846497968115,
+      "e2e_p50": 0.6342105263157894,
+      "e2e_p99": 12.750000000000057,
+      "server_tokens": {
+        "prompt": 1136334,
+        "generation": 32485
+      },
+      "tokens_source": "server",
+      "tokens_per_hour": 15066654.538309045,
+      "cost_per_mtok": 0.022566389846896878,
+      "cost_per_mtok_output": 0.8119447503296956,
+      "prefix_cache_hit_rate": 0.9615060360774209,
+      "computed_tokens_per_hour": 982603.7012503078,
+      "utilization": 0.05794138293417488,
+      "underutilization_penalty": 17.258821749837484
+    },
+    {
+      "devs": 4,
+      "holds_slo": true,
+      "slo_percentile": "p50",
+      "median_ttft": 0.06547619047619048,
+      "median_tps": 83.21918022039772,
+      "cost_per_dev_hour": 0.085,
+      "cost_per_dev_month": 62.050000000000004,
+      "valid": true,
+      "agents_ok": 4,
+      "tokens_per_dev": 372912,
+      "agents": [
+        {
+          "agent": 0,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 407921,
+            "completion": 15864,
+            "total": 423785
+          },
+          "wall_time": 259.31454610824585
+        },
+        {
+          "agent": 1,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 302416,
+            "completion": 19624,
+            "total": 322040
+          },
+          "wall_time": 303.9270179271698
+        },
+        {
+          "agent": 2,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 287714,
+            "completion": 14697,
+            "total": 302411
+          },
+          "wall_time": 246.34159803390503
+        },
+        {
+          "agent": 3,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 418786,
+            "completion": 18923,
+            "total": 437709
+          },
+          "wall_time": 293.5976586341858
+        }
+      ],
+      "p90_ttft": 0.20551724137931038,
+      "p90_tps": 44.31220141426163,
+      "holds_slo_p90": true,
+      "p99_ttft": 0.6457142857142851,
+      "p99_tps": 40.09453898108588,
+      "e2e_p50": 1.119047619047619,
+      "e2e_p99": 16.34999999999998,
+      "server_tokens": {
+        "prompt": 2359470,
+        "generation": 58887
+      },
+      "tokens_source": "server",
+      "tokens_per_hour": 27774763.721598953,
+      "cost_per_mtok": 0.012241328257838613,
+      "cost_per_mtok_output": 0.5027238929074637,
+      "prefix_cache_hit_rate": 0.9583304725213714,
+      "computed_tokens_per_hour": 1805495.1071549666,
+      "utilization": 0.1064649799876909,
+      "underutilization_penalty": 9.392759949004981
+    },
+    {
+      "devs": 8,
+      "holds_slo": true,
+      "slo_percentile": "p50",
+      "median_ttft": 0.08486111111111111,
+      "median_tps": 60.88782710150564,
+      "cost_per_dev_hour": 0.0425,
+      "cost_per_dev_month": 31.025000000000002,
+      "valid": true,
+      "agents_ok": 8,
+      "tokens_per_dev": 358551,
+      "agents": [
+        {
+          "agent": 0,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 157522,
+            "completion": 11814,
+            "total": 169336
+          },
+          "wall_time": 313.686003446579
+        },
+        {
+          "agent": 1,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 338652,
+            "completion": 17778,
+            "total": 356430
+          },
+          "wall_time": 470.38147926330566
+        },
+        {
+          "agent": 2,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 504852,
+            "completion": 21524,
+            "total": 526376
+          },
+          "wall_time": 513.7967610359192
+        },
+        {
+          "agent": 3,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 227285,
+            "completion": 16210,
+            "total": 243495
+          },
+          "wall_time": 412.10862922668457
+        },
+        {
+          "agent": 4,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 306985,
+            "completion": 15879,
+            "total": 322864
+          },
+          "wall_time": 428.9541940689087
+        },
+        {
+          "agent": 5,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 393841,
+            "completion": 17100,
+            "total": 410941
+          },
+          "wall_time": 452.4412741661072
+        },
+        {
+          "agent": 6,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 461256,
+            "completion": 19488,
+            "total": 480744
+          },
+          "wall_time": 498.7321331501007
+        },
+        {
+          "agent": 7,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 341873,
+            "completion": 18800,
+            "total": 360673
+          },
+          "wall_time": 463.8038203716278
+        }
+      ],
+      "p90_ttft": 0.875,
+      "p90_tps": 42.326951678646566,
+      "holds_slo_p90": true,
+      "p99_ttft": 5.125,
+      "p99_tps": 6.33521833152278,
+      "e2e_p50": 1.300925925925926,
+      "e2e_p99": 28.92857142857143,
+      "server_tokens": {
+        "prompt": 4571955,
+        "generation": 115678
+      },
+      "tokens_source": "server",
+      "tokens_per_hour": 32219333.480519183,
+      "cost_per_mtok": 0.010552670191193578,
+      "cost_per_mtok_output": 0.42762707711367176,
+      "prefix_cache_hit_rate": 0.6006467106034993,
+      "computed_tokens_per_hour": 795085.2932299731,
+      "utilization": 0.046883948617076475,
+      "underutilization_penalty": 21.329261495602175
+    }
+  ],
+  "tokens": {
+    "prompt": 5184870,
+    "completion": 261502,
+    "total": 5446372
+  },
+  "model_meta": {
+    "architecture": "moe",
+    "total_params_b": 30.5,
+    "active_params_b": 3.3
+  },
+  "theta_max": {
+    "tokens_per_hour": 16958582.130609628,
+    "output_tokens_per_hour": 8316303.173105614,
+    "server_tokens": {
+      "prompt": 308600,
+      "generation": 296960
+    },
+    "duration_s": 128.5494260787964,
+    "shape": {
+      "prompt_tokens": 205,
+      "output_tokens": 256
+    },
+    "concurrency": 64
+  },
+  "utilization_basis": "theta_max",
+  "timeline": [
+    {
+      "label": "create\u2192ready",
+      "seconds": 13.217034816741943,
+      "cost_usd": 0.0012482755104700725,
+      "pct": 0.006496943778947835
+    },
+    {
+      "label": "rsync",
+      "seconds": 13.454718351364136,
+      "cost_usd": 0.0012707233998510573,
+      "pct": 0.006613779104195366
+    },
+    {
+      "label": "vLLM startup",
+      "seconds": 539.8888907432556,
+      "cost_usd": 0.050989506347974146,
+      "pct": 0.2653868903783434
+    },
+    {
+      "label": "generation",
+      "seconds": 1336.951246023178,
+      "cost_usd": 0.12626761767996683,
+      "pct": 0.657189543724604
+    },
+    {
+      "label": "saturation-probe",
+      "seconds": 130.83460688591003,
+      "cost_usd": 0.01235660176144706,
+      "pct": 0.06431284301390935
+    }
+  ],
+  "pod_cost_usd": 0.19213272469970916
+}
