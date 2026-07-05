@@ -24,3 +24,8 @@ env:
 architecture: moe
 total_params_b: 30.5
 active_params_b: 3.3
+# gs32 stores ~1.4GB more quant metadata than the AWQ sibling: on 24GB it leaves 4.03GiB
+# of KV vs the 4.5 a 49152-token sequence needs (live 2026-07-05; vLLM estimated 43968
+# max). 40960 fits with margin — the cost is input headroom (~9k tokens above the agent's
+# 32k max_tokens): if long phases start 400ing, swap to a gs128 GPTQ repo instead.
+max_model_len_cap: 40960

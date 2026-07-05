@@ -160,6 +160,18 @@ class MaxModelLenCapTest(unittest.TestCase):
                                "container_disk_gb": 1}, hw, bench)
         self.assertEqual(vllm_cfg["max_model_len"], 65536)
 
+    def test_model_variant_can_cap_too_and_the_minimum_wins(self):
+        # The fit depends on the VARIANT's footprint, not only the card: GPTQ gs32
+        # carries more quant metadata than AWQ and lost 0.5GiB of KV on the same 24GB
+        # (live 2026-07-05) — the fat variant declares its own tighter cap.
+        hw = {"gpu_memory_utilization": 0.92, "gpu_type_ids": ["x"],
+              "max_model_len_cap": 49152}
+        bench = {"serving": {"max_model_len": 65536}, "devs": [1]}
+        vllm_cfg, _ = compose({"served_model_name": "m", "image": "i",
+                               "container_disk_gb": 1, "max_model_len_cap": 40960},
+                              hw, bench)
+        self.assertEqual(vllm_cfg["max_model_len"], 40960)
+
     def test_cap_larger_than_the_request_changes_nothing(self):
         hw = {"gpu_memory_utilization": 0.92, "gpu_type_ids": ["x"],
               "max_model_len_cap": 131072}

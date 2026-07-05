@@ -44,12 +44,15 @@ def compose(model, hardware, benchmark, gpu_count=1):
     # before the real memory limit. Derive from the benchmark's devs list.
     devs = benchmark.get("devs") or [1]
     vllm_cfg["max_num_seqs"] = max(max(devs), serving.get("max_num_seqs", 1))
-    # The benchmark REQUESTS a context length; the card CONSTRAINS it. Small-VRAM GPUs
-    # cannot hold the full request next to a big model's weights (vLLM refuses to boot if
-    # one max-length sequence doesn't fit in the KV cache — live 2026-07-05 on 24GB).
-    cap = hardware.get("max_model_len_cap")
-    if cap and vllm_cfg.get("max_model_len", cap) > cap:
-        vllm_cfg["max_model_len"] = cap
+    # The benchmark REQUESTS a context length; the card AND the model variant CONSTRAIN
+    # it (minimum wins). Small-VRAM GPUs cannot hold the full request next to a big
+    # model's weights (vLLM refuses to boot if one max-length sequence doesn't fit in the
+    # KV cache — live 2026-07-05 on 24GB), and a fat variant (e.g. GPTQ gs32's extra
+    # quant metadata) tightens the fit further than its siblings.
+    caps = [c for c in (hardware.get("max_model_len_cap"),
+                        model.get("max_model_len_cap")) if c]
+    if caps and vllm_cfg.get("max_model_len", min(caps)) > min(caps):
+        vllm_cfg["max_model_len"] = min(caps)
 
     pod_spec = dict(POD_CONSTANTS)
     pod_spec["env"] = {k: v for k, v in (
