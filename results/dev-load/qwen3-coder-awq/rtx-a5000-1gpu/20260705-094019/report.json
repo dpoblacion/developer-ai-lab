@@ -1,0 +1,539 @@
+{
+  "run_id": "20260705-094019",
+  "date": "2026-07-05",
+  "benchmark": "dev-load",
+  "family": "qwen3-coder",
+  "quant": "awq",
+  "model": "qwen3-coder-30b-awq",
+  "hardware": "rtx-a5000",
+  "gpu_count": 1,
+  "price_usd_per_gpu_hour": 0.27,
+  "cost_per_hour": 0.27,
+  "slo": {
+    "max_ttft": 2.0,
+    "min_tps": 20.0
+  },
+  "by_devs": [
+    {
+      "devs": 1,
+      "holds_slo": true,
+      "slo_percentile": "p50",
+      "median_ttft": 0.08,
+      "median_tps": 197.95291709314225,
+      "cost_per_dev_hour": 0.27,
+      "cost_per_dev_month": 197.10000000000002,
+      "valid": true,
+      "agents_ok": 1,
+      "tokens_per_dev": 239434,
+      "agents": [
+        {
+          "agent": 0,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 224047,
+            "completion": 15387,
+            "total": 239434
+          },
+          "wall_time": 156.8615484237671
+        }
+      ],
+      "p90_ttft": 0.4916666666666668,
+      "p90_tps": 109.97384282952349,
+      "holds_slo_p90": true,
+      "p99_ttft": 2.1900000000000013,
+      "p99_tps": 96.50932015410385,
+      "e2e_p50": 0.8,
+      "e2e_p99": 23.800000000000026,
+      "server_tokens": {
+        "prompt": 416896,
+        "generation": 12763
+      },
+      "tokens_source": "server",
+      "tokens_per_hour": 9340487.670368442,
+      "cost_per_mtok": 0.028906413618695958,
+      "cost_per_mtok_output": 0.973117665830548,
+      "prefix_cache_hit_rate": 0.9215919557875345,
+      "computed_tokens_per_hour": 988073.1117139781,
+      "utilization": 0.08436879470629087,
+      "underutilization_penalty": 11.852723551180896
+    },
+    {
+      "devs": 2,
+      "holds_slo": true,
+      "slo_percentile": "p50",
+      "median_ttft": 0.07541666666666666,
+      "median_tps": 94.12031267701371,
+      "cost_per_dev_hour": 0.135,
+      "cost_per_dev_month": 98.55000000000001,
+      "valid": true,
+      "agents_ok": 2,
+      "tokens_per_dev": 316388,
+      "agents": [
+        {
+          "agent": 0,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 205253,
+            "completion": 10606,
+            "total": 215859
+          },
+          "wall_time": 139.38621616363525
+        },
+        {
+          "agent": 1,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 394351,
+            "completion": 22566,
+            "total": 416917
+          },
+          "wall_time": 245.93702030181885
+        }
+      ],
+      "p90_ttft": 0.22828947368421054,
+      "p90_tps": 45.06840546375757,
+      "holds_slo_p90": true,
+      "p99_ttft": 0.4578125000000002,
+      "p99_tps": 40.33828223396786,
+      "e2e_p50": 0.8428571428571429,
+      "e2e_p99": 12.750000000000009,
+      "server_tokens": {
+        "prompt": 1026342,
+        "generation": 28156
+      },
+      "tokens_source": "server",
+      "tokens_per_hour": 14909716.676342282,
+      "cost_per_mtok": 0.018108996023272362,
+      "cost_per_mtok_output": 0.6782177897623477,
+      "prefix_cache_hit_rate": 0.9642477848514432,
+      "computed_tokens_per_hour": 916924.5711805968,
+      "utilization": 0.07829362016834565,
+      "underutilization_penalty": 12.772432771020377
+    },
+    {
+      "devs": 4,
+      "holds_slo": true,
+      "slo_percentile": "p50",
+      "median_ttft": 0.0923913043478261,
+      "median_tps": 60.22105958609361,
+      "cost_per_dev_hour": 0.0675,
+      "cost_per_dev_month": 49.275000000000006,
+      "valid": true,
+      "agents_ok": 3,
+      "tokens_per_dev": 233719,
+      "agents": [
+        {
+          "agent": 0,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 239996,
+            "completion": 13824,
+            "total": 253820
+          },
+          "wall_time": 224.1045045852661
+        },
+        {
+          "agent": 1,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 199391,
+            "completion": 14228,
+            "total": 213619
+          },
+          "wall_time": 230.6685426235199
+        },
+        {
+          "agent": 2,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "   \u001b[34mcompleteTask\u001b[39m(b\u001b[33m,\u001b[39m hi)\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[3/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mlistTasks sorts by priority then createdAt ascending\n\u001b[31m\u001b[1mTypeError\u001b[22m: addTask is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m40:15\u001b[22m\u001b[39m\n    \u001b[90m 38|\u001b[39m   \u001b[34mit\u001b[39m(\u001b[32m\"listTasks sorts by priority then createdAt ascending\"\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n    \u001b[90m 39|\u001b[39m     \u001b[35mconst\u001b[39m b \u001b[33m=\u001b[39m \u001b[34mcreateBoard\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m 40|\u001b[39m     \u001b[35mconst\u001b[39m m \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"m\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"medium\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m   |\u001b[39m               \u001b[31m^\u001b[39m\n    \u001b[90m 41|\u001b[39m     \u001b[35mconst\u001b[39m h1 \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"h1\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"high\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m 42|\u001b[39m     \u001b[35mconst\u001b[39m h2 \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"h2\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"high\"\u001b[39m })\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[4/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mstats counts total, done, pending\n\u001b[31m\u001b[1mTypeError\u001b[22m: addTask is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m49:15\u001b[22m\u001b[39m\n    \u001b[90m 47|\u001b[39m   \u001b[34mit\u001b[39m(\u001b[32m\"stats counts total, done, pending\"\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n    \u001b[90m 48|\u001b[39m     \u001b[35mconst\u001b[39m b \u001b[33m=\u001b[39m \u001b[34mcreateBoard\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m 49|\u001b[39m     \u001b[35mconst\u001b[39m a \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"a\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m   |\u001b[39m               \u001b[31m^\u001b[39m\n    \u001b[90m 50|\u001b[39m     \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"b\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m 51|\u001b[39m     \u001b[34mcompleteTask\u001b[39m(b\u001b[33m,\u001b[39m a)\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[5/5]\u23af\u001b[22m\u001b[39m\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 383964,
+            "completion": 20042,
+            "total": 404006
+          },
+          "wall_time": 285.9320421218872
+        },
+        {
+          "agent": 3,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 128583,
+            "completion": 10415,
+            "total": 138998
+          },
+          "wall_time": 176.47987914085388
+        }
+      ],
+      "p90_ttft": 0.3490000000000001,
+      "p90_tps": 42.604022708266484,
+      "holds_slo_p90": true,
+      "p99_ttft": 0.9139285714285715,
+      "p99_tps": 27.281845536609293,
+      "e2e_p50": 1.1810344827586208,
+      "e2e_p99": 25.180000000000007,
+      "server_tokens": {
+        "prompt": 1697128,
+        "generation": 48486
+      },
+      "tokens_source": "server",
+      "tokens_per_hour": 21325461.242300283,
+      "cost_per_mtok": 0.012660921934220089,
+      "cost_per_mtok_output": 0.4558240024188769,
+      "prefix_cache_hit_rate": 0.9512824017988036,
+      "computed_tokens_per_hour": 1602402.0483953261,
+      "utilization": 0.1368246214326092,
+      "underutilization_penalty": 7.308626104933417
+    },
+    {
+      "devs": 8,
+      "holds_slo": true,
+      "slo_percentile": "p50",
+      "median_ttft": 0.19084158415841584,
+      "median_tps": 44.05481008851403,
+      "cost_per_dev_hour": 0.03375,
+      "cost_per_dev_month": 24.637500000000003,
+      "valid": true,
+      "agents_ok": 8,
+      "tokens_per_dev": 378063,
+      "agents": [
+        {
+          "agent": 0,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 387489,
+            "completion": 20187,
+            "total": 407676
+          },
+          "wall_time": 553.6765158176422
+        },
+        {
+          "agent": 1,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 230462,
+            "completion": 14733,
+            "total": 245195
+          },
+          "wall_time": 413.076203584671
+        },
+        {
+          "agent": 2,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 328154,
+            "completion": 17846,
+            "total": 346000
+          },
+          "wall_time": 503.63952708244324
+        },
+        {
+          "agent": 3,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 361494,
+            "completion": 22597,
+            "total": 384091
+          },
+          "wall_time": 580.6382400989532
+        },
+        {
+          "agent": 4,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 393621,
+            "completion": 21099,
+            "total": 414720
+          },
+          "wall_time": 572.5471038818359
+        },
+        {
+          "agent": 5,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 352856,
+            "completion": 19179,
+            "total": 372035
+          },
+          "wall_time": 594.9387607574463
+        },
+        {
+          "agent": 6,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 388376,
+            "completion": 21123,
+            "total": 409499
+          },
+          "wall_time": 567.0182967185974
+        },
+        {
+          "agent": 7,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 260906,
+            "completion": 14042,
+            "total": 274948
+          },
+          "wall_time": 406.1720495223999
+        }
+      ],
+      "p90_ttft": 0.7708333333333334,
+      "p90_tps": 22.16181170354985,
+      "holds_slo_p90": true,
+      "p99_ttft": 6.262499999999989,
+      "p99_tps": 5.71195430436558,
+      "e2e_p50": 1.7877358490566038,
+      "e2e_p99": 56.83333333333318,
+      "server_tokens": {
+        "prompt": 4579719,
+        "generation": 125700
+      },
+      "tokens_source": "server",
+      "tokens_per_hour": 28055755.80548598,
+      "cost_per_mtok": 0.009623693685956758,
+      "cost_per_mtok_output": 0.3602506851239535,
+      "prefix_cache_hit_rate": 0.774451439117726,
+      "computed_tokens_per_hour": 749478.1027469791,
+      "utilization": 0.06399583536670965,
+      "underutilization_penalty": 15.626016822341466
+    }
+  ],
+  "tokens": {
+    "prompt": 4478943,
+    "completion": 257874,
+    "total": 4736817
+  },
+  "model_meta": {
+    "architecture": "moe",
+    "total_params_b": 30.5,
+    "active_params_b": 3.3
+  },
+  "theta_max": {
+    "tokens_per_hour": 11711357.441500861,
+    "output_tokens_per_hour": 6102704.265488784,
+    "server_tokens": {
+      "prompt": 195749,
+      "generation": 212992
+    },
+    "duration_s": 125.64449572563171,
+    "shape": {
+      "prompt_tokens": 181,
+      "output_tokens": 256
+    },
+    "concurrency": 64
+  },
+  "utilization_basis": "theta_max",
+  "timeline": [
+    {
+      "label": "create\u2192ready",
+      "seconds": 40.14522433280945,
+      "cost_usd": 0.003010891824960709,
+      "pct": 0.022463227679569323
+    },
+    {
+      "label": "rsync",
+      "seconds": 2.0687928199768066,
+      "cost_usd": 0.0001551594614982605,
+      "pct": 0.0011575913426648196
+    },
+    {
+      "label": "vLLM startup",
+      "seconds": 299.55355620384216,
+      "cost_usd": 0.022466516715288164,
+      "pct": 0.1676149491518028
+    },
+    {
+      "label": "generation",
+      "seconds": 1319.3218178749084,
+      "cost_usd": 0.09894913634061814,
+      "pct": 0.7382254519705496
+    },
+    {
+      "label": "saturation-probe",
+      "seconds": 126.06359076499939,
+      "cost_usd": 0.009454769307374955,
+      "pct": 0.07053877985541347
+    }
+  ],
+  "pod_cost_usd": 0.13403647364974022
+}
