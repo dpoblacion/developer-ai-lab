@@ -109,7 +109,7 @@ def main():
                    keep=args.keep, hardware=args.hardware, price_usd_per_gpu_hour=price,
                    label=f"bench-{vllm_cfg['served_model_name']}",
                    family=variant["family"], quant=variant["quant"], run_id=run_id,
-                   model_meta=model_meta(variant)) as ctx:
+                   model_meta=model_meta(variant), devs=devs_override) as ctx:
         bench_sdd.run(ctx)
 
 

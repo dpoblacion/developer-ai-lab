@@ -118,6 +118,7 @@ class BenchContext:
     family: str = ""
     quant: str = ""
     run_id: str = ""
+    devs: list = None        # DEVS= override; None -> the scenario's grid
     model_meta: dict = None
     timeline: object = None
     keep: bool = False
@@ -134,7 +135,7 @@ class BenchContext:
 @contextlib.contextmanager
 def provision(runpod, *, pod_spec, vllm_cfg, key, pub, scenario_path, composed_path,
               out_dir, keep, label, hardware, price_usd_per_gpu_hour, family="", quant="",
-              run_id="", model_meta=None):
+              run_id="", model_meta=None, devs=None):
     """Shared prologue under a PodGuard: create pod (GPU fallback) -> track -> wait ready ->
     SSH endpoint -> wait_for_ssh -> rsync repo up -> set the progress sampler. Yields a
     BenchContext. On exit, terminates the pod via the guard unless keep (then release) or the
@@ -165,7 +166,8 @@ def provision(runpod, *, pod_spec, vllm_cfg, key, pub, scenario_path, composed_p
                            vllm_cfg=vllm_cfg, served=vllm_cfg["served_model_name"],
                            hardware=hardware, price_usd_per_gpu_hour=price_usd_per_gpu_hour,
                            out_dir=out_dir, guard=guard, keep=keep, timeline=timeline,
-                           family=family, quant=quant, run_id=run_id, model_meta=model_meta)
+                           family=family, quant=quant, run_id=run_id, model_meta=model_meta,
+                           devs=devs)
         try:
             yield ctx
         finally:

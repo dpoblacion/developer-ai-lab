@@ -279,6 +279,14 @@ _GEN = ("set -e; python3 -m scripts.destream_proxy > /tmp/destream.log 2>&1 & "
         "sleep 8; python3 -m scripts.run_sdd_scenario /repo/{scenario}")
 
 
+def resolve_devs(ctx_devs, scenario):
+    """The team sizes a run actually measures: the run's DEVS= override when given, else
+    the scenario's grid. bench_sdd re-reads scenario.yaml, so the override must be
+    consulted HERE — sizing the server alone silently ran the scenario grid (live
+    2026-07-04)."""
+    return ctx_devs or scenario.get("devs") or [1]
+
+
 def _saturation_probe(ctx, scenario, generated):
     """Measure raw saturation Θmax (pod still up, tunnel open) when the benchmark asks
     for it (`saturation_probe:` in scenario.yaml). The probe mirrors the workload's own
@@ -423,7 +431,7 @@ def run(ctx):
             log(vllm_probe.stdout + (vllm_probe.stderr or ""))
 
         scenario = yaml.safe_load(pathlib.Path(ctx.scenario_path).read_text())
-        devs = scenario.get("devs") or [1]
+        devs = resolve_devs(ctx.devs, scenario)
         slo = scenario.get("slo") or DEFAULT_SLO
         repo = str(pathlib.Path.cwd())
 

@@ -9,8 +9,22 @@ import unittest
 from pathlib import Path
 
 from scripts.lib import bench_sdd, pod_guard
-from scripts.lib.bench_sdd import _load_json
+from scripts.lib.bench_sdd import _load_json, resolve_devs
 from tests.support import make_guard
+
+
+class ResolveDevsTest(unittest.TestCase):
+    def test_run_override_wins_over_the_scenario(self):
+        # DEVS= must reach the level loop: bench_sdd re-reads scenario.yaml, so without
+        # this seam the override only sized the server and the scenario's grid ran
+        # anyway (live 2026-07-04: DEVS=16,32 measured [1,2,4,8]).
+        self.assertEqual(resolve_devs([16, 32], {"devs": [1, 2, 4, 8]}), [16, 32])
+
+    def test_scenario_grid_when_no_override(self):
+        self.assertEqual(resolve_devs(None, {"devs": [1, 2]}), [1, 2])
+
+    def test_defaults_to_single_dev(self):
+        self.assertEqual(resolve_devs(None, {}), [1])
 
 
 class LoadJsonTest(unittest.TestCase):
