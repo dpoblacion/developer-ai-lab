@@ -241,6 +241,29 @@ def _load_json(path):
         return {}
 
 
+def _pod_log_tail(ip, port, key, n_bytes=8000):
+    """Last bytes of the pod's vllm.log ('' on any failure) — cached each startup poll so
+    a stall abort can show WHERE startup was stuck after the guard kills the pod."""
+    try:
+        out = subprocess.run(ssh_run_cmd(ip, port, key, f"tail -c {n_bytes} /workspace/vllm.log"),
+                             capture_output=True, text=True, timeout=15)
+        return out.stdout
+    except Exception:
+        return ""
+
+
+def _save_text(ctx, name, text):
+    """Best-effort artifact write; never masks the failure being diagnosed."""
+    if not text:
+        return
+    try:
+        ctx.out_dir.mkdir(parents=True, exist_ok=True)
+        (ctx.out_dir / name).write_text(text)
+        log(f"  saved {name} -> {ctx.out_dir / name}")
+    except Exception as exc:
+        log(f"  (could not save {name}: {exc})")
+
+
 def _save_vllm_log(ctx):
     """Pull the pod's vLLM log to results/ before the pod is terminated. On a startup failure
     the fail-fast tail keeps only 25 lines (the generic 'Engine core init failed' traceback);
@@ -397,8 +420,14 @@ def run(ctx):
         reachable = False
         # Backstop derived from MAX_STARTUP so the guard's max_phase governs (not a fixed
         # 30-min loop) — a raised MAX_STARTUP for a big model actually extends the wait.
+        last_tail = ""
         for i in range(startup_poll_iterations(pod_guard.MAX_STARTUP)):
-            guard.raise_if_aborted()
+            if guard.aborted:
+                # The guard has (or is about to have) killed the pod: the last fetched
+                # log tail is the only remaining evidence of WHERE startup was stuck —
+                # write it before raising (stall aborts used to leave nothing behind).
+                _save_text(ctx, "vllm-startup-stalled.log", last_tail)
+                guard.raise_if_aborted()
             if _url_ok("http://localhost:8000/health"):
                 reachable = True
                 break
@@ -408,6 +437,7 @@ def run(ctx):
                     log("FAILED: vLLM failed to start on the pod:\n" + found)
                     _save_vllm_log(ctx)
                     raise SystemExit("vLLM startup failed")
+                last_tail = _pod_log_tail(ctx.ip, ctx.port, ctx.key) or last_tail
                 log(f"  still waiting for vLLM ... ({(i + 1) * 5 // 60} min)")
             if tunnel.poll() is not None:  # tunnel died — reopen it
                 tunnel = subprocess.Popen(ssh_tunnel_cmd(ctx.ip, ctx.port, ctx.key),
