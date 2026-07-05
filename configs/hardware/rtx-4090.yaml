@@ -1,0 +1,15 @@
+# Single NVIDIA RTX 4090 (24GB, Ada, consumer). The self-hosting community's reference
+# card: Ada clocks at community pricing. Same VRAM as rtx-a5000 but one generation newer —
+# the pair isolates architecture generation at equal memory.
+gpu_type_ids:
+  - "NVIDIA GeForce RTX 4090"
+price_usd_per_gpu_hour: 0.34  # RunPod community on-demand, per GPU (edit when prices change)
+provider: RunPod
+instance: "NVIDIA GeForce RTX 4090"
+gpu_memory_utilization: 0.92
+# Ada has native FP8 kernels, but a 30B-class model's fp8 weights (~30GB) don't fit 24GB
+# anyway — W4 first so the default variant boots; fp8 stays available for smaller models
+# via QUANT=.
+supported_quants: [awq, fp8, gptq, bf16]
+# 24GB: same KV-cache ceiling as rtx-a5000 (see that config's note).
+max_model_len_cap: 49152

@@ -1,0 +1,10 @@
+# Single NVIDIA H100 PCIe (80GB, Hopper). The datacenter reference — and the headline GPU
+# of arXiv:2606.11690, so its curves compare directly against the paper's H100 sweep.
+# GPU count is the run's --gpus for tensor parallelism.
+gpu_type_ids:
+  - "NVIDIA H100 PCIe"
+price_usd_per_gpu_hour: 1.99  # RunPod community on-demand, per GPU (edit when prices change)
+provider: RunPod
+instance: "NVIDIA H100 PCIe"
+gpu_memory_utilization: 0.92
+supported_quants: [fp8, awq, bf16]   # native FP8 (Hopper); 80GB fits 30B fp8 comfortably

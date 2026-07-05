@@ -1,0 +1,15 @@
+# Single NVIDIA RTX 5090 (32GB, Blackwell, consumer). The 32GB sweet spot the 24GB class
+# lacks: a 30B W4 model leaves ~11GiB of KV cache, so the full 64k context fits (no
+# max_model_len_cap needed) and the tail latency of KV-starved 24GB cards should relax.
+#
+# Blackwell consumer is sm_120: vLLM 0.11.0's cu128 wheels carry sm_120 kernels, but the
+# Marlin quant paths are newer there than on Ada — if the engine refuses to boot, the
+# fail-fast makes the discovery cost cents.
+gpu_type_ids:
+  - "NVIDIA GeForce RTX 5090"
+price_usd_per_gpu_hour: 0.69  # RunPod community on-demand, per GPU (edit when prices change)
+provider: RunPod
+instance: "NVIDIA GeForce RTX 5090"
+gpu_memory_utilization: 0.92
+# A 30B-class model's fp8 weights (~30GB) still don't fit 32GB next to KV — W4 first.
+supported_quants: [awq, fp8, gptq, bf16]
