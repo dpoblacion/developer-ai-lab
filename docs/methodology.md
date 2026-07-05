@@ -51,7 +51,8 @@ N agents concurrently build the same small TypeScript module, and the harness re
 that N holds the SLO and the $/dev at that team size.
 
 - **SLO**: a developer is "served acceptably" when the median stream meets the scenario's
-  `slo.max_ttft` (default ≤ 2 s) and `slo.min_tps` (default ≥ 20 tok/s).
+  `slo.max_ttft` (default ≤ 10 s — the first-token waiter is an agent loop, which
+  tolerates queueing a human chat would not) and `slo.min_tps` (default ≥ 20 tok/s).
 - **holds_slo**: `true` if the SLO is met at N; the dashboard shows which hardware holds at
   each team size, so you can pick the right hardware for your team.
 - **holds_slo_p90 / p90_ttft / p90_tps**: the same thresholds evaluated at the p90 tail

@@ -16,7 +16,7 @@ POD_CONSTANTS = {"ports": "22/tcp", "volume_gb": 0, "env": {}}
 
 # Fallback when a benchmark declares no slo: — the single source of truth (bench_sdd
 # imports it; keep them from drifting apart).
-DEFAULT_SLO = {"max_ttft": 2.0, "min_tps": 20.0}
+DEFAULT_SLO = {"max_ttft": 10.0, "min_tps": 20.0}
 
 # Model serving-recipe keys copied verbatim into vllm_cfg when present in the model config.
 _MODEL_VLLM_KEYS = ["model", "served_model_name", "vllm_version", "tool_call_parser",

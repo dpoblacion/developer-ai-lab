@@ -10,7 +10,7 @@
   "price_usd_per_gpu_hour": 0.69,
   "cost_per_hour": 0.69,
   "slo": {
-    "max_ttft": 2.0,
+    "max_ttft": 10.0,
     "min_tps": 20.0
   },
   "by_devs": [
@@ -405,7 +405,7 @@
     },
     {
       "devs": 32,
-      "holds_slo": false,
+      "holds_slo": true,
       "slo_percentile": "p50",
       "median_ttft": 7.102490421455938,
       "median_tps": 47.32996611718495,

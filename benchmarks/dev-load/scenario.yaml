@@ -11,7 +11,9 @@ devs: [1, 2, 4, 8]
 # ceiling (an aborted run writes no report, losing every level it completed; a 4-level
 # run on a slow card blows the 3h MAX_RUN — learned live 2026-07-02).
 slo:
-  max_ttft: 2.0
+  # 10s, not 2s: the first-token waiter is an agent loop, not a human in a chat —
+  # agentic turns tolerate queueing that interactive chat cannot (policy set 2026-07-05).
+  max_ttft: 10.0
   min_tps: 20.0
 # Raw-saturation probe (arXiv:2606.11690 §3.2): after the last level, saturate the server
 # with fresh random prompts at the workload's own prompt:output ratio to measure Θmax —

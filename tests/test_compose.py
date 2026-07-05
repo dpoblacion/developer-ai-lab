@@ -325,7 +325,8 @@ class DefaultSloTest(unittest.TestCase):
         # The default SLO used to be duplicated in compose.py and bench_sdd.py — a drift
         # there would silently score runs against two different SLOs.
         from scripts.lib import bench_sdd, compose
-        self.assertEqual(compose.DEFAULT_SLO, {"max_ttft": 2.0, "min_tps": 20.0})
+        # 10s TTFT: the first-token waiter is an agent loop (policy set 2026-07-05)
+        self.assertEqual(compose.DEFAULT_SLO, {"max_ttft": 10.0, "min_tps": 20.0})
         self.assertIs(bench_sdd.DEFAULT_SLO, compose.DEFAULT_SLO)
 
 

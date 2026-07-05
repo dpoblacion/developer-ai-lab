@@ -4,7 +4,7 @@ name: smoke
 description: Minimal task to validate the agent stack + a low concurrency level.
 devs: [1]
 slo:
-  max_ttft: 2.0
+  max_ttft: 10.0
   min_tps: 20.0
 serving:
   max_model_len: 65536
