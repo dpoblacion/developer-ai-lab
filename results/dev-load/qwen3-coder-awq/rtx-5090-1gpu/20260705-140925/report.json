@@ -1,0 +1,1206 @@
+{
+  "run_id": "20260705-140925",
+  "date": "2026-07-05",
+  "benchmark": "dev-load",
+  "family": "qwen3-coder",
+  "quant": "awq",
+  "model": "qwen3-coder-30b-awq",
+  "hardware": "rtx-5090",
+  "gpu_count": 1,
+  "price_usd_per_gpu_hour": 0.69,
+  "cost_per_hour": 0.69,
+  "slo": {
+    "max_ttft": 2.0,
+    "min_tps": 20.0
+  },
+  "by_devs": [
+    {
+      "devs": 16,
+      "holds_slo": true,
+      "slo_percentile": "p50",
+      "median_ttft": 0.08200772200772201,
+      "median_tps": 58.108930284135404,
+      "cost_per_dev_hour": 0.043125,
+      "cost_per_dev_month": 31.48125,
+      "valid": true,
+      "agents_ok": 13,
+      "tokens_per_dev": 294552,
+      "agents": [
+        {
+          "agent": 0,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 394890,
+            "completion": 17847,
+            "total": 412737
+          },
+          "wall_time": 375.88022470474243
+        },
+        {
+          "agent": 1,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 222730,
+            "completion": 14420,
+            "total": 237150
+          },
+          "wall_time": 312.84247040748596
+        },
+        {
+          "agent": 2,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": false,
+              "exit_code": 2,
+              "output": "401,63): error TS2580: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nnode_modules/vite/dist/node/index.d.ts(3561,84): error TS2580: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nnode_modules/vite/types/customEvent.d.ts(27,14): error TS2304: Cannot find name 'WebSocket'.\nnode_modules/vite/types/importGlob.d.ts(38,11): error TS2304: Cannot find name 'Worker'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(11,26): error TS2307: Cannot find module 'node:stream' or its corresponding type declarations.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(15,29): error TS2307: Cannot find module 'node:worker_threads' or its corresponding type declarations.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(16,23): error TS2307: Cannot find module 'node:fs' or its corresponding type declarations.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(528,10): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(622,19): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(623,18): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(627,14): error TS2304: Cannot find name 'Console'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(628,45): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(628,90): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(947,13): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(948,14): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(949,14): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(1776,21): error TS2580: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\n"
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 650873,
+            "completion": 29999,
+            "total": 680872
+          },
+          "wall_time": 464.6115171909332
+        },
+        {
+          "agent": 3,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 183769,
+            "completion": 12845,
+            "total": 196614
+          },
+          "wall_time": 285.6966688632965
+        },
+        {
+          "agent": 4,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 391550,
+            "completion": 19364,
+            "total": 410914
+          },
+          "wall_time": 409.84057879447937
+        },
+        {
+          "agent": 5,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "145:16\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m31:16\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[3/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mlistTasks sorts by priority then createdAt ascending\n\u001b[31m\u001b[1mTypeError\u001b[22m: title.trim is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m Object.addTask src/board.ts:\u001b[2m41:27\u001b[22m\u001b[39m\n    \u001b[90m 39|\u001b[39m      */\u001b[39m\n    \u001b[90m 40|\u001b[39m     \u001b[34maddTask\u001b[39m(title\u001b[33m:\u001b[39m string\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[33mPriority\u001b[39m \u001b[33m=\u001b[39m \u001b[32m\"medium\"\u001b[39m)\u001b[33m:\u001b[39m string {\n    \u001b[90m 41|\u001b[39m       \u001b[35mif\u001b[39m (\u001b[33m!\u001b[39mtitle \u001b[33m||\u001b[39m title\u001b[33m.\u001b[39m\u001b[34mtrim\u001b[39m() \u001b[33m===\u001b[39m \u001b[32m\"\"\u001b[39m) {\n    \u001b[90m   |\u001b[39m                           \u001b[31m^\u001b[39m\n    \u001b[90m 42|\u001b[39m         \u001b[35mthrow\u001b[39m \u001b[35mnew\u001b[39m \u001b[33mError\u001b[39m(\u001b[32m\"Task title cannot be empty\"\u001b[39m)\u001b[33m;\u001b[39m\n    \u001b[90m 43|\u001b[39m       }\n\u001b[90m \u001b[2m\u276f\u001b[22m addTask src/board.ts:\u001b[2m145:16\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m40:15\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[4/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mstats counts total, done, pending\n\u001b[31m\u001b[1mTypeError\u001b[22m: title.trim is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m Object.addTask src/board.ts:\u001b[2m41:27\u001b[22m\u001b[39m\n    \u001b[90m 39|\u001b[39m      */\u001b[39m\n    \u001b[90m 40|\u001b[39m     \u001b[34maddTask\u001b[39m(title\u001b[33m:\u001b[39m string\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[33mPriority\u001b[39m \u001b[33m=\u001b[39m \u001b[32m\"medium\"\u001b[39m)\u001b[33m:\u001b[39m string {\n    \u001b[90m 41|\u001b[39m       \u001b[35mif\u001b[39m (\u001b[33m!\u001b[39mtitle \u001b[33m||\u001b[39m title\u001b[33m.\u001b[39m\u001b[34mtrim\u001b[39m() \u001b[33m===\u001b[39m \u001b[32m\"\"\u001b[39m) {\n    \u001b[90m   |\u001b[39m                           \u001b[31m^\u001b[39m\n    \u001b[90m 42|\u001b[39m         \u001b[35mthrow\u001b[39m \u001b[35mnew\u001b[39m \u001b[33mError\u001b[39m(\u001b[32m\"Task title cannot be empty\"\u001b[39m)\u001b[33m;\u001b[39m\n    \u001b[90m 43|\u001b[39m       }\n\u001b[90m \u001b[2m\u276f\u001b[22m addTask src/board.ts:\u001b[2m145:16\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m49:15\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[5/5]\u23af\u001b[22m\u001b[39m\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 303903,
+            "completion": 21866,
+            "total": 325769
+          },
+          "wall_time": 395.56863832473755
+        },
+        {
+          "agent": 6,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": false,
+              "exit_code": 2,
+              "output": "ll type definitions for node? Try `npm i --save-dev @types/node`.\nnode_modules/vite/dist/node/index.d.ts(1389,20): error TS2580: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nnode_modules/vite/dist/node/index.d.ts(2401,63): error TS2580: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nnode_modules/vite/dist/node/index.d.ts(3561,84): error TS2580: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(11,26): error TS2307: Cannot find module 'node:stream' or its corresponding type declarations.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(15,29): error TS2307: Cannot find module 'node:worker_threads' or its corresponding type declarations.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(16,23): error TS2307: Cannot find module 'node:fs' or its corresponding type declarations.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(528,10): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(622,19): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(623,18): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(628,45): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(628,90): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(947,13): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(948,14): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(949,14): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(1776,21): error TS2580: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\n"
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "\n     29|     throw new Error('Task title cannot be empty');\n     30|   }\n \u276f acceptance.test.ts:9:15\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[1/5]\u23af\n\n FAIL  acceptance.test.ts > TaskBoard acceptance > completeTask marks done and throws on unknown id\nTypeError: title.trim is not a function\n \u276f Module.addTask src/board.ts:28:23\n     26| \n     27| export const addTask = (board: Board, title: string, priority: Priorit\u2026\n     28|   if (!title || title.trim() === '') {\n       |                       ^\n     29|     throw new Error('Task title cannot be empty');\n     30|   }\n \u276f acceptance.test.ts:23:16\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[2/5]\u23af\n\n FAIL  acceptance.test.ts > TaskBoard acceptance > listTasks filters by done and by priority\nTypeError: title.trim is not a function\n \u276f Module.addTask src/board.ts:28:23\n     26| \n     27| export const addTask = (board: Board, title: string, priority: Priorit\u2026\n     28|   if (!title || title.trim() === '') {\n       |                       ^\n     29|     throw new Error('Task title cannot be empty');\n     30|   }\n \u276f acceptance.test.ts:31:16\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[3/5]\u23af\n\n FAIL  acceptance.test.ts > TaskBoard acceptance > listTasks sorts by priority then createdAt ascending\nTypeError: title.trim is not a function\n \u276f Module.addTask src/board.ts:28:23\n     26| \n     27| export const addTask = (board: Board, title: string, priority: Priorit\u2026\n     28|   if (!title || title.trim() === '') {\n       |                       ^\n     29|     throw new Error('Task title cannot be empty');\n     30|   }\n \u276f acceptance.test.ts:40:15\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[4/5]\u23af\n\n FAIL  acceptance.test.ts > TaskBoard acceptance > stats counts total, done, pending\nTypeError: title.trim is not a function\n \u276f Module.addTask src/board.ts:28:23\n     26| \n     27| export const addTask = (board: Board, title: string, priority: Priorit\u2026\n     28|   if (!title || title.trim() === '') {\n       |                       ^\n     29|     throw new Error('Task title cannot be empty');\n     30|   }\n \u276f acceptance.test.ts:49:15\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[5/5]\u23af\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 292851,
+            "completion": 19423,
+            "total": 312274
+          },
+          "wall_time": 369.50663924217224
+        },
+        {
+          "agent": 7,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 231323,
+            "completion": 15131,
+            "total": 246454
+          },
+          "wall_time": 323.7058296203613
+        },
+        {
+          "agent": 8,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 329108,
+            "completion": 18542,
+            "total": 347650
+          },
+          "wall_time": 376.1275706291199
+        },
+        {
+          "agent": 9,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 197009,
+            "completion": 13247,
+            "total": 210256
+          },
+          "wall_time": 290.209725856781
+        },
+        {
+          "agent": 10,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 258715,
+            "completion": 18116,
+            "total": 276831
+          },
+          "wall_time": 362.6954507827759
+        },
+        {
+          "agent": 11,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 180393,
+            "completion": 13493,
+            "total": 193886
+          },
+          "wall_time": 302.5250577926636
+        },
+        {
+          "agent": 12,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 384378,
+            "completion": 20613,
+            "total": 404991
+          },
+          "wall_time": 402.2299106121063
+        },
+        {
+          "agent": 13,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 245125,
+            "completion": 12867,
+            "total": 257992
+          },
+          "wall_time": 285.216632604599
+        },
+        {
+          "agent": 14,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 517427,
+            "completion": 24678,
+            "total": 542105
+          },
+          "wall_time": 427.70522260665894
+        },
+        {
+          "agent": 15,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 184473,
+            "completion": 12099,
+            "total": 196572
+          },
+          "wall_time": 267.7072286605835
+        }
+      ],
+      "p90_ttft": 0.21808270676691727,
+      "p90_tps": 41.448964687387736,
+      "holds_slo_p90": true,
+      "p99_ttft": 16.754838709677436,
+      "p99_tps": 10.737536132824097,
+      "e2e_p50": 1.341549295774648,
+      "e2e_p99": 34.92500000000007,
+      "server_tokens": {
+        "prompt": 8428330,
+        "generation": 237009
+      },
+      "tokens_source": "server",
+      "tokens_per_hour": 65782285.53829829,
+      "cost_per_mtok": 0.01048914604218614,
+      "cost_per_mtok_output": 0.38349601186474436,
+      "prefix_cache_hit_rate": 0.9606856874374876,
+      "computed_tokens_per_hour": 4314686.033103128,
+      "utilization": 0.1839770876368277,
+      "underutilization_penalty": 5.43545945228793
+    },
+    {
+      "devs": 32,
+      "holds_slo": false,
+      "slo_percentile": "p50",
+      "median_ttft": 7.102490421455938,
+      "median_tps": 47.32996611718495,
+      "cost_per_dev_hour": 0.0215625,
+      "cost_per_dev_month": 15.740625,
+      "valid": true,
+      "agents_ok": 28,
+      "tokens_per_dev": 373482,
+      "agents": [
+        {
+          "agent": 0,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "   \u001b[34mcompleteTask\u001b[39m(b\u001b[33m,\u001b[39m hi)\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[3/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mlistTasks sorts by priority then createdAt ascending\n\u001b[31m\u001b[1mTypeError\u001b[22m: addTask is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m40:15\u001b[22m\u001b[39m\n    \u001b[90m 38|\u001b[39m   \u001b[34mit\u001b[39m(\u001b[32m\"listTasks sorts by priority then createdAt ascending\"\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n    \u001b[90m 39|\u001b[39m     \u001b[35mconst\u001b[39m b \u001b[33m=\u001b[39m \u001b[34mcreateBoard\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m 40|\u001b[39m     \u001b[35mconst\u001b[39m m \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"m\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"medium\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m   |\u001b[39m               \u001b[31m^\u001b[39m\n    \u001b[90m 41|\u001b[39m     \u001b[35mconst\u001b[39m h1 \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"h1\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"high\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m 42|\u001b[39m     \u001b[35mconst\u001b[39m h2 \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"h2\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"high\"\u001b[39m })\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[4/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mstats counts total, done, pending\n\u001b[31m\u001b[1mTypeError\u001b[22m: addTask is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m49:15\u001b[22m\u001b[39m\n    \u001b[90m 47|\u001b[39m   \u001b[34mit\u001b[39m(\u001b[32m\"stats counts total, done, pending\"\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n    \u001b[90m 48|\u001b[39m     \u001b[35mconst\u001b[39m b \u001b[33m=\u001b[39m \u001b[34mcreateBoard\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m 49|\u001b[39m     \u001b[35mconst\u001b[39m a \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"a\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m   |\u001b[39m               \u001b[31m^\u001b[39m\n    \u001b[90m 50|\u001b[39m     \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"b\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m 51|\u001b[39m     \u001b[34mcompleteTask\u001b[39m(b\u001b[33m,\u001b[39m a)\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[5/5]\u23af\u001b[22m\u001b[39m\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 512720,
+            "completion": 22198,
+            "total": 534918
+          },
+          "wall_time": 1496.7478642463684
+        },
+        {
+          "agent": 1,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 555605,
+            "completion": 23140,
+            "total": 578745
+          },
+          "wall_time": 1522.9904897212982
+        },
+        {
+          "agent": 2,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 410665,
+            "completion": 17813,
+            "total": 428478
+          },
+          "wall_time": 1455.228369474411
+        },
+        {
+          "agent": 3,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "   \u001b[34mcompleteTask\u001b[39m(b\u001b[33m,\u001b[39m hi)\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[3/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mlistTasks sorts by priority then createdAt ascending\n\u001b[31m\u001b[1mTypeError\u001b[22m: addTask is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m40:15\u001b[22m\u001b[39m\n    \u001b[90m 38|\u001b[39m   \u001b[34mit\u001b[39m(\u001b[32m\"listTasks sorts by priority then createdAt ascending\"\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n    \u001b[90m 39|\u001b[39m     \u001b[35mconst\u001b[39m b \u001b[33m=\u001b[39m \u001b[34mcreateBoard\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m 40|\u001b[39m     \u001b[35mconst\u001b[39m m \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"m\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"medium\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m   |\u001b[39m               \u001b[31m^\u001b[39m\n    \u001b[90m 41|\u001b[39m     \u001b[35mconst\u001b[39m h1 \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"h1\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"high\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m 42|\u001b[39m     \u001b[35mconst\u001b[39m h2 \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"h2\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"high\"\u001b[39m })\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[4/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mstats counts total, done, pending\n\u001b[31m\u001b[1mTypeError\u001b[22m: addTask is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m49:15\u001b[22m\u001b[39m\n    \u001b[90m 47|\u001b[39m   \u001b[34mit\u001b[39m(\u001b[32m\"stats counts total, done, pending\"\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n    \u001b[90m 48|\u001b[39m     \u001b[35mconst\u001b[39m b \u001b[33m=\u001b[39m \u001b[34mcreateBoard\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m 49|\u001b[39m     \u001b[35mconst\u001b[39m a \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"a\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m   |\u001b[39m               \u001b[31m^\u001b[39m\n    \u001b[90m 50|\u001b[39m     \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"b\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m 51|\u001b[39m     \u001b[34mcompleteTask\u001b[39m(b\u001b[33m,\u001b[39m a)\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[5/5]\u23af\u001b[22m\u001b[39m\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 368322,
+            "completion": 21484,
+            "total": 389806
+          },
+          "wall_time": 1515.2261264324188
+        },
+        {
+          "agent": 4,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 287669,
+            "completion": 15492,
+            "total": 303161
+          },
+          "wall_time": 1405.4761500358582
+        },
+        {
+          "agent": 5,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 331799,
+            "completion": 17601,
+            "total": 349400
+          },
+          "wall_time": 1442.829046010971
+        },
+        {
+          "agent": 6,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 244293,
+            "completion": 16632,
+            "total": 260925
+          },
+          "wall_time": 1372.4333200454712
+        },
+        {
+          "agent": 7,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 391255,
+            "completion": 16907,
+            "total": 408162
+          },
+          "wall_time": 1449.42627120018
+        },
+        {
+          "agent": 8,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 351172,
+            "completion": 16737,
+            "total": 367909
+          },
+          "wall_time": 1441.614517211914
+        },
+        {
+          "agent": 9,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": false,
+              "exit_code": 2,
+              "output": "tests/board.test.ts(178,5): error TS2578: Unused '@ts-expect-error' directive.\n"
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 427853,
+            "completion": 20238,
+            "total": 448091
+          },
+          "wall_time": 1468.2551763057709
+        },
+        {
+          "agent": 10,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 277733,
+            "completion": 13170,
+            "total": 290903
+          },
+          "wall_time": 1252.9381277561188
+        },
+        {
+          "agent": 11,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 459103,
+            "completion": 14663,
+            "total": 473766
+          },
+          "wall_time": 1171.8514609336853
+        },
+        {
+          "agent": 12,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 536626,
+            "completion": 20075,
+            "total": 556701
+          },
+          "wall_time": 1472.6735854148865
+        },
+        {
+          "agent": 13,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 638370,
+            "completion": 22035,
+            "total": 660405
+          },
+          "wall_time": 1517.2612159252167
+        },
+        {
+          "agent": 14,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 767305,
+            "completion": 28350,
+            "total": 795655
+          },
+          "wall_time": 1568.803881406784
+        },
+        {
+          "agent": 15,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 345083,
+            "completion": 15118,
+            "total": 360201
+          },
+          "wall_time": 1400.7227728366852
+        },
+        {
+          "agent": 16,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 139611,
+            "completion": 11854,
+            "total": 151465
+          },
+          "wall_time": 925.5879809856415
+        },
+        {
+          "agent": 17,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 138841,
+            "completion": 11397,
+            "total": 150238
+          },
+          "wall_time": 935.2596876621246
+        },
+        {
+          "agent": 18,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "9 \u001b[39m\u001b[90m/out/workspace\u001b[39m\n\n \u001b[31m\u276f\u001b[39m acceptance.test.ts \u001b[2m(\u001b[22m\u001b[2m6 tests\u001b[22m\u001b[2m | \u001b[22m\u001b[31m1 failed\u001b[39m\u001b[2m)\u001b[22m\u001b[32m 7\u001b[2mms\u001b[22m\u001b[39m\n     \u001b[32m\u2713\u001b[39m addTask returns unique ids and defaults priority to medium\u001b[32m 1\u001b[2mms\u001b[22m\u001b[39m\n     \u001b[32m\u2713\u001b[39m addTask rejects empty/blank titles\u001b[32m 1\u001b[2mms\u001b[22m\u001b[39m\n     \u001b[32m\u2713\u001b[39m completeTask marks done and throws on unknown id\u001b[32m 0\u001b[2mms\u001b[22m\u001b[39m\n\u001b[31m     \u001b[31m\u00d7\u001b[31m listTasks filters by done and by priority\u001b[39m\u001b[32m 4\u001b[2mms\u001b[22m\u001b[39m\n     \u001b[32m\u2713\u001b[39m listTasks sorts by priority then createdAt ascending\u001b[32m 0\u001b[2mms\u001b[22m\u001b[39m\n     \u001b[32m\u2713\u001b[39m stats counts total, done, pending\u001b[32m 0\u001b[2mms\u001b[22m\u001b[39m\n\n\u001b[2m Test Files \u001b[22m \u001b[1m\u001b[31m1 failed\u001b[39m\u001b[22m\u001b[90m (1)\u001b[39m\n\u001b[2m      Tests \u001b[22m \u001b[1m\u001b[31m1 failed\u001b[39m\u001b[22m\u001b[2m | \u001b[22m\u001b[1m\u001b[32m5 passed\u001b[39m\u001b[22m\u001b[90m (6)\u001b[39m\n\u001b[2m   Start at \u001b[22m 12:52:10\n\u001b[2m   Duration \u001b[22m 176ms\u001b[2m (transform 32ms, setup 0ms, import 45ms, tests 7ms, environment 0ms)\u001b[22m\n\n\n\u001b[31m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u001b[39m\u001b[1m\u001b[41m Failed Tests 1 \u001b[49m\u001b[22m\u001b[31m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mlistTasks filters by done and by priority\n\u001b[31m\u001b[1mAssertionError\u001b[22m: expected 2 to be 1 // Object.is equality\u001b[39m\n\n\u001b[32m- Expected\u001b[39m\n\u001b[31m+ Received\u001b[39m\n\n\u001b[32m- 1\u001b[39m\n\u001b[31m+ 2\u001b[39m\n\n\u001b[36m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m34:50\u001b[22m\u001b[39m\n    \u001b[90m 32|\u001b[39m     \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"lo\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"low\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m 33|\u001b[39m     \u001b[34mcompleteTask\u001b[39m(b\u001b[33m,\u001b[39m hi)\u001b[33m;\u001b[39m\n    \u001b[90m 34|\u001b[39m     \u001b[34mexpect\u001b[39m(\u001b[34mlistTasks\u001b[39m(b\u001b[33m,\u001b[39m { done\u001b[33m:\u001b[39m \u001b[35mfalse\u001b[39m })\u001b[33m.\u001b[39mlength)\u001b[33m.\u001b[39m\u001b[34mtoBe\u001b[39m(\u001b[34m1\u001b[39m)\u001b[33m;\u001b[39m\n    \u001b[90m   |\u001b[39m                                                  \u001b[31m^\u001b[39m\n    \u001b[90m 35|\u001b[39m     expect(listTasks(b, { priority: \"high\" }).map((t) => t.id)).toEqua\u2026\n    \u001b[90m 36|\u001b[39m   })\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[1/1]\u23af\u001b[22m\u001b[39m\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 203288,
+            "completion": 13412,
+            "total": 216700
+          },
+          "wall_time": 1152.6671390533447
+        },
+        {
+          "agent": 19,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 148265,
+            "completion": 12182,
+            "total": 160447
+          },
+          "wall_time": 1088.7907836437225
+        },
+        {
+          "agent": 20,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 405451,
+            "completion": 19192,
+            "total": 424643
+          },
+          "wall_time": 1457.448580980301
+        },
+        {
+          "agent": 21,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 263065,
+            "completion": 15960,
+            "total": 279025
+          },
+          "wall_time": 1311.9723756313324
+        },
+        {
+          "agent": 22,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 270400,
+            "completion": 13928,
+            "total": 284328
+          },
+          "wall_time": 1260.7350754737854
+        },
+        {
+          "agent": 23,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 257361,
+            "completion": 13729,
+            "total": 271090
+          },
+          "wall_time": 1388.8826596736908
+        },
+        {
+          "agent": 24,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 594519,
+            "completion": 27283,
+            "total": 621802
+          },
+          "wall_time": 1550.6183743476868
+        },
+        {
+          "agent": 25,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 342959,
+            "completion": 18682,
+            "total": 361641
+          },
+          "wall_time": 1449.6038100719452
+        },
+        {
+          "agent": 26,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 459011,
+            "completion": 21349,
+            "total": 480360
+          },
+          "wall_time": 1488.2310786247253
+        },
+        {
+          "agent": 27,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 411312,
+            "completion": 19266,
+            "total": 430578
+          },
+          "wall_time": 1482.964216709137
+        },
+        {
+          "agent": 28,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 250338,
+            "completion": 15081,
+            "total": 265419
+          },
+          "wall_time": 1343.7238380908966
+        },
+        {
+          "agent": 29,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 236982,
+            "completion": 16784,
+            "total": 253766
+          },
+          "wall_time": 1318.250590801239
+        },
+        {
+          "agent": 30,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 364736,
+            "completion": 14320,
+            "total": 379056
+          },
+          "wall_time": 1414.858263015747
+        },
+        {
+          "agent": 31,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 532953,
+            "completion": 21244,
+            "total": 554197
+          },
+          "wall_time": 1483.312551021576
+        }
+      ],
+      "p90_ttft": 17.161246612466122,
+      "p90_tps": 5.254011462688853,
+      "holds_slo_p90": false,
+      "p99_ttft": 23.551724137931096,
+      "p99_tps": 3.4716038827944753,
+      "e2e_p50": 12.908057851239668,
+      "e2e_p99": 117.15000000000009,
+      "server_tokens": {
+        "prompt": 19516003,
+        "generation": 474027
+      },
+      "tokens_source": "server",
+      "tokens_per_hour": 45571146.43592222,
+      "cost_per_mtok": 0.015141159570567572,
+      "cost_per_mtok_output": 0.6385126460105286,
+      "prefix_cache_hit_rate": 0.5759421336498797,
+      "computed_tokens_per_hour": 1080636.3888188715,
+      "utilization": 0.046078053903330814,
+      "underutilization_penalty": 21.70230544236838
+    }
+  ],
+  "tokens": {
+    "prompt": 16893182,
+    "completion": 851866,
+    "total": 17745048
+  },
+  "model_meta": {
+    "architecture": "moe",
+    "total_params_b": 30.5,
+    "active_params_b": 3.3
+  },
+  "theta_max": {
+    "tokens_per_hour": 23452300.98228511,
+    "output_tokens_per_hour": 14230992.848022964,
+    "server_tokens": {
+      "prompt": 318492,
+      "generation": 491520
+    },
+    "duration_s": 124.33932185173035,
+    "shape": {
+      "prompt_tokens": 128,
+      "output_tokens": 256
+    },
+    "concurrency": 64
+  },
+  "utilization_basis": "theta_max",
+  "timeline": [
+    {
+      "label": "create\u2192ready",
+      "seconds": 17.765336990356445,
+      "cost_usd": 0.0034050229231516516,
+      "pct": 0.007151398554423658
+    },
+    {
+      "label": "rsync",
+      "seconds": 3.3238980770111084,
+      "cost_usd": 0.0006370804647604624,
+      "pct": 0.0013380280889629147
+    },
+    {
+      "label": "vLLM startup",
+      "seconds": 284.26701188087463,
+      "cost_usd": 0.05448451061050096,
+      "pct": 0.1144310799698729
+    },
+    {
+      "label": "generation",
+      "seconds": 2053.75723695755,
+      "cost_usd": 0.39363680375019705,
+      "pct": 0.8267355999769674
+    },
+    {
+      "label": "saturation-probe",
+      "seconds": 125.06312227249146,
+      "cost_usd": 0.023970431768894192,
+      "pct": 0.05034389340977312
+    }
+  ],
+  "pod_cost_usd": 0.4761338495175043
+}
