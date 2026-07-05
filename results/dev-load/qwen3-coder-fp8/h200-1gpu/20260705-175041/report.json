@@ -1,0 +1,542 @@
+{
+  "run_id": "20260705-175041",
+  "date": "2026-07-05",
+  "benchmark": "dev-load",
+  "family": "qwen3-coder",
+  "quant": "fp8",
+  "model": "qwen3-coder-30b-fp8",
+  "hardware": "h200",
+  "gpu_count": 1,
+  "price_usd_per_gpu_hour": 3.59,
+  "cost_per_hour": 3.59,
+  "slo": {
+    "max_ttft": 10.0,
+    "min_tps": 20.0
+  },
+  "by_devs": [
+    {
+      "devs": 1,
+      "holds_slo": true,
+      "slo_percentile": "p50",
+      "median_ttft": 0.03,
+      "median_tps": 199.86239433850992,
+      "cost_per_dev_hour": 3.59,
+      "cost_per_dev_month": 2620.7,
+      "valid": true,
+      "agents_ok": 1,
+      "tokens_per_dev": 220836,
+      "agents": [
+        {
+          "agent": 0,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 208289,
+            "completion": 12547,
+            "total": 220836
+          },
+          "wall_time": 127.27638101577759
+        }
+      ],
+      "p90_ttft": 0.089,
+      "p90_tps": 111.03466352139439,
+      "holds_slo_p90": true,
+      "p99_ttft": 1.5850000000000009,
+      "p99_tps": 100.94060320126763,
+      "e2e_p50": 0.545,
+      "e2e_p99": 11.950000000000003,
+      "server_tokens": {
+        "prompt": 407801,
+        "generation": 10235
+      },
+      "tokens_source": "server",
+      "tokens_per_hour": 11064026.69994915,
+      "cost_per_mtok": 0.32447499426375204,
+      "cost_per_mtok_output": 13.252782481880004,
+      "prefix_cache_hit_rate": 0.9233130865299497,
+      "computed_tokens_per_hour": 1098579.1182134778,
+      "utilization": 0.026169191565264815,
+      "underutilization_penalty": 38.212873237067484
+    },
+    {
+      "devs": 2,
+      "holds_slo": true,
+      "slo_percentile": "p50",
+      "median_ttft": 0.03473684210526316,
+      "median_tps": 199.20989240404685,
+      "cost_per_dev_hour": 1.795,
+      "cost_per_dev_month": 1310.35,
+      "valid": true,
+      "agents_ok": 1,
+      "tokens_per_dev": 318381,
+      "agents": [
+        {
+          "agent": 0,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "   \u001b[34mcompleteTask\u001b[39m(b\u001b[33m,\u001b[39m hi)\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[3/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mlistTasks sorts by priority then createdAt ascending\n\u001b[31m\u001b[1mTypeError\u001b[22m: addTask is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m40:15\u001b[22m\u001b[39m\n    \u001b[90m 38|\u001b[39m   \u001b[34mit\u001b[39m(\u001b[32m\"listTasks sorts by priority then createdAt ascending\"\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n    \u001b[90m 39|\u001b[39m     \u001b[35mconst\u001b[39m b \u001b[33m=\u001b[39m \u001b[34mcreateBoard\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m 40|\u001b[39m     \u001b[35mconst\u001b[39m m \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"m\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"medium\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m   |\u001b[39m               \u001b[31m^\u001b[39m\n    \u001b[90m 41|\u001b[39m     \u001b[35mconst\u001b[39m h1 \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"h1\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"high\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m 42|\u001b[39m     \u001b[35mconst\u001b[39m h2 \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"h2\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"high\"\u001b[39m })\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[4/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mstats counts total, done, pending\n\u001b[31m\u001b[1mTypeError\u001b[22m: addTask is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m49:15\u001b[22m\u001b[39m\n    \u001b[90m 47|\u001b[39m   \u001b[34mit\u001b[39m(\u001b[32m\"stats counts total, done, pending\"\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n    \u001b[90m 48|\u001b[39m     \u001b[35mconst\u001b[39m b \u001b[33m=\u001b[39m \u001b[34mcreateBoard\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m 49|\u001b[39m     \u001b[35mconst\u001b[39m a \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"a\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m   |\u001b[39m               \u001b[31m^\u001b[39m\n    \u001b[90m 50|\u001b[39m     \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"b\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m 51|\u001b[39m     \u001b[34mcompleteTask\u001b[39m(b\u001b[33m,\u001b[39m a)\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[5/5]\u23af\u001b[22m\u001b[39m\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 343903,
+            "completion": 19207,
+            "total": 363110
+          },
+          "wall_time": 202.1350061893463
+        },
+        {
+          "agent": 1,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 256201,
+            "completion": 17451,
+            "total": 273652
+          },
+          "wall_time": 179.58260345458984
+        }
+      ],
+      "p90_ttft": 0.059680000000000004,
+      "p90_tps": 110.67216244669271,
+      "holds_slo_p90": true,
+      "p99_ttft": 0.3766666666666675,
+      "p99_tps": 100.61105676972065,
+      "e2e_p50": 0.7192307692307693,
+      "e2e_p99": 17.60000000000005,
+      "server_tokens": {
+        "prompt": 1085179,
+        "generation": 31283
+      },
+      "tokens_source": "server",
+      "tokens_per_hour": 19051317.420187525,
+      "cost_per_mtok": 0.18843841193868802,
+      "cost_per_mtok_output": 6.725196632992089,
+      "prefix_cache_hit_rate": 0.9611243859308004,
+      "computed_tokens_per_hour": 1253692.728333949,
+      "utilization": 0.029864144172978252,
+      "underutilization_penalty": 33.48497094736177
+    },
+    {
+      "devs": 4,
+      "holds_slo": true,
+      "slo_percentile": "p50",
+      "median_ttft": 0.040344827586206895,
+      "median_tps": 197.14484679665736,
+      "cost_per_dev_hour": 0.8975,
+      "cost_per_dev_month": 655.175,
+      "valid": true,
+      "agents_ok": 3,
+      "tokens_per_dev": 354592,
+      "agents": [
+        {
+          "agent": 0,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 411406,
+            "completion": 23825,
+            "total": 435231
+          },
+          "wall_time": 246.70089602470398
+        },
+        {
+          "agent": 1,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 226901,
+            "completion": 17159,
+            "total": 244060
+          },
+          "wall_time": 187.24310636520386
+        },
+        {
+          "agent": 2,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 287312,
+            "completion": 17392,
+            "total": 304704
+          },
+          "wall_time": 192.8682143688202
+        },
+        {
+          "agent": 3,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": false,
+              "exit_code": 2,
+              "output": "test/taskboard.test.ts(17,20): error TS2339: Property 'id' does not exist on type 'string'.\ntest/taskboard.test.ts(18,20): error TS2339: Property 'id' does not exist on type 'string'.\ntest/taskboard.test.ts(19,20): error TS2339: Property 'id' does not exist on type 'string'.\ntest/taskboard.test.ts(20,20): error TS2339: Property 'id' does not exist on type 'string'.\ntest/taskboard.test.ts(20,39): error TS2339: Property 'id' does not exist on type 'string'.\ntest/taskboard.test.ts(21,20): error TS2339: Property 'id' does not exist on type 'string'.\ntest/taskboard.test.ts(21,39): error TS2339: Property 'id' does not exist on type 'string'.\ntest/taskboard.test.ts(26,19): error TS2339: Property 'priority' does not exist on type 'string'.\ntest/taskboard.test.ts(39,19): error TS2339: Property 'completed' does not exist on type 'string'.\ntest/taskboard.test.ts(41,31): error TS2339: Property 'id' does not exist on type 'string'.\ntest/taskboard.test.ts(42,19): error TS2339: Property 'completed' does not exist on type 'string'.\ntest/taskboard.test.ts(60,32): error TS2339: Property 'id' does not exist on type 'string'.\ntest/taskboard.test.ts(61,31): error TS2339: Property 'id' does not exist on type 'string'.\ntest/taskboard.test.ts(94,32): error TS2339: Property 'id' does not exist on type 'string'.\ntest/taskboard.test.ts(99,26): error TS2339: Property 'completed' does not exist on type '{ total: number; done: number; pending: number; }'.\n"
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 382845,
+            "completion": 21635,
+            "total": 404480
+          },
+          "wall_time": 228.47990441322327
+        }
+      ],
+      "p90_ttft": 0.06036363636363639,
+      "p90_tps": 109.52491488703187,
+      "holds_slo_p90": true,
+      "p99_ttft": 0.20699999999999932,
+      "p99_tps": 61.43847960242458,
+      "e2e_p50": 0.6721311475409837,
+      "e2e_p99": 18.566666666666645,
+      "server_tokens": {
+        "prompt": 2199124,
+        "generation": 66342
+      },
+      "tokens_source": "server",
+      "tokens_per_hour": 31909074.81293105,
+      "cost_per_mtok": 0.11250717926002556,
+      "cost_per_mtok_output": 3.841928030048732,
+      "prefix_cache_hit_rate": 0.958709013225266,
+      "computed_tokens_per_hour": 2213400.4529544306,
+      "utilization": 0.05272528805954669,
+      "underutilization_penalty": 18.966231135060347
+    },
+    {
+      "devs": 8,
+      "holds_slo": true,
+      "slo_percentile": "p50",
+      "median_ttft": 0.03704081632653061,
+      "median_tps": 69.62718757094491,
+      "cost_per_dev_hour": 0.44875,
+      "cost_per_dev_month": 327.5875,
+      "valid": true,
+      "agents_ok": 6,
+      "tokens_per_dev": 221900,
+      "agents": [
+        {
+          "agent": 0,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "   \u001b[34mcompleteTask\u001b[39m(b\u001b[33m,\u001b[39m hi)\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[3/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mlistTasks sorts by priority then createdAt ascending\n\u001b[31m\u001b[1mTypeError\u001b[22m: addTask is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m40:15\u001b[22m\u001b[39m\n    \u001b[90m 38|\u001b[39m   \u001b[34mit\u001b[39m(\u001b[32m\"listTasks sorts by priority then createdAt ascending\"\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n    \u001b[90m 39|\u001b[39m     \u001b[35mconst\u001b[39m b \u001b[33m=\u001b[39m \u001b[34mcreateBoard\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m 40|\u001b[39m     \u001b[35mconst\u001b[39m m \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"m\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"medium\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m   |\u001b[39m               \u001b[31m^\u001b[39m\n    \u001b[90m 41|\u001b[39m     \u001b[35mconst\u001b[39m h1 \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"h1\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"high\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m 42|\u001b[39m     \u001b[35mconst\u001b[39m h2 \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"h2\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"high\"\u001b[39m })\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[4/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mstats counts total, done, pending\n\u001b[31m\u001b[1mTypeError\u001b[22m: addTask is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m49:15\u001b[22m\u001b[39m\n    \u001b[90m 47|\u001b[39m   \u001b[34mit\u001b[39m(\u001b[32m\"stats counts total, done, pending\"\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n    \u001b[90m 48|\u001b[39m     \u001b[35mconst\u001b[39m b \u001b[33m=\u001b[39m \u001b[34mcreateBoard\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m 49|\u001b[39m     \u001b[35mconst\u001b[39m a \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"a\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m   |\u001b[39m               \u001b[31m^\u001b[39m\n    \u001b[90m 50|\u001b[39m     \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"b\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m 51|\u001b[39m     \u001b[34mcompleteTask\u001b[39m(b\u001b[33m,\u001b[39m a)\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[5/5]\u23af\u001b[22m\u001b[39m\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 294414,
+            "completion": 20394,
+            "total": 314808
+          },
+          "wall_time": 250.2114655971527
+        },
+        {
+          "agent": 1,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 181331,
+            "completion": 16414,
+            "total": 197745
+          },
+          "wall_time": 204.53604459762573
+        },
+        {
+          "agent": 2,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 153503,
+            "completion": 9974,
+            "total": 163477
+          },
+          "wall_time": 148.88710403442383
+        },
+        {
+          "agent": 3,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 142418,
+            "completion": 9862,
+            "total": 152280
+          },
+          "wall_time": 151.48567605018616
+        },
+        {
+          "agent": 4,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "   \u001b[34mcompleteTask\u001b[39m(b\u001b[33m,\u001b[39m hi)\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[3/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mlistTasks sorts by priority then createdAt ascending\n\u001b[31m\u001b[1mTypeError\u001b[22m: addTask is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m40:15\u001b[22m\u001b[39m\n    \u001b[90m 38|\u001b[39m   \u001b[34mit\u001b[39m(\u001b[32m\"listTasks sorts by priority then createdAt ascending\"\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n    \u001b[90m 39|\u001b[39m     \u001b[35mconst\u001b[39m b \u001b[33m=\u001b[39m \u001b[34mcreateBoard\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m 40|\u001b[39m     \u001b[35mconst\u001b[39m m \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"m\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"medium\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m   |\u001b[39m               \u001b[31m^\u001b[39m\n    \u001b[90m 41|\u001b[39m     \u001b[35mconst\u001b[39m h1 \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"h1\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"high\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m 42|\u001b[39m     \u001b[35mconst\u001b[39m h2 \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"h2\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"high\"\u001b[39m })\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[4/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mstats counts total, done, pending\n\u001b[31m\u001b[1mTypeError\u001b[22m: addTask is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m49:15\u001b[22m\u001b[39m\n    \u001b[90m 47|\u001b[39m   \u001b[34mit\u001b[39m(\u001b[32m\"stats counts total, done, pending\"\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n    \u001b[90m 48|\u001b[39m     \u001b[35mconst\u001b[39m b \u001b[33m=\u001b[39m \u001b[34mcreateBoard\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m 49|\u001b[39m     \u001b[35mconst\u001b[39m a \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"a\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m   |\u001b[39m               \u001b[31m^\u001b[39m\n    \u001b[90m 50|\u001b[39m     \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"b\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m 51|\u001b[39m     \u001b[34mcompleteTask\u001b[39m(b\u001b[33m,\u001b[39m a)\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[5/5]\u23af\u001b[22m\u001b[39m\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 280482,
+            "completion": 16217,
+            "total": 296699
+          },
+          "wall_time": 251.60934281349182
+        },
+        {
+          "agent": 5,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 281521,
+            "completion": 16987,
+            "total": 298508
+          },
+          "wall_time": 214.78246307373047
+        },
+        {
+          "agent": 6,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 221395,
+            "completion": 16845,
+            "total": 238240
+          },
+          "wall_time": 219.1733124256134
+        },
+        {
+          "agent": 7,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 190962,
+            "completion": 14598,
+            "total": 205560
+          },
+          "wall_time": 197.24127745628357
+        }
+      ],
+      "p90_ttft": 0.06664285714285716,
+      "p90_tps": 43.41591014002154,
+      "holds_slo_p90": true,
+      "p99_ttft": 0.09989999999999996,
+      "p99_tps": 40.025669993060475,
+      "e2e_p50": 0.7538461538461538,
+      "e2e_p99": 22.799999999999972,
+      "server_tokens": {
+        "prompt": 3334083,
+        "generation": 102444
+      },
+      "tokens_source": "server",
+      "tokens_per_hour": 47421159.4099562,
+      "cost_per_mtok": 0.07570460201034793,
+      "cost_per_mtok_output": 2.5395426655813416,
+      "prefix_cache_hit_rate": 0.9621068221756927,
+      "computed_tokens_per_hour": 3157011.45758145,
+      "utilization": 0.07520299288187517,
+      "underutilization_penalty": 13.297343119983886
+    }
+  ],
+  "tokens": {
+    "prompt": 3862883,
+    "completion": 250507,
+    "total": 4113390
+  },
+  "model_meta": {
+    "architecture": "moe",
+    "total_params_b": 30.5,
+    "active_params_b": 3.3
+  },
+  "theta_max": {
+    "tokens_per_hour": 41979864.585181,
+    "output_tokens_per_hour": 15008208.187584305,
+    "server_tokens": {
+      "prompt": 912768,
+      "generation": 507904
+    },
+    "duration_s": 121.83029294013977,
+    "shape": {
+      "prompt_tokens": 354,
+      "output_tokens": 256
+    },
+    "concurrency": 64
+  },
+  "utilization_basis": "theta_max",
+  "timeline": [
+    {
+      "label": "create\u2192ready",
+      "seconds": 12.03450608253479,
+      "cost_usd": 0.012001076898972193,
+      "pct": 0.009681163300960692
+    },
+    {
+      "label": "rsync",
+      "seconds": 3.3191468715667725,
+      "cost_usd": 0.0033099270191457534,
+      "pct": 0.0026700890475384272
+    },
+    {
+      "label": "vLLM startup",
+      "seconds": 240.58253502845764,
+      "cost_usd": 0.23991425020893414,
+      "pct": 0.19353671791730226
+    },
+    {
+      "label": "generation",
+      "seconds": 864.589900970459,
+      "cost_usd": 0.8621882623566521,
+      "pct": 0.6955196966333204
+    },
+    {
+      "label": "saturation-probe",
+      "seconds": 122.55862188339233,
+      "cost_usd": 0.12221818126704957,
+      "pct": 0.09859233310087827
+    }
+  ],
+  "pod_cost_usd": 1.2396316977507538
+}
