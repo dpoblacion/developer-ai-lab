@@ -41,6 +41,34 @@ class ExcludesTest(unittest.TestCase):
         self.assertIn(".env", EXCLUDES)
 
 
+class WaitReadyTest(unittest.TestCase):
+    def test_vanished_pod_fails_fast_not_after_the_full_ceiling(self):
+        # A pod the host reclaimed keeps returning None: bail after a short streak
+        # instead of burning the 15-minute ready ceiling on a ghost.
+        from scripts.lib.orchestrator import wait_ready
+
+        class FakeRunpod:
+            def get_pod(self, pod_id):
+                return None
+        with self.assertRaises(SystemExit) as cm:
+            wait_ready(FakeRunpod(), "gone", retries=100, nap=0)
+        self.assertIn("disappeared", str(cm.exception))
+
+    def test_transient_none_then_ready_succeeds(self):
+        from scripts.lib.orchestrator import wait_ready
+
+        class FakeRunpod:
+            def __init__(self):
+                self.calls = 0
+            def get_pod(self, pod_id):
+                self.calls += 1
+                if self.calls < 3:
+                    return None
+                return {"id": pod_id, "runtime": {"ports": [{"ip": "1.2.3.4"}]}}
+        pod = wait_ready(FakeRunpod(), "p1", retries=10, nap=0)
+        self.assertTrue(pod["runtime"]["ports"])
+
+
 class ProgressProbeTest(unittest.TestCase):
     def test_probe_samples_log_bytes_not_lines(self):
         # vLLM's shard-loading tqdm bar redraws with \r: vllm.log grows in BYTES, not

@@ -62,10 +62,18 @@ def create_and_track(runpod, spec, public_key, guard):
 
 
 def wait_ready(runpod, pod_id, retries=180, nap=5):  # 180 × 5s = 15 min ceiling
+    """Poll until the pod is ready. A None from get_pod is tolerated (transient API
+    miss), but a streak of them means the host reclaimed the pod — bail fast instead of
+    burning the full ceiling on a ghost (live 2026-07-05, community-cloud RTX 4090)."""
+    missing = 0
     for _ in range(retries):
         pod = runpod.get_pod(pod_id)
         if is_ready(pod):
             return pod
+        missing = missing + 1 if pod is None else 0
+        if missing >= 6:
+            raise SystemExit(f"pod {pod_id} disappeared while waiting for ready "
+                             "(host likely reclaimed it) — re-run to get another host")
         time.sleep(nap)
     raise SystemExit("Pod did not become ready in time")
 

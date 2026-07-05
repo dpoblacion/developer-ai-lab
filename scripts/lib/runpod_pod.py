@@ -37,8 +37,10 @@ def build_create_kwargs(spec, gpu_type_id=None, public_key=None):
 
 
 def is_ready(pod):
-    """A pod is ready once its runtime exists and its ports are populated."""
-    runtime = pod.get("runtime")
+    """A pod is ready once its runtime exists and its ports are populated. `pod` may be
+    None mid-wait (a community host reclaiming the pod makes get_pod return None — live
+    2026-07-05): that reads as not-ready, never as a crash."""
+    runtime = (pod or {}).get("runtime")
     return bool(runtime and runtime.get("ports"))
 
 
