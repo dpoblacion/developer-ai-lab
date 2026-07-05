@@ -7,4 +7,4 @@ price_usd_per_gpu_hour: 1.99  # RunPod community on-demand, per GPU (edit when p
 provider: RunPod
 instance: "NVIDIA H100 PCIe"
 gpu_memory_utilization: 0.92
-supported_quants: [fp8, awq, bf16]   # native FP8 (Hopper); 80GB fits 30B fp8 comfortably
+supported_quants: [fp8, awq, gptq, bf16]   # native FP8 (Hopper); 80GB fits 30B fp8 comfortably
