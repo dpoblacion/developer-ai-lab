@@ -1,0 +1,555 @@
+{
+  "run_id": "20260705-105458",
+  "date": "2026-07-05",
+  "benchmark": "dev-load",
+  "family": "qwen3-coder",
+  "quant": "gptq",
+  "model": "qwen3-coder-30b-gptq",
+  "hardware": "rtx-a5000",
+  "gpu_count": 1,
+  "price_usd_per_gpu_hour": 0.27,
+  "cost_per_hour": 0.27,
+  "slo": {
+    "max_ttft": 2.0,
+    "min_tps": 20.0
+  },
+  "by_devs": [
+    {
+      "devs": 1,
+      "holds_slo": true,
+      "slo_percentile": "p50",
+      "median_ttft": 0.07875,
+      "median_tps": 197.6367248771306,
+      "cost_per_dev_hour": 0.27,
+      "cost_per_dev_month": 197.10000000000002,
+      "valid": true,
+      "agents_ok": 0,
+      "tokens_per_dev": 96250,
+      "agents": [
+        {
+          "agent": 0,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": false,
+              "exit_code": 1,
+              "output": "es2017.typedarrays, es2018.asyncgenerator, es2018.asynciterable/esnext.asynciterable, es2018.intl, es2018.promise, es2018.regexp, es2019.array, es2019.object, es2019.string, es2019.symbol/esnext.symbol, es2019.intl, es2020.bigint/esnext.bigint, es2020.date, es2020.promise, es2020.sharedmemory, es2020.string, es2020.symbol.wellknown, es2020.intl, es2020.number, es2021.promise, es2021.string, es2021.weakref/esnext.weakref, es2021.intl, es2022.array, es2022.error, es2022.intl, es2022.object, es2022.string, es2022.regexp, es2023.array, es2023.collection, es2023.intl, es2024.arraybuffer, es2024.collection, es2024.object/esnext.object, es2024.promise, es2024.regexp/esnext.regexp, es2024.sharedmemory, es2024.string/esnext.string, esnext.array, esnext.collection, esnext.intl, esnext.disposable, esnext.promise, esnext.decorators, esnext.iterator, esnext.float16, esnext.error, esnext.sharedmemory, decorators, decorators.legacy\ndefault: undefined\n\n--allowJs\nAllow JavaScript files to be a part of your program. Use the 'checkJs' option to get errors from these files.\ntype: boolean\ndefault: false\n\n--checkJs\nEnable error reporting in type-checked JavaScript files.\ntype: boolean\ndefault: false\n\n--jsx\nSpecify what JSX code is generated.\none of: preserve, react, react-native, react-jsx, react-jsxdev\ndefault: undefined\n\n--outFile\nSpecify a file that bundles all outputs into one JavaScript file. If 'declaration' is true, also designates a file that bundles all .d.ts output.\n\n--outDir\nSpecify an output folder for all emitted files.\n\n--removeComments\nDisable emitting comments.\ntype: boolean\ndefault: false\n\n--strict\nEnable all strict type-checking options.\ntype: boolean\ndefault: false\n\n--types\nSpecify type package names to be included without being referenced in a source file.\n\n--esModuleInterop\nEmit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility.\ntype: boolean\ndefault: false\n\nYou can learn about all of the compiler options at https://aka.ms/tsc\n\n"
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "\n RUN  v1.6.1 /out/workspace\n\n \u276f acceptance.test.ts  (0 test)\n\n Test Files  1 failed (1)\n      Tests  no tests\n   Start at  09:15:52\n   Duration  482ms (transform 47ms, setup 0ms, collect 0ms, tests 0ms, environment 0ms, prepare 107ms)\n\n\u23af\u23af\u23af\u23af\u23af\u23af Failed Suites 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af\n\n FAIL  acceptance.test.ts [ acceptance.test.ts ]\nError: Failed to load url ./src/board (resolved id: ./src/board) in /out/workspace/acceptance.test.ts. Does the file exist?\n \u276f loadAndTransform node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51969:17\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[1/1]\u23af\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 83918,
+            "completion": 12332,
+            "total": 96250
+          },
+          "wall_time": 123.99034905433655
+        }
+      ],
+      "p90_ttft": 0.4187500000000002,
+      "p90_tps": 109.79818048729477,
+      "holds_slo_p90": true,
+      "p99_ttft": 2.1775,
+      "p99_tps": 80.41787230844315,
+      "e2e_p50": 0.7375,
+      "e2e_p99": 14.283333333333335,
+      "server_tokens": {
+        "prompt": 205972,
+        "generation": 9606
+      },
+      "tokens_source": "server",
+      "tokens_per_hour": 5844559.288819188,
+      "cost_per_mtok": 0.046196810855613675,
+      "cost_per_mtok_output": 1.0367495409776686,
+      "prefix_cache_hit_rate": 0.875924882993805,
+      "computed_tokens_per_hour": 953280.9178740887,
+      "utilization": 0.08343827212474365,
+      "underutilization_penalty": 11.984907819099595
+    },
+    {
+      "devs": 2,
+      "holds_slo": true,
+      "slo_percentile": "p50",
+      "median_ttft": 0.065,
+      "median_tps": 75.65946043237405,
+      "cost_per_dev_hour": 0.135,
+      "cost_per_dev_month": 98.55000000000001,
+      "valid": true,
+      "agents_ok": 0,
+      "tokens_per_dev": 102380,
+      "agents": [
+        {
+          "agent": 0,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": false,
+              "exit_code": 1,
+              "output": "es2017.typedarrays, es2018.asyncgenerator, es2018.asynciterable/esnext.asynciterable, es2018.intl, es2018.promise, es2018.regexp, es2019.array, es2019.object, es2019.string, es2019.symbol/esnext.symbol, es2019.intl, es2020.bigint/esnext.bigint, es2020.date, es2020.promise, es2020.sharedmemory, es2020.string, es2020.symbol.wellknown, es2020.intl, es2020.number, es2021.promise, es2021.string, es2021.weakref/esnext.weakref, es2021.intl, es2022.array, es2022.error, es2022.intl, es2022.object, es2022.string, es2022.regexp, es2023.array, es2023.collection, es2023.intl, es2024.arraybuffer, es2024.collection, es2024.object/esnext.object, es2024.promise, es2024.regexp/esnext.regexp, es2024.sharedmemory, es2024.string/esnext.string, esnext.array, esnext.collection, esnext.intl, esnext.disposable, esnext.promise, esnext.decorators, esnext.iterator, esnext.float16, esnext.error, esnext.sharedmemory, decorators, decorators.legacy\ndefault: undefined\n\n--allowJs\nAllow JavaScript files to be a part of your program. Use the 'checkJs' option to get errors from these files.\ntype: boolean\ndefault: false\n\n--checkJs\nEnable error reporting in type-checked JavaScript files.\ntype: boolean\ndefault: false\n\n--jsx\nSpecify what JSX code is generated.\none of: preserve, react, react-native, react-jsx, react-jsxdev\ndefault: undefined\n\n--outFile\nSpecify a file that bundles all outputs into one JavaScript file. If 'declaration' is true, also designates a file that bundles all .d.ts output.\n\n--outDir\nSpecify an output folder for all emitted files.\n\n--removeComments\nDisable emitting comments.\ntype: boolean\ndefault: false\n\n--strict\nEnable all strict type-checking options.\ntype: boolean\ndefault: false\n\n--types\nSpecify type package names to be included without being referenced in a source file.\n\n--esModuleInterop\nEmit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility.\ntype: boolean\ndefault: false\n\nYou can learn about all of the compiler options at https://aka.ms/tsc\n\n"
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "\n RUN  v1.6.1 /out/workspace\n\n \u276f acceptance.test.ts  (0 test)\n\n Test Files  1 failed (1)\n      Tests  no tests\n   Start at  09:15:53\n   Duration  459ms (transform 27ms, setup 0ms, collect 0ms, tests 0ms, environment 0ms, prepare 152ms)\n\n\u23af\u23af\u23af\u23af\u23af\u23af Failed Suites 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af\n\n FAIL  acceptance.test.ts [ acceptance.test.ts ]\nError: Failed to load url ./src/board (resolved id: ./src/board) in /out/workspace/acceptance.test.ts. Does the file exist?\n \u276f loadAndTransform node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51969:17\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[1/1]\u23af\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 84927,
+            "completion": 10517,
+            "total": 95444
+          },
+          "wall_time": 125.87942218780518
+        },
+        {
+          "agent": 1,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "\n RUN  v3.2.6 /out/workspace\n\n\n Test Files  1 failed (1)\n      Tests  no tests\n   Start at  09:15:56\n   Duration  213ms (transform 31ms, setup 0ms, collect 0ms, tests 0ms, environment 0ms, prepare 40ms)\n\n\n\u23af\u23af\u23af\u23af\u23af\u23af Failed Suites 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af\n\n FAIL  acceptance.test.ts [ acceptance.test.ts ]\nError: Cannot find module './src/board' imported from '/out/workspace/acceptance.test.ts'\n \u276f acceptance.test.ts:4:1\n      2| // agent's vitest. Imports the agent's module at ./src/board. The agen\u2026\n      3| import { describe, it, expect } from \"vitest\";\n      4| import { createBoard, addTask, completeTask, listTasks, stats } from \"\u2026\n       | ^\n      5| \n      6| describe(\"TaskBoard acceptance\", () => {\n\nCaused by: Error: Failed to load url ./src/board (resolved id: ./src/board) in /out/workspace/acceptance.test.ts. Does the file exist?\n \u276f loadAndTransform ../../usr/lib/node_modules/vitest/node_modules/vite/dist/node/chunks/config.js:22739:33\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[1/1]\u23af\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 100654,
+            "completion": 8662,
+            "total": 109316
+          },
+          "wall_time": 124.97804284095764
+        }
+      ],
+      "p90_ttft": 0.21029411764705883,
+      "p90_tps": 44.00021399977204,
+      "holds_slo_p90": true,
+      "p99_ttft": 0.45249999999999985,
+      "p99_tps": 40.21406399512567,
+      "e2e_p50": 0.6808823529411765,
+      "e2e_p99": 17.624999999999993,
+      "server_tokens": {
+        "prompt": 464665,
+        "generation": 15086
+      },
+      "tokens_source": "server",
+      "tokens_per_hour": 12820355.126673276,
+      "cost_per_mtok": 0.021060259043702612,
+      "cost_per_mtok_output": 0.6697388530077802,
+      "prefix_cache_hit_rate": 0.9554582333509087,
+      "computed_tokens_per_hour": 956226.8082771058,
+      "utilization": 0.08369611847463679,
+      "underutilization_penalty": 11.94798538122218
+    },
+    {
+      "devs": 4,
+      "holds_slo": true,
+      "slo_percentile": "p50",
+      "median_ttft": 0.09333333333333334,
+      "median_tps": 58.24385706227548,
+      "cost_per_dev_hour": 0.0675,
+      "cost_per_dev_month": 49.275000000000006,
+      "valid": true,
+      "agents_ok": 2,
+      "tokens_per_dev": 104342,
+      "agents": [
+        {
+          "agent": 0,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 94308,
+            "completion": 9612,
+            "total": 103920
+          },
+          "wall_time": 168.86936688423157
+        },
+        {
+          "agent": 1,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": false,
+              "exit_code": 2,
+              "output": "ind name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nnode_modules/vite/dist/node/index.d.ts(2401,63): error TS2580: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nnode_modules/vite/dist/node/index.d.ts(3561,84): error TS2580: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(11,26): error TS2307: Cannot find module 'node:stream' or its corresponding type declarations.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(15,29): error TS2307: Cannot find module 'node:worker_threads' or its corresponding type declarations.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(16,23): error TS2307: Cannot find module 'node:fs' or its corresponding type declarations.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(528,10): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(622,19): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(623,18): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(628,45): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(628,90): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(947,13): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(948,14): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(949,14): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(1776,21): error TS2580: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\ntest/board.test.ts(2,70): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.\n"
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "\n     23|     throw new Error('Task title cannot be empty');\n     24|   }\n \u276f acceptance.test.ts:9:15\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[1/5]\u23af\n\n FAIL  acceptance.test.ts > TaskBoard acceptance > completeTask marks done and throws on unknown id\nTypeError: title.trim is not a function\n \u276f Module.addTask src/board.ts:22:23\n     20| \n     21| export const addTask = (board: Board, title: string, priority: Priorit\u2026\n     22|   if (!title || title.trim() === '') {\n       |                       ^\n     23|     throw new Error('Task title cannot be empty');\n     24|   }\n \u276f acceptance.test.ts:23:16\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[2/5]\u23af\n\n FAIL  acceptance.test.ts > TaskBoard acceptance > listTasks filters by done and by priority\nTypeError: title.trim is not a function\n \u276f Module.addTask src/board.ts:22:23\n     20| \n     21| export const addTask = (board: Board, title: string, priority: Priorit\u2026\n     22|   if (!title || title.trim() === '') {\n       |                       ^\n     23|     throw new Error('Task title cannot be empty');\n     24|   }\n \u276f acceptance.test.ts:31:16\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[3/5]\u23af\n\n FAIL  acceptance.test.ts > TaskBoard acceptance > listTasks sorts by priority then createdAt ascending\nTypeError: title.trim is not a function\n \u276f Module.addTask src/board.ts:22:23\n     20| \n     21| export const addTask = (board: Board, title: string, priority: Priorit\u2026\n     22|   if (!title || title.trim() === '') {\n       |                       ^\n     23|     throw new Error('Task title cannot be empty');\n     24|   }\n \u276f acceptance.test.ts:40:15\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[4/5]\u23af\n\n FAIL  acceptance.test.ts > TaskBoard acceptance > stats counts total, done, pending\nTypeError: title.trim is not a function\n \u276f Module.addTask src/board.ts:22:23\n     20| \n     21| export const addTask = (board: Board, title: string, priority: Priorit\u2026\n     22|   if (!title || title.trim() === '') {\n       |                       ^\n     23|     throw new Error('Task title cannot be empty');\n     24|   }\n \u276f acceptance.test.ts:49:15\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[5/5]\u23af\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 90631,
+            "completion": 8568,
+            "total": 99199
+          },
+          "wall_time": 157.88222122192383
+        },
+        {
+          "agent": 2,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 98668,
+            "completion": 9931,
+            "total": 108599
+          },
+          "wall_time": 172.21678352355957
+        },
+        {
+          "agent": 3,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "   \u001b[34mcompleteTask\u001b[39m(b\u001b[33m,\u001b[39m hi)\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[3/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mlistTasks sorts by priority then createdAt ascending\n\u001b[31m\u001b[1mTypeError\u001b[22m: addTask is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m40:15\u001b[22m\u001b[39m\n    \u001b[90m 38|\u001b[39m   \u001b[34mit\u001b[39m(\u001b[32m\"listTasks sorts by priority then createdAt ascending\"\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n    \u001b[90m 39|\u001b[39m     \u001b[35mconst\u001b[39m b \u001b[33m=\u001b[39m \u001b[34mcreateBoard\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m 40|\u001b[39m     \u001b[35mconst\u001b[39m m \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"m\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"medium\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m   |\u001b[39m               \u001b[31m^\u001b[39m\n    \u001b[90m 41|\u001b[39m     \u001b[35mconst\u001b[39m h1 \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"h1\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"high\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m 42|\u001b[39m     \u001b[35mconst\u001b[39m h2 \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"h2\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"high\"\u001b[39m })\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[4/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mstats counts total, done, pending\n\u001b[31m\u001b[1mTypeError\u001b[22m: addTask is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m49:15\u001b[22m\u001b[39m\n    \u001b[90m 47|\u001b[39m   \u001b[34mit\u001b[39m(\u001b[32m\"stats counts total, done, pending\"\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n    \u001b[90m 48|\u001b[39m     \u001b[35mconst\u001b[39m b \u001b[33m=\u001b[39m \u001b[34mcreateBoard\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m 49|\u001b[39m     \u001b[35mconst\u001b[39m a \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"a\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m   |\u001b[39m               \u001b[31m^\u001b[39m\n    \u001b[90m 50|\u001b[39m     \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"b\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m 51|\u001b[39m     \u001b[34mcompleteTask\u001b[39m(b\u001b[33m,\u001b[39m a)\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[5/5]\u23af\u001b[22m\u001b[39m\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 94069,
+            "completion": 10696,
+            "total": 104765
+          },
+          "wall_time": 178.5340964794159
+        }
+      ],
+      "p90_ttft": 0.37142857142857166,
+      "p90_tps": 42.37982565917853,
+      "holds_slo_p90": true,
+      "p99_ttft": 0.9431250000000002,
+      "p99_tps": 20.724182093375386,
+      "e2e_p50": 0.9891891891891892,
+      "e2e_p99": 23.933333333333355,
+      "server_tokens": {
+        "prompt": 915414,
+        "generation": 31704
+      },
+      "tokens_source": "server",
+      "tokens_per_hour": 18190409.57099708,
+      "cost_per_mtok": 0.014842986297047974,
+      "cost_per_mtok_output": 0.4434159568410133,
+      "prefix_cache_hit_rate": 0.935620385967442,
+      "computed_tokens_per_hour": 1740799.2907916787,
+      "utilization": 0.15236776716726608,
+      "underutilization_penalty": 6.563067888907379
+    },
+    {
+      "devs": 8,
+      "holds_slo": true,
+      "slo_percentile": "p50",
+      "median_ttft": 0.13317307692307692,
+      "median_tps": 57.821956699862056,
+      "cost_per_dev_hour": 0.03375,
+      "cost_per_dev_month": 24.637500000000003,
+      "valid": true,
+      "agents_ok": 3,
+      "tokens_per_dev": 107145,
+      "agents": [
+        {
+          "agent": 0,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 97498,
+            "completion": 10920,
+            "total": 108418
+          },
+          "wall_time": 248.10204887390137
+        },
+        {
+          "agent": 1,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 113137,
+            "completion": 11153,
+            "total": 124290
+          },
+          "wall_time": 319.08540391921997
+        },
+        {
+          "agent": 2,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": false,
+              "exit_code": 2,
+              "output": "ll type definitions for node? Try `npm i --save-dev @types/node`.\nnode_modules/vite/dist/node/index.d.ts(1389,20): error TS2580: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nnode_modules/vite/dist/node/index.d.ts(2401,63): error TS2580: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nnode_modules/vite/dist/node/index.d.ts(3561,84): error TS2580: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(11,26): error TS2307: Cannot find module 'node:stream' or its corresponding type declarations.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(15,29): error TS2307: Cannot find module 'node:worker_threads' or its corresponding type declarations.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(16,23): error TS2307: Cannot find module 'node:fs' or its corresponding type declarations.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(528,10): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(622,19): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(623,18): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(628,45): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(628,90): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(947,13): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(948,14): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(949,14): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(1776,21): error TS2580: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\n"
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "\n     11|     expect(a).not.toEqual(c);\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[1/5]\u23af\n\n FAIL  acceptance.test.ts > TaskBoard acceptance > completeTask marks done and throws on unknown id\nTypeError: addTask is not a function\n \u276f acceptance.test.ts:23:16\n     21|   it(\"completeTask marks done and throws on unknown id\", () => {\n     22|     const b = createBoard();\n     23|     const id = addTask(b, { title: \"x\" });\n       |                ^\n     24|     completeTask(b, id);\n     25|     expect(listTasks(b, { done: true }).map((t) => t.id)).toEqual([id]\u2026\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[2/5]\u23af\n\n FAIL  acceptance.test.ts > TaskBoard acceptance > listTasks filters by done and by priority\nTypeError: addTask is not a function\n \u276f acceptance.test.ts:31:16\n     29|   it(\"listTasks filters by done and by priority\", () => {\n     30|     const b = createBoard();\n     31|     const hi = addTask(b, { title: \"hi\", priority: \"high\" });\n       |                ^\n     32|     addTask(b, { title: \"lo\", priority: \"low\" });\n     33|     completeTask(b, hi);\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[3/5]\u23af\n\n FAIL  acceptance.test.ts > TaskBoard acceptance > listTasks sorts by priority then createdAt ascending\nTypeError: addTask is not a function\n \u276f acceptance.test.ts:40:15\n     38|   it(\"listTasks sorts by priority then createdAt ascending\", () => {\n     39|     const b = createBoard();\n     40|     const m = addTask(b, { title: \"m\", priority: \"medium\" });\n       |               ^\n     41|     const h1 = addTask(b, { title: \"h1\", priority: \"high\" });\n     42|     const h2 = addTask(b, { title: \"h2\", priority: \"high\" });\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[4/5]\u23af\n\n FAIL  acceptance.test.ts > TaskBoard acceptance > stats counts total, done, pending\nTypeError: addTask is not a function\n \u276f acceptance.test.ts:49:15\n     47|   it(\"stats counts total, done, pending\", () => {\n     48|     const b = createBoard();\n     49|     const a = addTask(b, { title: \"a\" });\n       |               ^\n     50|     addTask(b, { title: \"b\" });\n     51|     completeTask(b, a);\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[5/5]\u23af\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 73978,
+            "completion": 7061,
+            "total": 81039
+          },
+          "wall_time": 172.69017720222473
+        },
+        {
+          "agent": 3,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": false,
+              "exit_code": 1,
+              "output": "es2017.typedarrays, es2018.asyncgenerator, es2018.asynciterable/esnext.asynciterable, es2018.intl, es2018.promise, es2018.regexp, es2019.array, es2019.object, es2019.string, es2019.symbol/esnext.symbol, es2019.intl, es2020.bigint/esnext.bigint, es2020.date, es2020.promise, es2020.sharedmemory, es2020.string, es2020.symbol.wellknown, es2020.intl, es2020.number, es2021.promise, es2021.string, es2021.weakref/esnext.weakref, es2021.intl, es2022.array, es2022.error, es2022.intl, es2022.object, es2022.string, es2022.regexp, es2023.array, es2023.collection, es2023.intl, es2024.arraybuffer, es2024.collection, es2024.object/esnext.object, es2024.promise, es2024.regexp/esnext.regexp, es2024.sharedmemory, es2024.string/esnext.string, esnext.array, esnext.collection, esnext.intl, esnext.disposable, esnext.promise, esnext.decorators, esnext.iterator, esnext.float16, esnext.error, esnext.sharedmemory, decorators, decorators.legacy\ndefault: undefined\n\n--allowJs\nAllow JavaScript files to be a part of your program. Use the 'checkJs' option to get errors from these files.\ntype: boolean\ndefault: false\n\n--checkJs\nEnable error reporting in type-checked JavaScript files.\ntype: boolean\ndefault: false\n\n--jsx\nSpecify what JSX code is generated.\none of: preserve, react, react-native, react-jsx, react-jsxdev\ndefault: undefined\n\n--outFile\nSpecify a file that bundles all outputs into one JavaScript file. If 'declaration' is true, also designates a file that bundles all .d.ts output.\n\n--outDir\nSpecify an output folder for all emitted files.\n\n--removeComments\nDisable emitting comments.\ntype: boolean\ndefault: false\n\n--strict\nEnable all strict type-checking options.\ntype: boolean\ndefault: false\n\n--types\nSpecify type package names to be included without being referenced in a source file.\n\n--esModuleInterop\nEmit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility.\ntype: boolean\ndefault: false\n\nYou can learn about all of the compiler options at https://aka.ms/tsc\n\n"
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "\n RUN  v1.6.1 /out/workspace\n\n \u276f acceptance.test.ts  (0 test)\n\n Test Files  1 failed (1)\n      Tests  no tests\n   Start at  09:16:15\n   Duration  497ms (transform 49ms, setup 0ms, collect 0ms, tests 0ms, environment 0ms, prepare 122ms)\n\n\u23af\u23af\u23af\u23af\u23af\u23af Failed Suites 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af\n\n FAIL  acceptance.test.ts [ acceptance.test.ts ]\nError: Failed to load url ./src/board (resolved id: ./src/board) in /out/workspace/acceptance.test.ts. Does the file exist?\n \u276f loadAndTransform node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51969:17\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[1/1]\u23af\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 99146,
+            "completion": 11063,
+            "total": 110209
+          },
+          "wall_time": 259.2608120441437
+        },
+        {
+          "agent": 4,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 104088,
+            "completion": 9838,
+            "total": 113926
+          },
+          "wall_time": 231.93826985359192
+        },
+        {
+          "agent": 5,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": false,
+              "exit_code": 2,
+              "output": "test/board.test.ts(1,50): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.\ntest/board.test.ts(105,36): error TS7006: Parameter 't' implicitly has an 'any' type.\ntest/board.test.ts(106,36): error TS7006: Parameter 't' implicitly has an 'any' type.\ntest/board.test.ts(107,36): error TS7006: Parameter 't' implicitly has an 'any' type.\n"
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 64232,
+            "completion": 14585,
+            "total": 78817
+          },
+          "wall_time": 278.7768087387085
+        },
+        {
+          "agent": 6,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": false,
+              "exit_code": 1,
+              "output": "es2017.typedarrays, es2018.asyncgenerator, es2018.asynciterable/esnext.asynciterable, es2018.intl, es2018.promise, es2018.regexp, es2019.array, es2019.object, es2019.string, es2019.symbol/esnext.symbol, es2019.intl, es2020.bigint/esnext.bigint, es2020.date, es2020.promise, es2020.sharedmemory, es2020.string, es2020.symbol.wellknown, es2020.intl, es2020.number, es2021.promise, es2021.string, es2021.weakref/esnext.weakref, es2021.intl, es2022.array, es2022.error, es2022.intl, es2022.object, es2022.string, es2022.regexp, es2023.array, es2023.collection, es2023.intl, es2024.arraybuffer, es2024.collection, es2024.object/esnext.object, es2024.promise, es2024.regexp/esnext.regexp, es2024.sharedmemory, es2024.string/esnext.string, esnext.array, esnext.collection, esnext.intl, esnext.disposable, esnext.promise, esnext.decorators, esnext.iterator, esnext.float16, esnext.error, esnext.sharedmemory, decorators, decorators.legacy\ndefault: undefined\n\n--allowJs\nAllow JavaScript files to be a part of your program. Use the 'checkJs' option to get errors from these files.\ntype: boolean\ndefault: false\n\n--checkJs\nEnable error reporting in type-checked JavaScript files.\ntype: boolean\ndefault: false\n\n--jsx\nSpecify what JSX code is generated.\none of: preserve, react, react-native, react-jsx, react-jsxdev\ndefault: undefined\n\n--outFile\nSpecify a file that bundles all outputs into one JavaScript file. If 'declaration' is true, also designates a file that bundles all .d.ts output.\n\n--outDir\nSpecify an output folder for all emitted files.\n\n--removeComments\nDisable emitting comments.\ntype: boolean\ndefault: false\n\n--strict\nEnable all strict type-checking options.\ntype: boolean\ndefault: false\n\n--types\nSpecify type package names to be included without being referenced in a source file.\n\n--esModuleInterop\nEmit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility.\ntype: boolean\ndefault: false\n\nYou can learn about all of the compiler options at https://aka.ms/tsc\n\n"
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "\n RUN  v1.6.1 /out/workspace\n\n \u276f acceptance.test.ts  (0 test)\n\n Test Files  1 failed (1)\n      Tests  no tests\n   Start at  09:16:22\n   Duration  494ms (transform 45ms, setup 0ms, collect 0ms, tests 0ms, environment 0ms, prepare 132ms)\n\n\u23af\u23af\u23af\u23af\u23af\u23af Failed Suites 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af\n\n FAIL  acceptance.test.ts [ acceptance.test.ts ]\nError: Failed to load url ./src/board (resolved id: ./src/board) in /out/workspace/acceptance.test.ts. Does the file exist?\n \u276f loadAndTransform node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51969:17\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[1/1]\u23af\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 95401,
+            "completion": 9561,
+            "total": 104962
+          },
+          "wall_time": 224.661762714386
+        },
+        {
+          "agent": 7,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": false,
+              "exit_code": 1,
+              "output": "es2017.typedarrays, es2018.asyncgenerator, es2018.asynciterable/esnext.asynciterable, es2018.intl, es2018.promise, es2018.regexp, es2019.array, es2019.object, es2019.string, es2019.symbol/esnext.symbol, es2019.intl, es2020.bigint/esnext.bigint, es2020.date, es2020.promise, es2020.sharedmemory, es2020.string, es2020.symbol.wellknown, es2020.intl, es2020.number, es2021.promise, es2021.string, es2021.weakref/esnext.weakref, es2021.intl, es2022.array, es2022.error, es2022.intl, es2022.object, es2022.string, es2022.regexp, es2023.array, es2023.collection, es2023.intl, es2024.arraybuffer, es2024.collection, es2024.object/esnext.object, es2024.promise, es2024.regexp/esnext.regexp, es2024.sharedmemory, es2024.string/esnext.string, esnext.array, esnext.collection, esnext.intl, esnext.disposable, esnext.promise, esnext.decorators, esnext.iterator, esnext.float16, esnext.error, esnext.sharedmemory, decorators, decorators.legacy\ndefault: undefined\n\n--allowJs\nAllow JavaScript files to be a part of your program. Use the 'checkJs' option to get errors from these files.\ntype: boolean\ndefault: false\n\n--checkJs\nEnable error reporting in type-checked JavaScript files.\ntype: boolean\ndefault: false\n\n--jsx\nSpecify what JSX code is generated.\none of: preserve, react, react-native, react-jsx, react-jsxdev\ndefault: undefined\n\n--outFile\nSpecify a file that bundles all outputs into one JavaScript file. If 'declaration' is true, also designates a file that bundles all .d.ts output.\n\n--outDir\nSpecify an output folder for all emitted files.\n\n--removeComments\nDisable emitting comments.\ntype: boolean\ndefault: false\n\n--strict\nEnable all strict type-checking options.\ntype: boolean\ndefault: false\n\n--types\nSpecify type package names to be included without being referenced in a source file.\n\n--esModuleInterop\nEmit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility.\ntype: boolean\ndefault: false\n\nYou can learn about all of the compiler options at https://aka.ms/tsc\n\n"
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "\n\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv4.1.9 \u001b[39m\u001b[90m/out/workspace\u001b[39m\n\n \u001b[31m\u276f\u001b[39m acceptance.test.ts \u001b[2m(\u001b[22m\u001b[2m0 test\u001b[22m\u001b[2m)\u001b[22m\n\n\u001b[2m Test Files \u001b[22m \u001b[1m\u001b[31m1 failed\u001b[39m\u001b[22m\u001b[90m (1)\u001b[39m\n\u001b[2m      Tests \u001b[22m \u001b[2mno tests\u001b[22m\n\u001b[2m   Start at \u001b[22m 09:16:24\n\u001b[2m   Duration \u001b[22m 193ms\u001b[2m (transform 22ms, setup 0ms, import 0ms, tests 0ms, environment 0ms)\u001b[22m\n\n\n\u001b[31m\u23af\u23af\u23af\u23af\u23af\u23af\u001b[39m\u001b[1m\u001b[41m Failed Suites 1 \u001b[49m\u001b[22m\u001b[31m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m [ acceptance.test.ts ]\u001b[22m\n\u001b[31m\u001b[1mError\u001b[22m: Cannot find module './src/board' imported from /out/workspace/acceptance.test.ts\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m4:1\u001b[22m\u001b[39m\n    \u001b[90m  2|\u001b[39m // agent's vitest. Imports the agent's module at ./src/board. The agen\u2026\n    \u001b[90m  3|\u001b[39m \u001b[35mimport\u001b[39m { describe\u001b[33m,\u001b[39m it\u001b[33m,\u001b[39m expect } \u001b[35mfrom\u001b[39m \u001b[32m\"vitest\"\u001b[39m\u001b[33m;\u001b[39m\n    \u001b[90m  4|\u001b[39m import { createBoard, addTask, completeTask, listTasks, stats } from \"\u2026\n    \u001b[90m   |\u001b[39m \u001b[31m^\u001b[39m\n    \u001b[90m  5|\u001b[39m\n    \u001b[90m  6|\u001b[39m \u001b[34mdescribe\u001b[39m(\u001b[32m\"TaskBoard acceptance\"\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[1/1]\u23af\u001b[22m\u001b[39m\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 94723,
+            "completion": 11150,
+            "total": 105873
+          },
+          "wall_time": 262.4424555301666
+        }
+      ],
+      "p90_ttft": 0.3734374999999999,
+      "p90_tps": 41.99842430057917,
+      "holds_slo_p90": true,
+      "p99_ttft": 1.1387500000000017,
+      "p99_tps": 10.390662875087774,
+      "e2e_p50": 1.358910891089109,
+      "e2e_p99": 39.10000000000001,
+      "server_tokens": {
+        "prompt": 1803650,
+        "generation": 68762
+      },
+      "tokens_source": "server",
+      "tokens_per_hour": 20542351.29470606,
+      "cost_per_mtok": 0.013143578168171105,
+      "cost_per_mtok_output": 0.3579039801783193,
+      "prefix_cache_hit_rate": 0.9313381199234885,
+      "computed_tokens_per_hour": 2113070.7497952194,
+      "utilization": 0.18495174815146898,
+      "underutilization_penalty": 5.406815615395185
+    }
+  ],
+  "tokens": {
+    "prompt": 1389378,
+    "completion": 155649,
+    "total": 1545027
+  },
+  "model_meta": {
+    "architecture": "moe",
+    "total_params_b": 30.5,
+    "active_params_b": 3.3
+  },
+  "theta_max": {
+    "tokens_per_hour": 11424983.926427605,
+    "output_tokens_per_hour": 3377411.8212630916,
+    "server_tokens": {
+      "prompt": 289134,
+      "generation": 121344
+    },
+    "duration_s": 129.34117102622986,
+    "shape": {
+      "prompt_tokens": 468,
+      "output_tokens": 256
+    },
+    "concurrency": 64
+  },
+  "utilization_basis": "theta_max",
+  "timeline": [
+    {
+      "label": "create\u2192ready",
+      "seconds": 27.91769003868103,
+      "cost_usd": 0.0020938267529010774,
+      "pct": 0.022300979341189103
+    },
+    {
+      "label": "rsync",
+      "seconds": 3.527470111846924,
+      "cost_usd": 0.0002645602583885193,
+      "pct": 0.0028177846369798307
+    },
+    {
+      "label": "vLLM startup",
+      "seconds": 305.98712611198425,
+      "cost_usd": 0.02294903445839882,
+      "pct": 0.24442611722669502
+    },
+    {
+      "label": "generation",
+      "seconds": 784.2912046909332,
+      "cost_usd": 0.05882184035182,
+      "pct": 0.6265010439278862
+    },
+    {
+      "label": "saturation-probe",
+      "seconds": 130.13588309288025,
+      "cost_usd": 0.009760191231966019,
+      "pct": 0.10395407486724983
+    }
+  ],
+  "pod_cost_usd": 0.09388945305347443
+}
