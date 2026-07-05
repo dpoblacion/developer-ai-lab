@@ -1,0 +1,543 @@
+{
+  "run_id": "20260704-203736",
+  "date": "2026-07-04",
+  "benchmark": "dev-load",
+  "family": "qwen3-coder",
+  "quant": "awq",
+  "model": "qwen3-coder-30b-awq",
+  "hardware": "a40",
+  "gpu_count": 1,
+  "price_usd_per_gpu_hour": 0.35,
+  "cost_per_hour": 0.35,
+  "slo": {
+    "max_ttft": 2.0,
+    "min_tps": 20.0
+  },
+  "by_devs": [
+    {
+      "devs": 1,
+      "holds_slo": true,
+      "slo_percentile": "p50",
+      "median_ttft": 0.07833333333333334,
+      "median_tps": 115.10815034131097,
+      "cost_per_dev_hour": 0.35,
+      "cost_per_dev_month": 255.49999999999997,
+      "valid": true,
+      "agents_ok": 1,
+      "tokens_per_dev": 282498,
+      "agents": [
+        {
+          "agent": 0,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 268110,
+            "completion": 14388,
+            "total": 282498
+          },
+          "wall_time": 173.38103914260864
+        }
+      ],
+      "p90_ttft": 0.24294117647058824,
+      "p90_tps": 46.55615412751238,
+      "holds_slo_p90": true,
+      "p99_ttft": 1.9899999999999949,
+      "p99_tps": 40.54548822312839,
+      "e2e_p50": 0.8,
+      "e2e_p99": 11.599999999999966,
+      "server_tokens": {
+        "prompt": 481391,
+        "generation": 12227
+      },
+      "tokens_source": "server",
+      "tokens_per_hour": 9749950.936492123,
+      "cost_per_mtok": 0.035897616539794036,
+      "cost_per_mtok_output": 1.4492279120912777,
+      "prefix_cache_hit_rate": 0.932397988329653,
+      "computed_tokens_per_hour": 884297.7837654874,
+      "utilization": 0.06665732173029391,
+      "underutilization_penalty": 15.002102905456637
+    },
+    {
+      "devs": 2,
+      "holds_slo": true,
+      "slo_percentile": "p50",
+      "median_ttft": 0.0791304347826087,
+      "median_tps": 60.71777717576942,
+      "cost_per_dev_hour": 0.175,
+      "cost_per_dev_month": 127.74999999999999,
+      "valid": true,
+      "agents_ok": 1,
+      "tokens_per_dev": 277501,
+      "agents": [
+        {
+          "agent": 0,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 157207,
+            "completion": 14252,
+            "total": 171459
+          },
+          "wall_time": 192.60976457595825
+        },
+        {
+          "agent": 1,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": false,
+              "exit_code": 2,
+              "output": "rity?: Priority | undefined; }'.\ntests/board.test.ts(34,15): error TS2339: Property 'completed' does not exist on type 'string'.\ntests/board.test.ts(36,43): error TS2339: Property 'id' does not exist on type 'string'.\ntests/board.test.ts(39,25): error TS2339: Property 'completed' does not exist on type 'Task'.\ntests/board.test.ts(53,53): error TS2554: Expected 2 arguments, but got 3.\ntests/board.test.ts(54,54): error TS2554: Expected 2 arguments, but got 3.\ntests/board.test.ts(55,56): error TS2554: Expected 2 arguments, but got 3.\ntests/board.test.ts(56,62): error TS2554: Expected 2 arguments, but got 3.\ntests/board.test.ts(77,42): error TS2554: Expected 2 arguments, but got 3.\ntests/board.test.ts(83,42): error TS2554: Expected 2 arguments, but got 3.\ntests/board.test.ts(96,18): error TS2345: Argument of type 'string' is not assignable to parameter of type '{ title: string; priority?: Priority | undefined; }'.\ntests/board.test.ts(97,18): error TS2345: Argument of type 'string' is not assignable to parameter of type '{ title: string; priority?: Priority | undefined; }'.\ntests/board.test.ts(98,18): error TS2345: Argument of type 'string' is not assignable to parameter of type '{ title: string; priority?: Priority | undefined; }'.\ntests/board.test.ts(103,17): error TS2339: Property 'completed' does not exist on type '{ total: number; done: number; pending: number; }'.\ntests/board.test.ts(110,18): error TS2339: Property 'completed' does not exist on type '{ total: number; done: number; pending: number; }'.\ntests/board.test.ts(114,34): error TS2339: Property 'completed' does not exist on type '{ total: number; done: number; pending: number; }'.\ntests/board.test.ts(122,41): error TS2554: Expected 2 arguments, but got 3.\ntests/board.test.ts(123,42): error TS2554: Expected 2 arguments, but got 3.\ntests/board.test.ts(124,44): error TS2554: Expected 2 arguments, but got 3.\ntests/board.test.ts(125,41): error TS2554: Expected 2 arguments, but got 3.\ntests/board.test.ts(126,42): error TS2554: Expected 2 arguments, but got 3.\n"
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "\n RUN  v1.6.1 /out/workspace\n\n \u276f acceptance.test.ts  (6 tests | 1 failed) 7ms\n   \u276f acceptance.test.ts > TaskBoard acceptance > completeTask marks done and throws on unknown id\n     \u2192 expected [Function] to throw an error\n\n Test Files  1 failed (1)\n      Tests  1 failed | 5 passed (6)\n   Start at  19:10:56\n   Duration  434ms (transform 47ms, setup 0ms, collect 46ms, tests 7ms, environment 0ms, prepare 107ms)\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af\n\n FAIL  acceptance.test.ts > TaskBoard acceptance > completeTask marks done and throws on unknown id\nAssertionError: expected [Function] to throw an error\n \u276f acceptance.test.ts:26:43\n     24|     completeTask(b, id);\n     25|     expect(listTasks(b, { done: true }).map((t) => t.id)).toEqual([id]\u2026\n     26|     expect(() => completeTask(b, \"nope\")).toThrow();\n       |                                           ^\n     27|   });\n     28| \n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[1/1]\u23af\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 362041,
+            "completion": 21503,
+            "total": 383544
+          },
+          "wall_time": 275.10090017318726
+        }
+      ],
+      "p90_ttft": 0.24571428571428572,
+      "p90_tps": 42.856834064656866,
+      "holds_slo_p90": true,
+      "p99_ttft": 0.6024999999999991,
+      "p99_tps": 40.19636724648724,
+      "e2e_p50": 0.9833333333333333,
+      "e2e_p99": 26.066666666666645,
+      "server_tokens": {
+        "prompt": 879925,
+        "generation": 29604
+      },
+      "tokens_source": "server",
+      "tokens_per_hour": 11532870.219179083,
+      "cost_per_mtok": 0.03034803941675789,
+      "cost_per_mtok_output": 0.9323882564073903,
+      "prefix_cache_hit_rate": 0.9487172202176322,
+      "computed_tokens_per_hour": 947567.211830556,
+      "utilization": 0.07142649643552353,
+      "underutilization_penalty": 14.000406710452289
+    },
+    {
+      "devs": 4,
+      "holds_slo": true,
+      "slo_percentile": "p50",
+      "median_ttft": 0.08746031746031746,
+      "median_tps": 57.88049243698348,
+      "cost_per_dev_hour": 0.0875,
+      "cost_per_dev_month": 63.87499999999999,
+      "valid": true,
+      "agents_ok": 3,
+      "tokens_per_dev": 285691,
+      "agents": [
+        {
+          "agent": 0,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 496772,
+            "completion": 26076,
+            "total": 522848
+          },
+          "wall_time": 403.0143504142761
+        },
+        {
+          "agent": 1,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "[39m\n    \u001b[90m 39|\u001b[39m       \u001b[35mthrow\u001b[39m \u001b[35mnew\u001b[39m \u001b[33mError\u001b[39m(\u001b[32m'Task title cannot be empty'\u001b[39m)\u001b[33m;\u001b[39m\n    \u001b[90m 40|\u001b[39m     }\n\u001b[90m \u001b[2m\u276f\u001b[22m addTask src/board.ts:\u001b[2m110:16\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m31:16\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[3/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mlistTasks sorts by priority then createdAt ascending\n\u001b[31m\u001b[1mTypeError\u001b[22m: title.trim is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m Object.addTask src/board.ts:\u001b[2m38:25\u001b[22m\u001b[39m\n    \u001b[90m 36|\u001b[39m\n    \u001b[90m 37|\u001b[39m   function addTask(title: string, priority: Priority = 'medium'): Task\u2026\n    \u001b[90m 38|\u001b[39m     \u001b[35mif\u001b[39m (\u001b[33m!\u001b[39mtitle \u001b[33m||\u001b[39m title\u001b[33m.\u001b[39m\u001b[34mtrim\u001b[39m() \u001b[33m===\u001b[39m \u001b[32m''\u001b[39m) {\n    \u001b[90m   |\u001b[39m                         \u001b[31m^\u001b[39m\n    \u001b[90m 39|\u001b[39m       \u001b[35mthrow\u001b[39m \u001b[35mnew\u001b[39m \u001b[33mError\u001b[39m(\u001b[32m'Task title cannot be empty'\u001b[39m)\u001b[33m;\u001b[39m\n    \u001b[90m 40|\u001b[39m     }\n\u001b[90m \u001b[2m\u276f\u001b[22m addTask src/board.ts:\u001b[2m110:16\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m40:15\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[4/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mstats counts total, done, pending\n\u001b[31m\u001b[1mTypeError\u001b[22m: title.trim is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m Object.addTask src/board.ts:\u001b[2m38:25\u001b[22m\u001b[39m\n    \u001b[90m 36|\u001b[39m\n    \u001b[90m 37|\u001b[39m   function addTask(title: string, priority: Priority = 'medium'): Task\u2026\n    \u001b[90m 38|\u001b[39m     \u001b[35mif\u001b[39m (\u001b[33m!\u001b[39mtitle \u001b[33m||\u001b[39m title\u001b[33m.\u001b[39m\u001b[34mtrim\u001b[39m() \u001b[33m===\u001b[39m \u001b[32m''\u001b[39m) {\n    \u001b[90m   |\u001b[39m                         \u001b[31m^\u001b[39m\n    \u001b[90m 39|\u001b[39m       \u001b[35mthrow\u001b[39m \u001b[35mnew\u001b[39m \u001b[33mError\u001b[39m(\u001b[32m'Task title cannot be empty'\u001b[39m)\u001b[33m;\u001b[39m\n    \u001b[90m 40|\u001b[39m     }\n\u001b[90m \u001b[2m\u276f\u001b[22m addTask src/board.ts:\u001b[2m110:16\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m49:15\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[5/5]\u23af\u001b[22m\u001b[39m\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 247022,
+            "completion": 15599,
+            "total": 262621
+          },
+          "wall_time": 333.47147274017334
+        },
+        {
+          "agent": 2,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 292634,
+            "completion": 16127,
+            "total": 308761
+          },
+          "wall_time": 295.02912998199463
+        },
+        {
+          "agent": 3,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 211121,
+            "completion": 13224,
+            "total": 224345
+          },
+          "wall_time": 241.46683859825134
+        }
+      ],
+      "p90_ttft": 0.22543956043956048,
+      "p90_tps": 42.42608151421472,
+      "holds_slo_p90": true,
+      "p99_ttft": 0.44839285714285737,
+      "p99_tps": 40.02172659131537,
+      "e2e_p50": 1.05,
+      "e2e_p99": 30.366666666666713,
+      "server_tokens": {
+        "prompt": 2154224,
+        "generation": 58949
+      },
+      "tokens_source": "server",
+      "tokens_per_hour": 19340789.305462874,
+      "cost_per_mtok": 0.018096469304959607,
+      "cost_per_mtok_output": 0.6794113091157675,
+      "prefix_cache_hit_rate": 0.9649804291475724,
+      "computed_tokens_per_hour": 1174417.604937278,
+      "utilization": 0.0885262109384477,
+      "underutilization_penalty": 11.29608947902786
+    },
+    {
+      "devs": 8,
+      "holds_slo": true,
+      "slo_percentile": "p50",
+      "median_ttft": 0.13583617747440274,
+      "median_tps": 38.37148652564474,
+      "cost_per_dev_hour": 0.04375,
+      "cost_per_dev_month": 31.937499999999996,
+      "valid": true,
+      "agents_ok": 6,
+      "tokens_per_dev": 330404,
+      "agents": [
+        {
+          "agent": 0,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 176079,
+            "completion": 12268,
+            "total": 188347
+          },
+          "wall_time": 338.09485602378845
+        },
+        {
+          "agent": 1,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 246205,
+            "completion": 16434,
+            "total": 262639
+          },
+          "wall_time": 432.5632915496826
+        },
+        {
+          "agent": 2,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 339738,
+            "completion": 15490,
+            "total": 355228
+          },
+          "wall_time": 429.57873463630676
+        },
+        {
+          "agent": 3,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "\n RUN  v2.1.9 /out/workspace\n\n \u276f acceptance.test.ts (0 test)\n\n Test Files  1 failed (1)\n      Tests  no tests\n   Start at  19:11:13\n   Duration  345ms (transform 43ms, setup 0ms, collect 0ms, tests 0ms, environment 0ms, prepare 72ms)\n\n\u23af\u23af\u23af\u23af\u23af\u23af Failed Suites 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af\n\n FAIL  acceptance.test.ts [ acceptance.test.ts ]\nError: Failed to load url ./src/board (resolved id: ./src/board) in /out/workspace/acceptance.test.ts. Does the file exist?\n \u276f loadAndTransform node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51969:17\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[1/1]\u23af\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 599827,
+            "completion": 18089,
+            "total": 617916
+          },
+          "wall_time": 656.5243027210236
+        },
+        {
+          "agent": 4,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 216127,
+            "completion": 12835,
+            "total": 228962
+          },
+          "wall_time": 350.62287044525146
+        },
+        {
+          "agent": 5,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 349709,
+            "completion": 17884,
+            "total": 367593
+          },
+          "wall_time": 458.768545627594
+        },
+        {
+          "agent": 6,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": false,
+              "exit_code": 2,
+              "output": "src/board.ts(43,15): error TS2304: Cannot find name 'InternalTask'.\n"
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 289803,
+            "completion": 15778,
+            "total": 305581
+          },
+          "wall_time": 420.7659134864807
+        },
+        {
+          "agent": 7,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 468791,
+            "completion": 20599,
+            "total": 489390
+          },
+          "wall_time": 492.152850151062
+        }
+      ],
+      "p90_ttft": 0.2811320754716982,
+      "p90_tps": 21.691661274602147,
+      "holds_slo_p90": true,
+      "p99_ttft": 0.6643749999999997,
+      "p99_tps": 8.76800086865647,
+      "e2e_p50": 1.6071428571428572,
+      "e2e_p99": 40.64999999999998,
+      "server_tokens": {
+        "prompt": 4547547,
+        "generation": 106720
+      },
+      "tokens_source": "server",
+      "tokens_per_hour": 25171993.795350194,
+      "cost_per_mtok": 0.013904341580786996,
+      "cost_per_mtok_output": 0.6063954101966338,
+      "prefix_cache_hit_rate": 0.9598880451373015,
+      "computed_tokens_per_hour": 1563727.1643512065,
+      "utilization": 0.11787190537639186,
+      "underutilization_penalty": 8.483785825017184
+    }
+  ],
+  "tokens": {
+    "prompt": 4721186,
+    "completion": 250546,
+    "total": 4971732
+  },
+  "model_meta": {
+    "architecture": "moe",
+    "total_params_b": 30.5,
+    "active_params_b": 3.3
+  },
+  "theta_max": {
+    "tokens_per_hour": 13266326.351117082,
+    "output_tokens_per_hour": 4276752.488353422,
+    "server_tokens": {
+      "prompt": 309947,
+      "generation": 147456
+    },
+    "duration_s": 124.12259101867676,
+    "shape": {
+      "prompt_tokens": 414,
+      "output_tokens": 256
+    },
+    "concurrency": 64
+  },
+  "utilization_basis": "theta_max",
+  "timeline": [
+    {
+      "label": "create\u2192ready",
+      "seconds": 17.355312824249268,
+      "cost_usd": 0.0016873220801353452,
+      "pct": 0.008709897111208193
+    },
+    {
+      "label": "rsync",
+      "seconds": 3.557278871536255,
+      "cost_usd": 0.00034584655695491363,
+      "pct": 0.0017852477382985928
+    },
+    {
+      "label": "vLLM startup",
+      "seconds": 301.8052890300751,
+      "cost_usd": 0.029342180877923965,
+      "pct": 0.15146330358260846
+    },
+    {
+      "label": "generation",
+      "seconds": 1544.9708762168884,
+      "cost_usd": 0.1502055018544197,
+      "pct": 0.7753555068659128
+    },
+    {
+      "label": "saturation-probe",
+      "seconds": 124.90801000595093,
+      "cost_usd": 0.012143834306134117,
+      "pct": 0.06268604470197192
+    }
+  ],
+  "pod_cost_usd": 0.19372468567556803
+}

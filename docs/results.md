@@ -10,7 +10,7 @@ summary of the run — plus heavy per-agent **artifacts**. Results are **config-
 path itself tells you the model, quantization, hardware, GPU count, and benchmark:
 
 ```
-results/<family>-<quant>/<hardware>-<gpus>gpu/<benchmark>/<run_id>/
+results/<benchmark>/<family>-<quant>/<hardware>-<gpus>gpu/<run_id>/
   report.json               # the run summary (small, kept forever)
   artifacts/n<N>/agent<i>/  # per-agent workspace, transcripts, gate output (heavy)
 ```

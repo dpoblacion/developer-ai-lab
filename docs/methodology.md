@@ -140,7 +140,7 @@ workload you actually run.
 ## Results
 
 Per-run output is collected on the local machine under `results/`, config-keyed:
-`results/<family>-<quant>/<hardware>-<gpus>gpu/<benchmark>/<run_id>/report.json`
+`results/<benchmark>/<family>-<quant>/<hardware>-<gpus>gpu/<run_id>/report.json`
 (with per-agent artifacts under `artifacts/`), a flat `by_devs` structure (one entry per N with
 `holds_slo`, `cost_per_dev_month`, `valid`, `tokens_per_dev`, etc.). The small `report.json`
 files are committed (they feed the Streamlit Community Cloud deploy); the heavy `artifacts/`

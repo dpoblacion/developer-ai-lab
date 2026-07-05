@@ -19,9 +19,10 @@ def make_guard(killed, state_path=None, clock=lambda: 0.0, **kw):
 
 def mk_run(root, run_id, config="qwen3-coder-fp8/h200-1gpu", bench="dev-load",
            with_artifacts=True):
-    """One config-keyed run dir (<root>/<config>/<bench>/<run_id>/report.json [+ artifacts/])
-    — the layout results_layout.artifacts_to_prune and prune_artifacts operate on."""
-    run = pathlib.Path(root) / config / bench / run_id
+    """One benchmark-keyed run dir (<root>/<bench>/<config>/<run_id>/report.json
+    [+ artifacts/]) — the layout results_layout.artifacts_to_prune and prune_artifacts
+    operate on."""
+    run = pathlib.Path(root) / bench / config / run_id
     run.mkdir(parents=True)
     (run / "report.json").write_text(json.dumps({"run_id": run_id}))
     if with_artifacts:

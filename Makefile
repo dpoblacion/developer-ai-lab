@@ -32,7 +32,7 @@ setup:
 	./scripts/setup_pod.sh $(CONFIG)
 
 # Score an already-produced SDD workspace with the scenario gates (no pod needed).
-# Usage: make gates WORKSPACE=results/<family>-<quant>/<hw>-<gpus>gpu/<benchmark>/<run_id>/artifacts/n<N>/agent<i>/workspace
+# Usage: make gates WORKSPACE=results/<benchmark>/<family>-<quant>/<hw>-<gpus>gpu/<run_id>/artifacts/n<N>/agent<i>/workspace
 gates:  ## Re-score a produced workspace with the benchmark's gates (free, no pod)
 	$(PYTHON) -m scripts.run_gates $(BENCHMARK) $(WORKSPACE)
 

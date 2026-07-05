@@ -1,17 +1,17 @@
 """On-disk layout of results/ — pure path logic (dirs in, Paths out), unit-tested offline.
 
-A run lives at results/<family>-<quant>/<hardware>-<gpus>gpu/<benchmark>/<run_id>/, so the model,
-hardware, quant and benchmark are in the PATH (navigable) and "latest per config" is just the
-lexically-max <run_id> under a <benchmark>/ dir.
+A run lives at results/<benchmark>/<family>-<quant>/<hardware>-<gpus>gpu/<run_id>/: the
+benchmark is the question, so it comes first; model, quant and hardware are in the PATH
+(navigable) and "latest per config" is just the lexically-max <run_id> under a config dir.
 """
 import pathlib
 
 
 def run_out_dir(family, quant, hardware, gpus, benchmark, run_id, root="results"):
     """The on-disk dir for one run:
-    <root>/<family>-<quant>/<hardware>-<gpus>gpu/<benchmark>/<run_id>."""
-    return (pathlib.Path(root) / f"{family}-{quant}" / f"{hardware}-{gpus}gpu"
-            / benchmark / run_id)
+    <root>/<benchmark>/<family>-<quant>/<hardware>-<gpus>gpu/<run_id>."""
+    return (pathlib.Path(root) / benchmark / f"{family}-{quant}"
+            / f"{hardware}-{gpus}gpu" / run_id)
 
 
 def artifacts_to_prune(results_dir="results"):

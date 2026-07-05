@@ -6,14 +6,16 @@ from tests.support import mk_run
 
 
 class RunOutDirTest(unittest.TestCase):
-    def test_builds_config_keyed_path(self):
+    def test_builds_benchmark_keyed_path(self):
+        # Benchmark first: results/ answers "what did dev-load measure?" before
+        # "which configs exist" — the benchmark is the question, the config the answer.
         p = run_out_dir("qwen3-coder", "fp8", "h200", 1, "dev-load", "20260701-115435")
         self.assertEqual(
-            p, pathlib.Path("results/qwen3-coder-fp8/h200-1gpu/dev-load/20260701-115435"))
+            p, pathlib.Path("results/dev-load/qwen3-coder-fp8/h200-1gpu/20260701-115435"))
 
     def test_root_override_and_gpu_count(self):
         p = run_out_dir("glm-5.2", "fp8", "h200", 8, "smoke", "20260701-000000", root="/tmp/r")
-        self.assertEqual(p, pathlib.Path("/tmp/r/glm-5.2-fp8/h200-8gpu/smoke/20260701-000000"))
+        self.assertEqual(p, pathlib.Path("/tmp/r/smoke/glm-5.2-fp8/h200-8gpu/20260701-000000"))
 
 
 class ArtifactsToPruneTest(unittest.TestCase):
@@ -23,7 +25,7 @@ class ArtifactsToPruneTest(unittest.TestCase):
             mk_run(d, "20260702-000000")  # latest
             prune = artifacts_to_prune(d)
             self.assertEqual([str(p) for p in prune],
-                             [str(pathlib.Path(d) / "qwen3-coder-fp8/h200-1gpu/dev-load"
+                             [str(pathlib.Path(d) / "dev-load/qwen3-coder-fp8/h200-1gpu"
                               / "20260701-000000" / "artifacts")])
 
     def test_single_run_prunes_nothing(self):

@@ -132,10 +132,10 @@ Both create the pod, run, pull results to `results/` (gitignored, config-keyed �
 
 ### Reading results
 
-Runs are laid out **config-keyed**, so the tree mirrors model → hardware → benchmark:
+Runs are laid out **benchmark-first**, so the tree mirrors benchmark → model → hardware:
 
 ```
-results/<family>-<quant>/<hardware>-<gpus>gpu/<benchmark>/<run_id>/
+results/<benchmark>/<family>-<quant>/<hardware>-<gpus>gpu/<run_id>/
   report.json               # flat by_devs summary (kept)
   artifacts/n<N>/agent<i>/  # per-agent workspace + transcripts (heavy)
 ```
