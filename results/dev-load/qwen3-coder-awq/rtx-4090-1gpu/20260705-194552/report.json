@@ -1,0 +1,1205 @@
+{
+  "run_id": "20260705-194552",
+  "date": "2026-07-05",
+  "benchmark": "dev-load",
+  "family": "qwen3-coder",
+  "quant": "awq",
+  "model": "qwen3-coder-30b-awq",
+  "hardware": "rtx-4090",
+  "gpu_count": 1,
+  "price_usd_per_gpu_hour": 0.34,
+  "cost_per_hour": 0.34,
+  "slo": {
+    "max_ttft": 10.0,
+    "min_tps": 20.0
+  },
+  "by_devs": [
+    {
+      "devs": 16,
+      "holds_slo": true,
+      "slo_percentile": "p50",
+      "median_ttft": 6.8411330049261085,
+      "median_tps": 55.49666437249998,
+      "cost_per_dev_hour": 0.02125,
+      "cost_per_dev_month": 15.512500000000001,
+      "valid": true,
+      "agents_ok": 13,
+      "tokens_per_dev": 354780,
+      "agents": [
+        {
+          "agent": 0,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "   \u001b[34mcompleteTask\u001b[39m(b\u001b[33m,\u001b[39m hi)\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[3/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mlistTasks sorts by priority then createdAt ascending\n\u001b[31m\u001b[1mTypeError\u001b[22m: addTask is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m40:15\u001b[22m\u001b[39m\n    \u001b[90m 38|\u001b[39m   \u001b[34mit\u001b[39m(\u001b[32m\"listTasks sorts by priority then createdAt ascending\"\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n    \u001b[90m 39|\u001b[39m     \u001b[35mconst\u001b[39m b \u001b[33m=\u001b[39m \u001b[34mcreateBoard\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m 40|\u001b[39m     \u001b[35mconst\u001b[39m m \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"m\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"medium\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m   |\u001b[39m               \u001b[31m^\u001b[39m\n    \u001b[90m 41|\u001b[39m     \u001b[35mconst\u001b[39m h1 \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"h1\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"high\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m 42|\u001b[39m     \u001b[35mconst\u001b[39m h2 \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"h2\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"high\"\u001b[39m })\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[4/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mstats counts total, done, pending\n\u001b[31m\u001b[1mTypeError\u001b[22m: addTask is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m49:15\u001b[22m\u001b[39m\n    \u001b[90m 47|\u001b[39m   \u001b[34mit\u001b[39m(\u001b[32m\"stats counts total, done, pending\"\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n    \u001b[90m 48|\u001b[39m     \u001b[35mconst\u001b[39m b \u001b[33m=\u001b[39m \u001b[34mcreateBoard\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m 49|\u001b[39m     \u001b[35mconst\u001b[39m a \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"a\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m   |\u001b[39m               \u001b[31m^\u001b[39m\n    \u001b[90m 50|\u001b[39m     \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"b\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m 51|\u001b[39m     \u001b[34mcompleteTask\u001b[39m(b\u001b[33m,\u001b[39m a)\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[5/5]\u23af\u001b[22m\u001b[39m\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 338946,
+            "completion": 16888,
+            "total": 355834
+          },
+          "wall_time": 1036.013911485672
+        },
+        {
+          "agent": 1,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 298767,
+            "completion": 15731,
+            "total": 314498
+          },
+          "wall_time": 908.8086032867432
+        },
+        {
+          "agent": 2,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": false,
+              "exit_code": 2,
+              "output": "ll type definitions for node? Try `npm i --save-dev @types/node`.\nnode_modules/vite/dist/node/index.d.ts(1389,20): error TS2580: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nnode_modules/vite/dist/node/index.d.ts(2401,63): error TS2580: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nnode_modules/vite/dist/node/index.d.ts(3561,84): error TS2580: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(11,26): error TS2307: Cannot find module 'node:stream' or its corresponding type declarations.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(15,29): error TS2307: Cannot find module 'node:worker_threads' or its corresponding type declarations.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(16,23): error TS2307: Cannot find module 'node:fs' or its corresponding type declarations.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(528,10): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(622,19): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(623,18): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(628,45): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(628,90): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(947,13): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(948,14): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(949,14): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(1776,21): error TS2580: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\n"
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 340033,
+            "completion": 15484,
+            "total": 355517
+          },
+          "wall_time": 935.3698875904083
+        },
+        {
+          "agent": 3,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 354855,
+            "completion": 17970,
+            "total": 372825
+          },
+          "wall_time": 1035.4200727939606
+        },
+        {
+          "agent": 4,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 319962,
+            "completion": 14162,
+            "total": 334124
+          },
+          "wall_time": 946.9739515781403
+        },
+        {
+          "agent": 5,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 386560,
+            "completion": 16719,
+            "total": 403279
+          },
+          "wall_time": 1025.7500846385956
+        },
+        {
+          "agent": 6,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 384412,
+            "completion": 17154,
+            "total": 401566
+          },
+          "wall_time": 988.0567357540131
+        },
+        {
+          "agent": 7,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": false,
+              "exit_code": 2,
+              "output": "test/board.test.ts(1,30): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.\n"
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 338156,
+            "completion": 15888,
+            "total": 354044
+          },
+          "wall_time": 1007.4795384407043
+        },
+        {
+          "agent": 8,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 172284,
+            "completion": 10421,
+            "total": 182705
+          },
+          "wall_time": 657.590677022934
+        },
+        {
+          "agent": 9,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 244490,
+            "completion": 14305,
+            "total": 258795
+          },
+          "wall_time": 858.8981418609619
+        },
+        {
+          "agent": 10,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 315000,
+            "completion": 15948,
+            "total": 330948
+          },
+          "wall_time": 1004.1292765140533
+        },
+        {
+          "agent": 11,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 313054,
+            "completion": 20621,
+            "total": 333675
+          },
+          "wall_time": 1029.5763640403748
+        },
+        {
+          "agent": 12,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 465276,
+            "completion": 22985,
+            "total": 488261
+          },
+          "wall_time": 1064.9181225299835
+        },
+        {
+          "agent": 13,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 322174,
+            "completion": 22097,
+            "total": 344271
+          },
+          "wall_time": 1046.533483505249
+        },
+        {
+          "agent": 14,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 437396,
+            "completion": 19484,
+            "total": 456880
+          },
+          "wall_time": 1058.3093326091766
+        },
+        {
+          "agent": 15,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 540373,
+            "completion": 20858,
+            "total": 561231
+          },
+          "wall_time": 1074.451816558838
+        }
+      ],
+      "p90_ttft": 16.176666666666666,
+      "p90_tps": 40.37952413317258,
+      "holds_slo_p90": false,
+      "p99_ttft": 19.707666666666668,
+      "p99_tps": 3.5237036836256217,
+      "e2e_p50": 10.93859649122807,
+      "e2e_p99": 69.55714285714294,
+      "server_tokens": {
+        "prompt": 9305356,
+        "generation": 230091
+      },
+      "tokens_source": "server",
+      "tokens_per_hour": 31673526.58140665,
+      "cost_per_mtok": 0.010734516698863291,
+      "cost_per_mtok_output": 0.4448605771308998,
+      "prefix_cache_hit_rate": 0.5783246752426167,
+      "computed_tokens_per_hour": 764284.4016271536,
+      "utilization": 0.028440045657047785,
+      "underutilization_penalty": 35.16168757458334
+    },
+    {
+      "devs": 32,
+      "holds_slo": false,
+      "slo_percentile": "p50",
+      "median_ttft": 20.091407678244973,
+      "median_tps": 52.307337795799434,
+      "cost_per_dev_hour": 0.010625,
+      "cost_per_dev_month": 7.7562500000000005,
+      "valid": true,
+      "agents_ok": 29,
+      "tokens_per_dev": 318049,
+      "agents": [
+        {
+          "agent": 0,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 390709,
+            "completion": 15437,
+            "total": 406146
+          },
+          "wall_time": 1884.2870168685913
+        },
+        {
+          "agent": 1,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 272489,
+            "completion": 15716,
+            "total": 288205
+          },
+          "wall_time": 1611.1196162700653
+        },
+        {
+          "agent": 2,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 488149,
+            "completion": 22326,
+            "total": 510475
+          },
+          "wall_time": 1945.3826763629913
+        },
+        {
+          "agent": 3,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 307646,
+            "completion": 18293,
+            "total": 325939
+          },
+          "wall_time": 1704.7023260593414
+        },
+        {
+          "agent": 4,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 256655,
+            "completion": 13683,
+            "total": 270338
+          },
+          "wall_time": 1723.1729924678802
+        },
+        {
+          "agent": 5,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 324162,
+            "completion": 15605,
+            "total": 339767
+          },
+          "wall_time": 1788.6123247146606
+        },
+        {
+          "agent": 6,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 269212,
+            "completion": 16185,
+            "total": 285397
+          },
+          "wall_time": 1779.1758823394775
+        },
+        {
+          "agent": 7,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 350558,
+            "completion": 15524,
+            "total": 366082
+          },
+          "wall_time": 1876.043198108673
+        },
+        {
+          "agent": 8,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 387653,
+            "completion": 17293,
+            "total": 404946
+          },
+          "wall_time": 1882.5190887451172
+        },
+        {
+          "agent": 9,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 359069,
+            "completion": 17501,
+            "total": 376570
+          },
+          "wall_time": 1849.8488874435425
+        },
+        {
+          "agent": 10,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 178946,
+            "completion": 10630,
+            "total": 189576
+          },
+          "wall_time": 1243.0744500160217
+        },
+        {
+          "agent": 11,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 292743,
+            "completion": 15616,
+            "total": 308359
+          },
+          "wall_time": 1624.1959428787231
+        },
+        {
+          "agent": 12,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 246626,
+            "completion": 14740,
+            "total": 261366
+          },
+          "wall_time": 1682.4384677410126
+        },
+        {
+          "agent": 13,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 312055,
+            "completion": 14900,
+            "total": 326955
+          },
+          "wall_time": 1688.7519726753235
+        },
+        {
+          "agent": 14,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 207300,
+            "completion": 15564,
+            "total": 222864
+          },
+          "wall_time": 1538.4683887958527
+        },
+        {
+          "agent": 15,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 246559,
+            "completion": 14449,
+            "total": 261008
+          },
+          "wall_time": 1581.1544139385223
+        },
+        {
+          "agent": 16,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 318346,
+            "completion": 19036,
+            "total": 337382
+          },
+          "wall_time": 1906.7089314460754
+        },
+        {
+          "agent": 17,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 392802,
+            "completion": 17321,
+            "total": 410123
+          },
+          "wall_time": 1888.9371070861816
+        },
+        {
+          "agent": 18,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 238678,
+            "completion": 20103,
+            "total": 258781
+          },
+          "wall_time": 1697.052461385727
+        },
+        {
+          "agent": 19,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 219258,
+            "completion": 14623,
+            "total": 233881
+          },
+          "wall_time": 1527.4314694404602
+        },
+        {
+          "agent": 20,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 187882,
+            "completion": 11350,
+            "total": 199232
+          },
+          "wall_time": 1482.4965574741364
+        },
+        {
+          "agent": 21,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 353951,
+            "completion": 15471,
+            "total": 369422
+          },
+          "wall_time": 1813.3890218734741
+        },
+        {
+          "agent": 22,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 352004,
+            "completion": 17578,
+            "total": 369582
+          },
+          "wall_time": 1851.6583223342896
+        },
+        {
+          "agent": 23,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 206755,
+            "completion": 11625,
+            "total": 218380
+          },
+          "wall_time": 1378.976033449173
+        },
+        {
+          "agent": 24,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "   \u001b[34mcompleteTask\u001b[39m(b\u001b[33m,\u001b[39m hi)\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[3/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mlistTasks sorts by priority then createdAt ascending\n\u001b[31m\u001b[1mTypeError\u001b[22m: addTask is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m40:15\u001b[22m\u001b[39m\n    \u001b[90m 38|\u001b[39m   \u001b[34mit\u001b[39m(\u001b[32m\"listTasks sorts by priority then createdAt ascending\"\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n    \u001b[90m 39|\u001b[39m     \u001b[35mconst\u001b[39m b \u001b[33m=\u001b[39m \u001b[34mcreateBoard\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m 40|\u001b[39m     \u001b[35mconst\u001b[39m m \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"m\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"medium\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m   |\u001b[39m               \u001b[31m^\u001b[39m\n    \u001b[90m 41|\u001b[39m     \u001b[35mconst\u001b[39m h1 \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"h1\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"high\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m 42|\u001b[39m     \u001b[35mconst\u001b[39m h2 \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"h2\"\u001b[39m\u001b[33m,\u001b[39m priority\u001b[33m:\u001b[39m \u001b[32m\"high\"\u001b[39m })\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[4/5]\u23af\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m > \u001b[22mTaskBoard acceptance\u001b[2m > \u001b[22mstats counts total, done, pending\n\u001b[31m\u001b[1mTypeError\u001b[22m: addTask is not a function\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m49:15\u001b[22m\u001b[39m\n    \u001b[90m 47|\u001b[39m   \u001b[34mit\u001b[39m(\u001b[32m\"stats counts total, done, pending\"\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n    \u001b[90m 48|\u001b[39m     \u001b[35mconst\u001b[39m b \u001b[33m=\u001b[39m \u001b[34mcreateBoard\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m 49|\u001b[39m     \u001b[35mconst\u001b[39m a \u001b[33m=\u001b[39m \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"a\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m   |\u001b[39m               \u001b[31m^\u001b[39m\n    \u001b[90m 50|\u001b[39m     \u001b[34maddTask\u001b[39m(b\u001b[33m,\u001b[39m { title\u001b[33m:\u001b[39m \u001b[32m\"b\"\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m 51|\u001b[39m     \u001b[34mcompleteTask\u001b[39m(b\u001b[33m,\u001b[39m a)\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[5/5]\u23af\u001b[22m\u001b[39m\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 420001,
+            "completion": 25049,
+            "total": 445050
+          },
+          "wall_time": 1895.2600235939026
+        },
+        {
+          "agent": 25,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 203075,
+            "completion": 15399,
+            "total": 218474
+          },
+          "wall_time": 1471.1662731170654
+        },
+        {
+          "agent": 26,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 295097,
+            "completion": 15062,
+            "total": 310159
+          },
+          "wall_time": 1726.0071754455566
+        },
+        {
+          "agent": 27,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 404719,
+            "completion": 18848,
+            "total": 423567
+          },
+          "wall_time": 1886.283586025238
+        },
+        {
+          "agent": 28,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": false,
+              "exit_code": 2,
+              "output": "error TS18003: No inputs were found in config file '/out/workspace/tsconfig.json'. Specified 'include' paths were '[\"src\",\"tests\"]' and 'exclude' paths were '[]'.\n"
+            },
+            {
+              "id": "acceptance",
+              "passed": false,
+              "exit_code": 1,
+              "output": "\n\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv4.1.9 \u001b[39m\u001b[90m/out/workspace\u001b[39m\n\n \u001b[31m\u276f\u001b[39m acceptance.test.ts \u001b[2m(\u001b[22m\u001b[2m0 test\u001b[22m\u001b[2m)\u001b[22m\n\n\u001b[2m Test Files \u001b[22m \u001b[1m\u001b[31m1 failed\u001b[39m\u001b[22m\u001b[90m (1)\u001b[39m\n\u001b[2m      Tests \u001b[22m \u001b[2mno tests\u001b[22m\n\u001b[2m   Start at \u001b[22m 18:44:05\n\u001b[2m   Duration \u001b[22m 186ms\u001b[2m (transform 32ms, setup 0ms, import 0ms, tests 0ms, environment 0ms)\u001b[22m\n\n\n\u001b[31m\u23af\u23af\u23af\u23af\u23af\u23af\u001b[39m\u001b[1m\u001b[41m Failed Suites 1 \u001b[49m\u001b[22m\u001b[31m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m acceptance.test.ts\u001b[2m [ acceptance.test.ts ]\u001b[22m\n\u001b[31m\u001b[1mError\u001b[22m: Cannot find module './src/board' imported from /out/workspace/acceptance.test.ts\u001b[39m\n\u001b[36m \u001b[2m\u276f\u001b[22m acceptance.test.ts:\u001b[2m4:1\u001b[22m\u001b[39m\n    \u001b[90m  2|\u001b[39m // agent's vitest. Imports the agent's module at ./src/board. The agen\u2026\n    \u001b[90m  3|\u001b[39m \u001b[35mimport\u001b[39m { describe\u001b[33m,\u001b[39m it\u001b[33m,\u001b[39m expect } \u001b[35mfrom\u001b[39m \u001b[32m\"vitest\"\u001b[39m\u001b[33m;\u001b[39m\n    \u001b[90m  4|\u001b[39m import { createBoard, addTask, completeTask, listTasks, stats } from \"\u2026\n    \u001b[90m   |\u001b[39m \u001b[31m^\u001b[39m\n    \u001b[90m  5|\u001b[39m\n    \u001b[90m  6|\u001b[39m \u001b[34mdescribe\u001b[39m(\u001b[32m\"TaskBoard acceptance\"\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n\n\u001b[31m\u001b[2m\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[1/1]\u23af\u001b[22m\u001b[39m\n\n"
+            }
+          ],
+          "tokens": {
+            "prompt": 260439,
+            "completion": 16670,
+            "total": 277109
+          },
+          "wall_time": 1799.3235239982605
+        },
+        {
+          "agent": 29,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": false,
+              "exit_code": 2,
+              "output": "ll type definitions for node? Try `npm i --save-dev @types/node`.\nnode_modules/vite/dist/node/index.d.ts(1389,20): error TS2580: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nnode_modules/vite/dist/node/index.d.ts(2401,63): error TS2580: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nnode_modules/vite/dist/node/index.d.ts(3561,84): error TS2580: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(11,26): error TS2307: Cannot find module 'node:stream' or its corresponding type declarations.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(15,29): error TS2307: Cannot find module 'node:worker_threads' or its corresponding type declarations.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(16,23): error TS2307: Cannot find module 'node:fs' or its corresponding type declarations.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(528,10): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(622,19): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(623,18): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(628,45): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(628,90): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(947,13): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(948,14): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(949,14): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(1776,21): error TS2580: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\n"
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 421156,
+            "completion": 20841,
+            "total": 441997
+          },
+          "wall_time": 1928.0488512516022
+        },
+        {
+          "agent": 30,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 247282,
+            "completion": 14824,
+            "total": 262106
+          },
+          "wall_time": 1660.0803372859955
+        },
+        {
+          "agent": 31,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 566605,
+            "completion": 23071,
+            "total": 589676
+          },
+          "wall_time": 1935.489503145218
+        }
+      ],
+      "p90_ttft": 36.53016453382084,
+      "p90_tps": 20.4133747027903,
+      "holds_slo_p90": false,
+      "p99_ttft": 54.30857142857141,
+      "p99_tps": 3.5361571189256256,
+      "e2e_p50": 24.24802110817942,
+      "e2e_p99": 99.85573770491801,
+      "server_tokens": {
+        "prompt": 17065536,
+        "generation": 439036
+      },
+      "tokens_source": "server",
+      "tokens_per_hour": 32230421.788555317,
+      "cost_per_mtok": 0.010549039731175049,
+      "cost_per_mtok_output": 0.4205951801337801,
+      "prefix_cache_hit_rate": 0.589474682876218,
+      "computed_tokens_per_hour": 808378.2602830948,
+      "utilization": 0.030080837161755407,
+      "underutilization_penalty": 33.2437556382704
+    }
+  ],
+  "tokens": {
+    "prompt": 15550319,
+    "completion": 807048,
+    "total": 16357367
+  },
+  "model_meta": {
+    "architecture": "moe",
+    "total_params_b": 30.5,
+    "active_params_b": 3.3
+  },
+  "theta_max": {
+    "tokens_per_hour": 26873529.34814135,
+    "output_tokens_per_hour": 7469867.019097035,
+    "server_tokens": {
+      "prompt": 680943,
+      "generation": 262144
+    },
+    "duration_s": 126.33670687675476,
+    "shape": {
+      "prompt_tokens": 512,
+      "output_tokens": 256
+    },
+    "concurrency": 64
+  },
+  "utilization_basis": "theta_max",
+  "timeline": [
+    {
+      "label": "create\u2192ready",
+      "seconds": 34.91592502593994,
+      "cost_usd": 0.003297615141338772,
+      "pct": 0.010284129181968646
+    },
+    {
+      "label": "rsync",
+      "seconds": 2.1079087257385254,
+      "cost_usd": 0.00019908026854197186,
+      "pct": 0.0006208629908326577
+    },
+    {
+      "label": "vLLM startup",
+      "seconds": 192.12806606292725,
+      "cost_usd": 0.018145428461498688,
+      "pct": 0.056589359995618774
+    },
+    {
+      "label": "generation",
+      "seconds": 3039.209934234619,
+      "cost_usd": 0.2870364937888252,
+      "pct": 0.8951682520675207
+    },
+    {
+      "label": "saturation-probe",
+      "seconds": 126.7652018070221,
+      "cost_usd": 0.011972269059552088,
+      "pct": 0.037337395764059256
+    }
+  ],
+  "pod_cost_usd": 0.3206508867197567
+}
