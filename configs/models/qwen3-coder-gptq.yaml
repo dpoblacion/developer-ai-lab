@@ -1,0 +1,26 @@
+# Qwen3-Coder 30B-A3B GPTQ-Int4 — MODEL axis only. Sibling of qwen3-coder-awq.yaml.
+# Purpose: the W4-vs-W4 method pair — same memory class as AWQ on 24GB cards
+# (rtx-a5000/l4), isolating the quantization METHOD (GPTQ vs AWQ) instead of the width.
+# Run with QUANT=gptq (awq leads the supported_quants preference on those cards).
+#
+# Repo quantized with GPTQModel (4 bits, group size 32, symmetric, desc_act off) and its
+# card documents `vllm serve` directly. vLLM auto-detects gptq_marlin from the config.
+family: qwen3-coder
+quant: gptq
+model: btbtyler09/Qwen3-Coder-30B-A3B-Instruct-gptq-4bit
+served_model_name: qwen3-coder-30b-gptq
+vllm_version: "0.11.0"
+image: runpod/pytorch:1.0.2-cu1281-torch280-ubuntu2404
+container_disk_gb: 100
+pip_constraints:
+  - "transformers<5"          # vLLM 0.11.0's tokenizer code predates the transformers 5.x API
+tool_call_parser: qwen3_xml   # same model family → same vLLM streaming-parse workaround
+enable_auto_tool_choice: true
+extra_args:
+  - "--enable-expert-parallel"  # same MoE serving requirement as the AWQ sibling
+env:
+  VLLM_USE_FLASHINFER_SAMPLER: "0"
+# Architecture metadata (HF model card: 30.5B total, 3.3B activated, 128 experts / 8 active)
+architecture: moe
+total_params_b: 30.5
+active_params_b: 3.3
