@@ -1,0 +1,440 @@
+{
+  "run_id": "20260706-015513",
+  "date": "2026-07-06",
+  "benchmark": "dev-load",
+  "family": "qwen3-coder",
+  "quant": "awq",
+  "model": "qwen3-coder-30b-awq",
+  "hardware": "rtx-a5000",
+  "gpu_count": 1,
+  "price_usd_per_gpu_hour": 0.27,
+  "cost_per_hour": 0.27,
+  "slo": {
+    "max_ttft": 10.0,
+    "min_tps": 20.0
+  },
+  "by_devs": [
+    {
+      "devs": 16,
+      "holds_slo": false,
+      "slo_percentile": "p50",
+      "median_ttft": 11.58284023668639,
+      "median_tps": 27.67991272187408,
+      "cost_per_dev_hour": 0.016875,
+      "cost_per_dev_month": 12.318750000000001,
+      "valid": true,
+      "agents_ok": 15,
+      "tokens_per_dev": 321047,
+      "agents": [
+        {
+          "agent": 0,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 228341,
+            "completion": 14034,
+            "total": 242375
+          },
+          "wall_time": 1459.4471318721771
+        },
+        {
+          "agent": 1,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 224433,
+            "completion": 16629,
+            "total": 241062
+          },
+          "wall_time": 1560.738668680191
+        },
+        {
+          "agent": 2,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 439123,
+            "completion": 18939,
+            "total": 458062
+          },
+          "wall_time": 1892.1632633209229
+        },
+        {
+          "agent": 3,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 258075,
+            "completion": 15658,
+            "total": 273733
+          },
+          "wall_time": 1565.1539950370789
+        },
+        {
+          "agent": 4,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 418464,
+            "completion": 22916,
+            "total": 441380
+          },
+          "wall_time": 1902.664072751999
+        },
+        {
+          "agent": 5,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 409931,
+            "completion": 18432,
+            "total": 428363
+          },
+          "wall_time": 1878.9546473026276
+        },
+        {
+          "agent": 6,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 201044,
+            "completion": 13070,
+            "total": 214114
+          },
+          "wall_time": 1368.0751905441284
+        },
+        {
+          "agent": 7,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 293585,
+            "completion": 17477,
+            "total": 311062
+          },
+          "wall_time": 1814.997882604599
+        },
+        {
+          "agent": 8,
+          "passed": false,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": false,
+              "exit_code": 2,
+              "output": "ll type definitions for node? Try `npm i --save-dev @types/node`.\nnode_modules/vite/dist/node/index.d.ts(1389,20): error TS2580: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nnode_modules/vite/dist/node/index.d.ts(2401,63): error TS2580: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nnode_modules/vite/dist/node/index.d.ts(3561,84): error TS2580: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(11,26): error TS2307: Cannot find module 'node:stream' or its corresponding type declarations.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(15,29): error TS2307: Cannot find module 'node:worker_threads' or its corresponding type declarations.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(16,23): error TS2307: Cannot find module 'node:fs' or its corresponding type declarations.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(528,10): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(622,19): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(623,18): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(628,45): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(628,90): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(947,13): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(948,14): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(949,14): error TS2503: Cannot find namespace 'NodeJS'.\nnode_modules/vitest/dist/reporters-w_64AS5f.d.ts(1776,21): error TS2580: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\n"
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 273038,
+            "completion": 19518,
+            "total": 292556
+          },
+          "wall_time": 1718.3369359970093
+        },
+        {
+          "agent": 9,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 292751,
+            "completion": 16926,
+            "total": 309677
+          },
+          "wall_time": 1797.0139937400818
+        },
+        {
+          "agent": 10,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 314854,
+            "completion": 16178,
+            "total": 331032
+          },
+          "wall_time": 1791.7766542434692
+        },
+        {
+          "agent": 11,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 494502,
+            "completion": 25811,
+            "total": 520313
+          },
+          "wall_time": 1927.2634053230286
+        },
+        {
+          "agent": 12,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 415022,
+            "completion": 26374,
+            "total": 441396
+          },
+          "wall_time": 1908.0434715747833
+        },
+        {
+          "agent": 13,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 334634,
+            "completion": 15843,
+            "total": 350477
+          },
+          "wall_time": 1809.8316400051117
+        },
+        {
+          "agent": 14,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 365416,
+            "completion": 19235,
+            "total": 384651
+          },
+          "wall_time": 1840.1582221984863
+        },
+        {
+          "agent": 15,
+          "passed": true,
+          "gates": [
+            {
+              "id": "typecheck",
+              "passed": true,
+              "exit_code": 0
+            },
+            {
+              "id": "acceptance",
+              "passed": true,
+              "exit_code": 0
+            }
+          ],
+          "tokens": {
+            "prompt": 291424,
+            "completion": 14735,
+            "total": 306159
+          },
+          "wall_time": 1653.4562585353851
+        }
+      ],
+      "p90_ttft": 32.1027397260274,
+      "p90_tps": 20.352498853939043,
+      "holds_slo_p90": false,
+      "p99_ttft": 39.21027397260274,
+      "p99_tps": 1.590066695093463,
+      "e2e_p50": 19.186507936507937,
+      "e2e_p99": 124.70000000000027,
+      "server_tokens": {
+        "prompt": 8883902,
+        "generation": 241230
+      },
+      "tokens_source": "server",
+      "tokens_per_hour": 16965145.19222294,
+      "cost_per_mtok": 0.01591498315757249,
+      "cost_per_mtok_output": 0.6020243008358238,
+      "prefix_cache_hit_rate": 0.6003505272230845,
+      "computed_tokens_per_hour": 448486.87939198466
+    }
+  ],
+  "tokens": {
+    "prompt": 5254637,
+    "completion": 291775,
+    "total": 5546412
+  },
+  "model_meta": {
+    "architecture": "moe",
+    "total_params_b": 30.5,
+    "active_params_b": 3.3
+  },
+  "truncated": "max_run",
+  "timeline": [
+    {
+      "label": "create\u2192ready",
+      "seconds": 17.449922800064087,
+      "cost_usd": 0.0013087442100048067,
+      "pct": 0.004061198718847352
+    },
+    {
+      "label": "rsync",
+      "seconds": 3.505495071411133,
+      "cost_usd": 0.000262912130355835,
+      "pct": 0.0008158495745831215
+    },
+    {
+      "label": "vLLM startup",
+      "seconds": 301.4701600074768,
+      "cost_usd": 0.022610262000560762,
+      "pct": 0.07016250109648477
+    },
+    {
+      "label": "generation",
+      "seconds": 3974.316346883774,
+      "cost_usd": 0.298073726016283,
+      "pct": 0.9249604506100848
+    }
+  ],
+  "pod_cost_usd": 0.32225564435720444
+}
